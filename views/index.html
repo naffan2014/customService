@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html ng-app='chatApp'>
+
+<head>
+    <meta charset="utf-8">
+    <title>chat</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link rel="stylesheet" href="/public/libs/bootstrap/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="/public/libs/flat-ui/css/flat-ui.css"> -->
+    <link rel="stylesheet" href="/public/libs/adminLTE/css/AdminLTE.min.css">
+    <link rel="stylesheet" href="/public/libs/font-awesome/css/font-awesome.css">
+    <link rel="stylesheet" href="/public/libs/bootstrap.switch/css/bootstrap3/bootstrap-switch.css">
+    <link rel="stylesheet" href="/public/app/css/main.css">
+    <link rel="stylesheet" href="/public/app/css/chat.css">
+    <style media="screen">
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+
+                    <a class="navbar-brand" href="#">Chat</a>
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            <form class="navbar-form navbar-left" role="search">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="Search">
+                                </div>
+                                <button type="submit" class="btn btn-default">Submit</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /.navbar-collapse -->
+            </div>
+            <!-- /.container-fluid -->
+        </nav>
+        <div class="row chat-container">
+
+            <div class="chat-container-header">
+
+            </div>
+            <div class="row">
+                <!-- userList -->
+                <div class="col-sm-3 chat-userlist-container">
+                    <user-list></user-list>
+                </div>
+                <!-- chat window -->
+                <div class="col-sm-6 chat-messagewindow-container">
+                    <div id="chatWindowDiv">
+
+                    </div>
+                </div>
+                <!-- setting -->
+                <div class="col-sm-3 chat-setting-container">
+
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label for="" class='control-label'>通知声音</label>
+                            <input type="checkbox" name="my-checkbox" checked>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 输入用户名的modal -->
+    <!-- fade会有动画效果 -->
+    <div class="modal fade" id="init" tabindex="-1" data-backdrop='static' role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div ng-controller="sign" class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">输入一个用户名,然后开始吧</h4>
+                </div>
+                <div class="modal-body">
+                    <form novalidate class="form-horizontal">
+                        <div class="form-group">
+                            <label for="username" class="col-sm-2 control-label">用户名</label>
+                            <div class="col-sm-9">
+                                <input ng-model='username' type="text" class="form-control" name="username" id="username" placeholder="username">
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="col-sm-3 col-sm-offset-4">
+                        <button ng-click='signUser()' type="button" class="btn btn-primary">确定</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <audio id="audio">
+        <source src="/public/app/audio/msg.wav" type="audio/wav">
+    </audio>
+</body>
+
+<script src="/public/libs/jquery/jquery-2.2.3.js" charset="utf-8"></script>
+<script src="/public/libs/bootstrap/js/bootstrap.min.js" charset="utf-8"></script>
+<script src="/public/libs/socket.io/socket.io.js" charset="utf-8"></script>
+<script src="/public/libs/angular/angular.js" charset="utf-8"></script>
+
+<script src="/public/libs/bootstrap.switch/js/bootstrap-switch.js" charset="utf-8"></script>
+
+<script src="/dist/app.js" charset="utf-8"></script>
+<script type="text/javascript">
+</script>
+
+</html>

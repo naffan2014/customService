@@ -1,0 +1,359 @@
+[2016-12-12 20:10:52.419] [INFO] yifan - listening on port 3000
+[2016-12-12 20:10:52.421] [INFO] yifan - You can debug your app with http://undefined:3000
+[2016-12-12 20:10:52.421] [INFO] yifan - 
+[2016-12-12 20:10:52.465] [DEBUG] yifan - a client connected, socket id is ToDKnVYnEquVh31rAAAA
+[2016-12-12 20:17:19.349] [INFO] yifan - listening on port 3000
+[2016-12-12 20:17:19.351] [INFO] yifan - You can debug your app with http://undefined:3000
+[2016-12-12 20:17:19.352] [INFO] yifan - 
+[2016-12-12 20:17:23.050] [DEBUG] yifan - a client connected, socket id is LgP1lhyFwkpBWVPrAAAA
+[2016-12-12 20:17:46.408] [INFO] yifan - listening on port 3000
+[2016-12-12 20:17:46.410] [INFO] yifan - You can debug your app with http://undefined:3000
+[2016-12-12 20:17:46.410] [INFO] yifan - 
+[2016-12-12 20:17:46.559] [DEBUG] yifan - a client connected, socket id is 5GiXuzsab4RB9Nh6AAAA
+[2016-12-12 20:19:05.495] [INFO] yifan - handle a letter  { directive: { send: { message: null } },
+  message: 
+   { sendUser: 'abc',
+     content: 'abc',
+     receiveUser: 'abc',
+     type: 'one' } }
+[2016-12-12 20:19:06.231] [INFO] yifan - listening on port 3000
+[2016-12-12 20:19:06.233] [INFO] yifan - You can debug your app with http://undefined:3000
+[2016-12-12 20:19:06.234] [INFO] yifan - 
+[2016-12-12 20:19:06.999] [DEBUG] yifan - a client connected, socket id is wwzvONO7yOAskBedAAAA
+[2016-12-12 20:19:15.554] [INFO] yifan - handle a letter  { directive: { send: { message: null } },
+  message: 
+   { sendUser: 'abc',
+     content: 'abc',
+     receiveUser: 'abc',
+     type: 'one' } }
+[2016-12-12 20:19:16.370] [INFO] yifan - listening on port 3000
+[2016-12-12 20:19:16.372] [INFO] yifan - You can debug your app with http://undefined:3000
+[2016-12-12 20:19:16.372] [INFO] yifan - 
+[2016-12-12 20:19:17.020] [DEBUG] yifan - a client connected, socket id is B1BMZyzZJeAtH2JfAAAA
+[2016-12-12 20:19:34.874] [INFO] yifan - handle a letter  { directive: { client: { sign_in: null } },
+  user: { username: 'avc' } }
+[2016-12-12 20:19:42.446] [INFO] yifan - handle a letter  { directive: { send: { message: null } },
+  message: 
+   { sendUser: 'avc',
+     content: 'abc',
+     receiveUser: 'avc',
+     type: 'one' } }
+[2016-12-12 20:54:53.036] [INFO] yifan - listening on port 3000
+[2016-12-12 20:54:53.038] [INFO] yifan - You can debug your app with http://undefined:3000
+[2016-12-12 20:54:53.038] [INFO] yifan - 
+[2016-12-12 20:54:53.353] [DEBUG] yifan - a client connected, socket id is NkZIuNTSKxS2KPJuAAAA
+[2016-12-12 20:54:55.764] [INFO] yifan - handle a letter  { directive: { send: { message: null } },
+  message: 
+   { sendUser: 'avc',
+     content: '111',
+     receiveUser: 'avc',
+     type: 'one' } }
+[2016-12-12 20:54:56.526] [INFO] yifan - listening on port 3000
+[2016-12-12 20:54:56.528] [INFO] yifan - You can debug your app with http://undefined:3000
+[2016-12-12 20:54:56.529] [INFO] yifan - 
+[2016-12-12 20:54:56.768] [DEBUG] yifan - a client connected, socket id is pclK6qwJNXepYlvJAAAA
+[2016-12-12 20:55:07.899] [INFO] yifan - handle a letter  { directive: { send: { message: null } },
+  message: 
+   { sendUser: 'avc',
+     content: 'abc',
+     receiveUser: 'avc',
+     type: 'one' } }
+[2016-12-12 20:55:08.629] [INFO] yifan - listening on port 3000
+[2016-12-12 20:55:08.631] [INFO] yifan - You can debug your app with http://undefined:3000
+[2016-12-12 20:55:08.632] [INFO] yifan - 
+[2016-12-12 20:55:09.110] [DEBUG] yifan - a client connected, socket id is zsk2UPO6U0Zz4HyMAAAA
+[2016-12-12 20:55:14.424] [INFO] yifan - handle a letter  { directive: { send: { message: null } },
+  message: 
+   { sendUser: 'avc',
+     content: 'avc',
+     receiveUser: 'avc',
+     type: 'one' } }
+[2016-12-12 20:55:15.245] [INFO] yifan - listening on port 3000
+[2016-12-12 20:55:15.247] [INFO] yifan - You can debug your app with http://undefined:3000
+[2016-12-12 20:55:15.247] [INFO] yifan - 
+[2016-12-12 20:55:15.466] [DEBUG] yifan - a client connected, socket id is RmFQJDJOCh1MY5bmAAAA
+[2016-12-12 20:55:27.428] [DEBUG] yifan - a client connected, socket id is AGn_QwAaHdInnWcxAAAB
+[2016-12-12 20:55:30.056] [INFO] yifan - handle a letter  { directive: { client: { sign_in: null } },
+  user: { username: 'ccc' } }
+[2016-12-12 20:55:35.957] [INFO] yifan - handle a letter  { directive: { send: { message: null } },
+  message: 
+   { sendUser: 'ccc',
+     content: 'aaaa',
+     receiveUser: 'ccc',
+     type: 'one' } }
+[2016-12-12 20:56:29.231] [INFO] yifan - listening on port 3000
+[2016-12-12 20:56:29.232] [INFO] yifan - You can debug your app with http://undefined:3000
+[2016-12-12 20:56:29.233] [INFO] yifan - 
+[2016-12-12 20:56:29.267] [DEBUG] yifan - a client connected, socket id is HbAJ4LPBvyqMQr7GAAAA
+[2016-12-12 20:57:00.045] [INFO] yifan - listening on port 3000
+[2016-12-12 20:57:00.047] [INFO] yifan - You can debug your app with http://undefined:3000
+[2016-12-12 20:57:00.048] [INFO] yifan - 
+[2016-12-12 20:57:00.170] [DEBUG] yifan - a client connected, socket id is rGCfrL1HRf50hwhWAAAA
+[2016-12-12 20:57:06.013] [INFO] yifan - listening on port 3000
+[2016-12-12 20:57:06.015] [INFO] yifan - You can debug your app with http://undefined:3000
+[2016-12-12 20:57:06.015] [INFO] yifan - 
+[2016-12-12 20:57:06.843] [DEBUG] yifan - a client connected, socket id is X7KlCreQFEQ4M5LSAAAA
+[2016-12-12 20:57:07.270] [INFO] yifan - handle a letter  { directive: { send: { message: null } },
+  message: 
+   { sendUser: 'ccc',
+     content: '111',
+     receiveUser: 'ccc',
+     type: 'one' } }
+[2016-12-12 20:57:08.053] [INFO] yifan - listening on port 3000
+[2016-12-12 20:57:08.055] [INFO] yifan - You can debug your app with http://undefined:3000
+[2016-12-12 20:57:08.056] [INFO] yifan - 
+[2016-12-12 20:57:08.094] [DEBUG] yifan - a client connected, socket id is t1F_M0BQUsQ-CY4uAAAA
+[2016-12-12 20:57:21.554] [DEBUG] yifan - a client connected, socket id is Fna2qWUl9sh38V9pAAAB
+[2016-12-12 20:57:23.625] [INFO] yifan - handle a letter  { directive: { client: { sign_in: null } },
+  user: { username: 'ccc' } }
+[2016-12-12 20:57:28.079] [INFO] yifan - handle a letter  { directive: { send: { message: null } },
+  message: 
+   { sendUser: 'ccc',
+     content: 'aaa',
+     receiveUser: 'ccc',
+     type: 'one' } }
+[2016-12-12 20:57:34.617] [INFO] yifan - listening on port 3000
+[2016-12-12 20:57:34.619] [INFO] yifan - You can debug your app with http://undefined:3000
+[2016-12-12 20:57:34.619] [INFO] yifan - 
+[2016-12-12 20:57:34.976] [DEBUG] yifan - a client connected, socket id is y4M-7IzGiQYqxaInAAAA
+[2016-12-12 20:57:35.445] [INFO] yifan - handle a letter  { directive: { send: { message: null } },
+  message: 
+   { sendUser: 'ccc',
+     content: 'aaa',
+     receiveUser: 'ccc',
+     type: 'one' } }
+[2016-12-12 20:57:36.173] [INFO] yifan - listening on port 3000
+[2016-12-12 20:57:36.175] [INFO] yifan - You can debug your app with http://undefined:3000
+[2016-12-12 20:57:36.176] [INFO] yifan - 
+[2016-12-12 20:57:36.870] [DEBUG] yifan - a client connected, socket id is aiwW63yAhCBon-beAAAA
+[2016-12-12 21:05:38.645] [INFO] yifan - listening on port 3000
+[2016-12-12 21:05:38.647] [INFO] yifan - You can debug your app with http://undefined:3000
+[2016-12-12 21:05:38.648] [INFO] yifan - 
+[2016-12-12 21:05:39.135] [DEBUG] yifan - a client connected, socket id is efCsx9Xkuvtw97QGAAAA
+[2016-12-12 21:06:18.701] [INFO] yifan - listening on port 3000
+[2016-12-12 21:06:18.703] [INFO] yifan - You can debug your app with http://localhost:3000
+[2016-12-12 21:06:18.703] [INFO] yifan - 
+[2016-12-12 21:06:19.345] [DEBUG] yifan - a client connected, socket id is FjPuTptGABcQiEl1AAAA
+[2016-12-12 21:07:40.906] [INFO] yifan - listening on port 3000
+[2016-12-12 21:07:40.908] [INFO] yifan - You can debug your app with http://localhost:3000
+[2016-12-12 21:07:40.909] [INFO] yifan - 
+[2016-12-12 21:07:41.204] [DEBUG] yifan - a client connected, socket id is -YvKLgKXAA81ACbbAAAA
+[2016-12-12 21:08:49.392] [INFO] yifan - listening on port 3000
+[2016-12-12 21:08:49.400] [INFO] yifan - You can debug your app with http://localhost:3000
+[2016-12-12 21:08:49.402] [INFO] yifan - 
+[2016-12-12 21:09:05.649] [INFO] yifan - listening on port 3000
+[2016-12-12 21:09:05.651] [INFO] yifan - You can debug your app with http://localhost:3000
+[2016-12-12 21:09:05.651] [INFO] yifan - 
+[2016-12-12 21:09:06.742] [DEBUG] yifan - a client connected, socket id is GIfkSApdLyr0zOMpAAAA
+[2016-12-12 21:09:10.592] [INFO] yifan - handle a letter  { directive: { client: { sign_in: null } },
+  user: { username: 'aaaa' } }
+[2016-12-12 21:14:25.435] [DEBUG] yifan - a client connected, socket id is RKYnnMg_EK3JF463AAAB
+[2016-12-12 21:17:25.805] [DEBUG] yifan - a client connected, socket id is e_nu4qI9m6gkjE7yAAAC
+[2016-12-12 21:20:45.814] [DEBUG] yifan - a client connected, socket id is TTbt0Fh_ikotFtLpAAAD
+[2016-12-12 21:24:07.048] [DEBUG] yifan - a client connected, socket id is Yp1Srq9RPtYOv00WAAAE
+[2016-12-12 21:27:30.926] [DEBUG] yifan - a client connected, socket id is 6RhZJSil0REWlisQAAAF
+[2016-12-12 21:29:22.552] [DEBUG] yifan - a client connected, socket id is 2j6LOIcyiLyYn4JDAAAG
+[2016-12-12 21:29:23.725] [DEBUG] yifan - a client connected, socket id is 37qsejP-wcG0DSGXAAAH
+[2016-12-12 21:29:27.200] [INFO] yifan - handle a letter  { directive: { client: { sign_in: null } },
+  user: { username: 'abc' } }
+[2016-12-12 21:30:08.263] [INFO] yifan - handle a letter  { directive: { send: { message: null } },
+  message: 
+   { sendUser: 'abc',
+     content: 'abc',
+     receiveUser: 'aaaa',
+     type: 'one' } }
+[2016-12-12 21:30:50.416] [INFO] yifan - handle a letter  { directive: { send: { message: null } },
+  message: 
+   { sendUser: 'abc',
+     content: 'hello',
+     receiveUser: 'abc',
+     type: 'one' } }
+[2016-12-12 21:31:09.971] [INFO] yifan - listening on port 3000
+[2016-12-12 21:31:09.973] [INFO] yifan - You can debug your app with http://localhost:3000
+[2016-12-12 21:31:09.973] [INFO] yifan - 
+[2016-12-12 21:31:10.110] [DEBUG] yifan - a client connected, socket id is 0S776aRrcyOJtH-NAAAA
+[2016-12-12 21:31:12.792] [INFO] yifan - handle a letter  { directive: { send: { message: null } },
+  message: 
+   { sendUser: 'abc',
+     content: 'abc',
+     receiveUser: 'abc',
+     type: 'one' } }
+[2016-12-12 21:31:13.532] [INFO] yifan - listening on port 3000
+[2016-12-12 21:31:13.534] [INFO] yifan - You can debug your app with http://localhost:3000
+[2016-12-12 21:31:13.535] [INFO] yifan - 
+[2016-12-12 21:31:14.320] [DEBUG] yifan - a client connected, socket id is 272nEpWQRtvUB8JuAAAA
+[2016-12-13 14:50:44.245] [INFO] yifan - listening on port 3000
+[2016-12-13 14:50:44.247] [INFO] yifan - You can debug your app with http://localhost:3000
+[2016-12-13 14:50:44.247] [INFO] yifan - 
+[2016-12-13 14:50:47.506] [DEBUG] yifan - a client connected, socket id is _7Zy9NzwCLXF-TRZAAAA
+[2016-12-13 14:50:49.974] [INFO] yifan - handle a letter  { directive: { client: { sign_in: null } },
+  user: { username: 'abc' } }
+[2016-12-13 14:50:53.607] [INFO] yifan - handle a letter  { directive: { send: { message: null } },
+  message: 
+   { sendUser: 'abc',
+     content: 'aaaa',
+     receiveUser: 'abc',
+     type: 'one' } }
+[2016-12-13 14:51:56.695] [INFO] yifan - listening on port 3000
+[2016-12-13 14:51:56.697] [INFO] yifan - You can debug your app with http://localhost:3000
+[2016-12-13 14:51:56.698] [INFO] yifan - 
+[2016-12-13 14:51:56.730] [DEBUG] yifan - a client connected, socket id is pdJjvPlk4BbfoyH5AAAA
+[2016-12-13 14:51:57.923] [DEBUG] yifan - a client connected, socket id is tJb0Ht6xOUCo5x5lAAAB
+[2016-12-13 14:52:00.467] [INFO] yifan - handle a letter  { directive: { client: { sign_in: null } },
+  user: { username: 'abc' } }
+[2016-12-13 14:52:03.786] [INFO] yifan - handle a letter  { directive: { send: { message: null } },
+  message: 
+   { sendUser: 'abc',
+     content: 'aaaa',
+     receiveUser: 'abc',
+     type: 'one' } }
+[2016-12-13 14:53:01.268] [INFO] yifan - listening on port 3000
+[2016-12-13 14:53:01.270] [INFO] yifan - You can debug your app with http://localhost:3000
+[2016-12-13 14:53:01.270] [INFO] yifan - 
+[2016-12-13 14:53:01.972] [DEBUG] yifan - a client connected, socket id is nSvfMD1YbTujTgmuAAAA
+[2016-12-13 14:53:04.321] [INFO] yifan - handle a letter  { directive: { client: { sign_in: null } },
+  user: { username: 'abc' } }
+[2016-12-13 14:53:12.123] [INFO] yifan - handle a letter  { directive: { send: { message: null } },
+  message: 
+   { sendUser: 'abc',
+     content: 'aaaa',
+     receiveUser: 'abc',
+     type: 'one' } }
+[2016-12-13 15:05:53.549] [INFO] yifan - listening on port 3000
+[2016-12-13 15:05:53.551] [INFO] yifan - You can debug your app with http://localhost:3000
+[2016-12-13 15:05:53.551] [INFO] yifan - 
+[2016-12-13 15:05:54.352] [DEBUG] yifan - a client connected, socket id is IUtTstUw6SWcrA3DAAAA
+[2016-12-13 15:05:56.561] [INFO] yifan - handle a letter  { directive: { client: { sign_in: null } },
+  user: { username: 'abc' } }
+[2016-12-13 15:06:03.124] [INFO] yifan - handle a letter  { directive: { send: { message: null } },
+  message: 
+   { sendUser: 'abc',
+     content: '123',
+     receiveUser: 'abc',
+     type: 'one' } }
+[2016-12-13 15:06:07.971] [INFO] yifan - handle a letter  { directive: { send: { message: null } },
+  message: 
+   { sendUser: 'abc',
+     content: '321',
+     receiveUser: 'abc',
+     type: 'one' } }
+[2016-12-13 15:06:29.349] [INFO] yifan - handle a letter  { directive: { send: { message: null } },
+  message: 
+   { sendUser: 'abc',
+     content: '1111',
+     receiveUser: 'abc',
+     type: 'one' } }
+[2016-12-13 15:06:40.510] [INFO] yifan - handle a letter  { directive: { send: { message: null } },
+  message: 
+   { sendUser: 'abc',
+     content: 'avx',
+     receiveUser: 'abc',
+     type: 'one' } }
+[2016-12-13 15:07:10.835] [INFO] yifan - handle a letter  { directive: { send: { message: null } },
+  message: 
+   { sendUser: 'abc',
+     content: 'zcvzxcvxv',
+     receiveUser: 'abc',
+     type: 'one' } }
+[2016-12-13 15:07:26.582] [DEBUG] yifan - a client connected, socket id is qHSrVPejcaksDakZAAAB
+[2016-12-13 15:07:28.649] [INFO] yifan - handle a letter  { directive: { client: { sign_in: null } },
+  user: { username: 'abc' } }
+[2016-12-13 15:07:32.564] [DEBUG] yifan - a client connected, socket id is iFeqqe63OO1N_cvJAAAC
+[2016-12-13 15:07:34.763] [INFO] yifan - handle a letter  { directive: { client: { sign_in: null } },
+  user: { username: 'ddd' } }
+[2016-12-13 15:07:50.122] [INFO] yifan - handle a letter  { directive: { send: { message: null } },
+  message: 
+   { sendUser: 'ddd',
+     content: 'ssss',
+     receiveUser: 'abc',
+     type: 'one' } }
+[2016-12-13 15:08:03.541] [INFO] yifan - handle a letter  { directive: { send: { message: null } },
+  message: 
+   { sendUser: 'ddd',
+     content: 'dddd',
+     receiveUser: 'abc',
+     type: 'one' } }
+[2016-12-13 15:08:05.368] [DEBUG] yifan - a client connected, socket id is G705jG_uuIstNp1qAAAD
+[2016-12-13 15:08:10.017] [INFO] yifan - handle a letter  { directive: { client: { sign_in: null } },
+  user: { username: 'safrai' } }
+[2016-12-13 15:08:14.780] [INFO] yifan - handle a letter  { directive: { send: { message: null } },
+  message: 
+   { sendUser: 'ddd',
+     content: '222',
+     receiveUser: 'safrai',
+     type: 'one' } }
+[2016-12-13 15:08:19.648] [INFO] yifan - handle a letter  { directive: { send: { message: null } },
+  message: 
+   { sendUser: 'ddd',
+     content: 'ddd',
+     receiveUser: 'safrai',
+     type: 'one' } }
+[2016-12-13 15:08:30.768] [INFO] yifan - handle a letter  { directive: { send: { message: null } },
+  message: 
+   { sendUser: 'ddd',
+     content: 'ddddd',
+     receiveUser: 'safrai',
+     type: 'one' } }
+[2016-12-13 15:08:34.930] [INFO] yifan - handle a letter  { directive: { send: { message: null } },
+  message: 
+   { sendUser: 'ddd',
+     content: 'nihao',
+     receiveUser: 'safrai',
+     type: 'one' } }
+[2016-12-13 15:14:19.512] [DEBUG] yifan - a client connected, socket id is DLfskPckw46YtvlxAAAE
+[2016-12-13 15:16:39.515] [DEBUG] yifan - a client connected, socket id is JxLlV6HphvkzaRiIAAAF
+[2016-12-13 15:20:39.564] [DEBUG] yifan - a client connected, socket id is r73CG_56E3mvVftKAAAG
+[2016-12-13 15:23:19.573] [DEBUG] yifan - a client connected, socket id is VTJRsPJQgrc_FYpOAAAH
+[2016-12-13 15:25:59.575] [DEBUG] yifan - a client connected, socket id is KMuTuQFDkZqwEqpNAAAI
+[2016-12-13 15:27:39.614] [DEBUG] yifan - a client connected, socket id is RbrtVgzFhSB7Osy4AAAJ
+[2016-12-13 15:30:39.621] [DEBUG] yifan - a client connected, socket id is WcnoipxrHQyGio89AAAK
+[2016-12-13 15:33:39.629] [DEBUG] yifan - a client connected, socket id is 2dYa83PVAiIHIWzdAAAL
+[2016-12-13 15:36:39.633] [DEBUG] yifan - a client connected, socket id is zTYd4I7-9LgaJPG5AAAM
+[2016-12-13 15:39:39.641] [DEBUG] yifan - a client connected, socket id is m22dWzh3l7_VoAPEAAAN
+[2016-12-13 15:42:39.646] [DEBUG] yifan - a client connected, socket id is a8MaoakXxQaSsoFZAAAO
+[2016-12-13 15:45:27.758] [DEBUG] yifan - a client connected, socket id is eELPzUUP90w1TB0yAAAP
+[2016-12-13 15:45:36.421] [DEBUG] yifan - a client connected, socket id is wPw93ukiRyw6O11aAAAQ
+[2016-12-13 15:45:38.906] [INFO] yifan - handle a letter  { directive: { client: { sign_in: null } },
+  user: { username: 'abc' } }
+[2016-12-13 16:00:18.471] [DEBUG] yifan - a client connected, socket id is oE6bu-HlXhjNs7swAAAR
+[2016-12-13 16:05:02.478] [DEBUG] yifan - a client connected, socket id is WWfDovCrDT5-y_wdAAAS
+[2016-12-13 16:47:52.644] [INFO] yifan - listening on port 3000
+[2016-12-13 16:47:52.649] [INFO] yifan - You can debug your app with http://localhost:3000
+[2016-12-13 16:47:52.650] [INFO] yifan - 
+[2016-12-13 17:27:39.367] [INFO] yifan - listening on port 3000
+[2016-12-13 17:27:39.370] [INFO] yifan - You can debug your app with http://localhost:3000
+[2016-12-13 17:27:39.370] [INFO] yifan - 
+[2016-12-13 17:41:31.898] [INFO] yifan - listening on port 3000
+[2016-12-13 17:41:31.902] [INFO] yifan - You can debug your app with http://localhost:3000
+[2016-12-13 17:41:31.902] [INFO] yifan - 
+[2016-12-13 17:41:37.585] [DEBUG] yifan - a client connected, socket id is tSn7eNTX0Ga0fM4EAAAA
+[2016-12-13 17:41:37.910] [DEBUG] yifan - a client connected, socket id is Mq1_9RnZWIaeJh7dAAAB
+[2016-12-13 17:41:39.512] [INFO] yifan - handle a letter  { directive: { client: { sign_in: null } },
+  user: { username: 'sdf' } }
+[2016-12-13 17:41:41.894] [INFO] yifan - handle a letter  { directive: { send: { message: null } },
+  message: 
+   { sendUser: 'sdf',
+     content: '23',
+     receiveUser: 'sdf',
+     type: 'one' } }
+[2016-12-13 17:42:08.042] [INFO] yifan - listening on port 3000
+[2016-12-13 17:42:08.045] [INFO] yifan - You can debug your app with http://localhost:3000
+[2016-12-13 17:42:08.045] [INFO] yifan - 
+[2016-12-13 17:44:46.263] [INFO] yifan - listening on port 3000
+[2016-12-13 17:44:46.267] [INFO] yifan - You can debug your app with http://localhost:3000
+[2016-12-13 17:44:46.267] [INFO] yifan - 
+[2016-12-13 18:01:50.482] [INFO] yifan - listening on port 3000
+[2016-12-13 18:01:50.487] [INFO] yifan - You can debug your app with http://localhost:3000
+[2016-12-13 18:01:50.487] [INFO] yifan - 
+[2016-12-13 18:03:52.326] [INFO] yifan - listening on port 3000
+[2016-12-13 18:03:52.329] [INFO] yifan - You can debug your app with http://localhost:3000
+[2016-12-13 18:03:52.330] [INFO] yifan - 
+[2016-12-13 18:04:48.443] [INFO] yifan - listening on port 3000
+[2016-12-13 18:04:48.446] [INFO] yifan - You can debug your app with http://localhost:3000
+[2016-12-13 18:04:48.447] [INFO] yifan - 
+[2016-12-13 18:06:13.942] [INFO] yifan - listening on port 3000
+[2016-12-13 18:06:13.946] [INFO] yifan - You can debug your app with http://localhost:3000
+[2016-12-13 18:06:13.946] [INFO] yifan - 
+[2016-12-13 18:07:25.816] [INFO] yifan - listening on port 3000
+[2016-12-13 18:07:25.820] [INFO] yifan - You can debug your app with http://localhost:3000
+[2016-12-13 18:07:25.821] [INFO] yifan - 

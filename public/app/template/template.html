@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>template</title>
+</head>
+
+<body>
+
+    <!-- 左侧的消息框,对方的消息  -->
+    <div id="msg-left">
+        <div class="direct-chat-msg">
+            <div class="direct-chat-info clearfix">
+                <span class="direct-chat-name pull-left">Alexander Pierce</span>
+                <span class="direct-chat-timestamp pull-right"></span>
+            </div>
+            <!-- /.direct-chat-info -->
+            <img id='chatWindow-avatar' alt="message user image" src="/public/libs/adminLTE/img/user1-128x128.jpg" class="direct-chat-img">
+            <!-- /.direct-chat-img -->
+            <div class="direct-chat-text">
+            </div>
+            <!-- /.direct-chat-text -->
+        </div>
+    </div>
+
+    <div id="msg-right">
+        <!-- 右侧的消息框,本人的消息 -->
+        <div class="direct-chat-msg right">
+            <div class="direct-chat-info clearfix">
+                <span class="direct-chat-name pull-right">Sarah Bullock</span>
+                <span class="direct-chat-timestamp pull-left"></span>
+            </div>
+            <!-- /.direct-chat-info -->
+            <img alt="message user image" src="/public/libs/adminLTE/img/user3-128x128.jpg" class="direct-chat-img">
+            <!-- /.direct-chat-img -->
+            <div style="text-align:right;" class="direct-chat-text">
+            </div>
+            <!-- /.direct-chat-text -->
+        </div>
+    </div>
+
+    <div id='chatWindow'>
+        <div id='chatWindowDiv' class="box box-success direct-chat direct-chat-success">
+            <div class="box-header with-border">
+                <h3 id='chatWindow-username' class="box-title"></h3>
+                <div class="box-tools pull-right">
+                    <span data-toggle="tooltip" title="3 New Messages" class="badge bg-green">3</span>
+                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    <!-- In box-tools add this button if you intend to use the contacts pane -->
+                    <button class="btn btn-box-tool" data-toggle="tooltip" title="Contacts" data-widget="chat-pane-toggle"><i class="fa fa-comments"></i></button>
+                    <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body">
+                <!-- Conversations are loaded here -->
+                <div class="direct-chat-messages">
+                    <div id="msg_end" style="height:0px; overflow:hidden"></div>
+                </div>
+                <!--/.direct-chat-messages-->
+                <!-- /.direct-chat-pane -->
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer">
+                <div class="input-group">
+                    <input id="msg-input" type="text" name="message" placeholder="Type Message ..." class="form-control">
+                    <span class="input-group-btn">
+        <button id="say" type="button" class="btn btn-success btn-flat">Send</button>
+      </span>
+                </div>
+            </div>
+            <!-- /.box-footer-->
+        </div>
+    </div>
+
+</body>
+
+</html>

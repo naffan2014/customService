@@ -1,0 +1,45 @@
+/* 用户列表 */
+
+.user-list {
+    height: 500px;
+    overflow: auto;
+    background-color: #aeaeb4;
+}
+.user-list-item {
+    border-bottom-style: groove;
+    border-bottom-color: #339999;
+}
+.user-list-item:hover {
+    background-color: cyan;
+    cursor: pointer;
+}
+
+/* 聊天框 */
+
+.direct-chat-messages {
+    -webkit-transform: translate(0, 0);
+    -ms-transform: translate(0, 0);
+    -o-transform: translate(0, 0);
+    transform: translate(0, 0);
+    padding: 10px;
+    height: 400px;
+    overflow: auto;
+}
+.chat-container {
+    border: 2px solid #339999;
+    border-radius: 6px;
+}
+body {
+    background-image: url('../img/background.jpg');
+}
+.chat-container-header {
+    height: 50px;
+    border-bottom-style: solid;
+    border-bottom-color: #339999;
+    margin-bottom: 5px;
+}
+.chat-messagewindow-container {
+    border: 1px solid #339999;
+}
+.chat-userlist-container {}
+.chat-setting-container {}

@@ -52,7 +52,6 @@
 	middle.userAvatarComponent = userAvatarComponent;
 
 	$(function() {
-
 	    $("#init").modal('show');
 
 	    $("[name='my-checkbox']").bootstrapSwitch({
@@ -89,24 +88,40 @@
 
 	var middle = __webpack_require__(1);
 	var chat = __webpack_require__(3);
+	var config = __webpack_require__(4);
+	var Connect = __webpack_require__(5);
 
 	var chatApp = angular.module('chatApp', []);
 
 	chatApp.controller('sign', function($scope, $http) {
-
-
-
 	    $scope.signUser = function() {
 
 	        if (undefined === $scope.username || $scope.username.trim() === '') {
-	            alert('请输入用户名');
+	            alert('请输入客服标示');
 	        } else {
 	            $("#init").modal('hide');
 	            chat.signinuser.username = $scope.username;
-	            chat.signIn($scope.username);
+	            //chat.signIn($scope.username);
+	            var connect = new Connect(chat);
+	            chat.connect = connect;
+	            // 连接server
+	            var jsonStr = "{group_id:111111,customer_id:"+$scope.username+"}";
+	            //初始化chat信息
+	            //chat.users.push($scope.username);
+	            //chat.currentChat.theUser = $scope.username;
+	            //chat.currentChat.username = $scope.username;
+	            //chat.currentChat.chatname = $scope.username;
+	            //构造websocket通讯地址
+	            var socketData = window.btoa(jsonStr);
+	            var socketUrl = config.communication_server_host +"?data="+ socketData;
+	            connect.connect(socketUrl);
+	            //chat.refreshUserList();
+	            //setInterval(function(){chat.say()}, 5000);
 	        }
-
+	        
+	        
 	    };
+
 
 	});
 
@@ -162,14 +177,16 @@
 	    var date = new Date();
 	    var clone = chatMsgLeft.clone();
 	    clone.find(".direct-chat-timestamp").html((new Date()).toLocaleTimeString());
-	    clone.find(".direct-chat-text").html(message.content);
+	    clone.find(".direct-chat-text").html(message);
 	    clone.find('img').attr('src', message.avatar);
 	    msg_end.before(clone);
 	}
 
 	function Chat() {
 	    this.connect = null;
+	    //登入进来的用户
 	    this.users = [];
+	    //当前聊天窗口的用户
 	    this.currentChat = {
 	        theUser: null,
 	        username: null,
@@ -195,16 +212,16 @@
 	Chat.prototype.toggleChatView = function(user) {
 
 	    var chat = this;
-	    console.log(chat.chatWindow);
-	    console.log(this);
-
-	    console.log(chat);
-	    var userDom = chat.chatWindowDom.get(user.username);
+	    // console.log(chat.chatWindow);
+	    // console.log(this);
+	// 
+	    // console.log(chat);
+	    var userDom = chat.chatWindowDom.get(user.from);
 
 	    if (userDom === undefined || userDom === null) {
 	        userDom = chat.chatWindow.clone();
-	        chat.chatWindowDom.set(user.username, userDom);
-	        userDom.find('#chatWindow-username').html(user.username);
+	        chat.chatWindowDom.set(user.from, userDom);
+	        userDom.find('#chatWindow-username').html(user.from);
 	        userDom.find('#msg-input').on('keydown', function(event) {
 
 	            if (event.keyCode === 13) {
@@ -225,8 +242,8 @@
 	    msg_input = userDom.find("#msg-input");
 	    msg_end = userDom.find("#msg_end");
 
-	    console.log(msg_input);
-	    console.log(msg_end);
+	    // console.log(msg_input);
+	    // console.log(msg_end);
 
 	    $('#chatWindowDiv').replaceWith(userDom);
 	};
@@ -237,15 +254,27 @@
 	 * @return {[type]}         [description]
 	 */
 	Chat.prototype.receiveMessage = function(message) {
+	    console.log('最后的消息')
+	    console.log(message)
 	    playMsgComingPromptTone();
-	    var sendUserName = message.sendUser;
+	    contentFormat = JSON.parse(message.content);
+	    messageContent = contentFormat.content;
+	    messageType = contentFormat.type;
+	    var sendUserName = message.from;
+	    //
+	    console.log('sendUserName is :');
+	    console.log(sendUserName);
+	    console.log('this.currentChat.username is:');
+	    console.log(this.currentChat.username);
 	    if (sendUserName === this.currentChat.username) {
-	        // 正式当前聊天的
+	        // 当前窗口是和发送用户
 	        message.avatar = this.currentChat.theUser.avatar;
-	        this.listen(message);
+	        this.listen(messageContent);
 	    } else {
 	        // 当前窗口并不是该用户
 	        var user = this.usersMap.get(sendUserName);
+	        console.log('receiveMessage中获取Map用户信息:')
+	        console.log(user);
 	        // 未读消息加1
 	        if (user.unreadMsgCount === undefined) {
 	            user.unreadMsgCount = 0;
@@ -266,6 +295,7 @@
 	};
 
 	Chat.prototype.say = function() {
+	    console.log('in say')    
 	    var msg = msg_input.val();
 	    if (msg !== '') {
 	        msg_input.val(null);
@@ -273,25 +303,24 @@
 	        msgScrollEnd();
 
 	        var letter = {
-	            directive: {
-	                send: {
-	                    message: null
-	                }
-	            },
-	            message: {
-	                sendUser: chat.signinuser.username,
-	                content: msg
-	            }
-	        };
-	        if (chat.currentChat.username !== null) {
-	            // 单聊
-	            letter.message.receiveUser = chat.currentChat.username;
-	            letter.message.type = 'one';
-	        } else {
-	            // 群聊
-	            letter.message.receiveUser = chat.currentChat.chatname;
-	            letter.message.type = 'some';
+	             type:'message',
+	             content:{
+	                 type:'text',
+	                 content:msg,
+	             },
+	             from:this.signinuser.username,
+	             to:this.currentChat.username,
+	             id:'asdfasdfasdfsadfds123',
 	        }
+	        // if (chat.currentChat.username !== null) {
+	            // // 单聊
+	            // letter.message.receiveUser = chat.currentChat.username;
+	            // letter.message.type = 'one';
+	        // } else {
+	            // // 群聊
+	            // letter.message.receiveUser = chat.currentChat.chatname;
+	            // letter.message.type = 'some';
+	        // }
 
 	        // 发送到服务器
 	        this.connect.sendToUser(letter);
@@ -328,12 +357,10 @@
 	};
 
 	var chat = new Chat();
-	var connect = new Connect(chat);
-	chat.connect = connect;
-
+	// var connect = new Connect(chat);
+	// chat.connect = connect;
 	// 连接server
-	connect.connect(config.communication_server_host);
-
+	//connect.connect(config.communication_server_host);
 	// TODO 防止缓存的问题
 	templateDiv.load('/public/app/template/template.html', function() {
 
@@ -369,9 +396,11 @@
 	var my_config = {
 	    // 通讯服务器地址
 	    //communication_server_host: window.location.href
-	    communication_server_host: 'ws://10.0.8.101:8081/websocket?data=eyJncm91cF9pZCI6IjIyMjIyMiIsImN1c3RvbWVyX2lkIjoiMTExMTExIiwidG9rZW4iOiJjZjRmZDg4OGI1MjhlNzkzMzMyZGMyMTM1NGU4OTJlYjMyYTA1ZWE3ZTM0OGZiNmVmOTJjYjJhNGQyNTg5MTlmIn0='
+	   //communication_server_host: 'ws://10.0.8.101:8081/websocket?data=eyJncm91cF9pZCI6IjIyMjIyMiIsImN1c3RvbWVyX2lkIjoiMTExMTExIiwidG9rZW4iOiJjZjRmZDg4OGI1MjhlNzkzMzMyZGMyMTM1NGU4OTJlYjMyYTA1ZWE3ZTM0OGZiNmVmOTJjYjJhNGQyNTg5MTlmIn0='
+	   communication_server_host: 'ws://10.0.8.91:8097/websocket?data=eyJncm91cF9pZCI6IjIyMjIyMiIsImN1c3RvbWVyX2lkIjoiMTExMTExIiwidG9rZW4iOiJjZjRmZDg4OGI1MjhlNzkzMzMyZGMyMTM1NGU4OTJlYjMyYTA1ZWE3ZTM0OGZiNmVmOTJjYjJhNGQyNTg5MTlmIn0='
+	   // communication_server_host: 'ws://192.168.33.191:8097/websocket?data=eyJncm91cF9pZCI6IjIyMjIyMiIsImN1c3RvbWVyX2lkIjoiMTExMTExIiwidG9rZW4iOiJjZjRmZDg4OGI1MjhlNzkzMzMyZGMyMTM1NGU4OTJlYjMyYTA1ZWE3ZTM0OGZiNmVmOTJjYjJhNGQyNTg5MTlmIn0='
 	};
-	console.log(window.location.href)
+
 	module.exports = my_config;
 
 
@@ -388,8 +417,6 @@
 	pubsub.addEvent("signoutBack");
 	pubsub.addEvent("msgfromUser");
 	pubsub.addEvent('chat');
-
-
 
 	/**
 	 * 聊天消息回调
@@ -425,59 +452,87 @@
 	}
 
 	Connect.prototype.connect = function(host) {
-	    var socket = io(host);
+	    var socket = new WebSocket(host);
 	    this.socket = socket;
+	    // this.socket = socket;
 
 	    // 以下是socketio 的内部事件
-	    socket.on('connect', function() {
+
+	    this.socket.onopen = function (obj) {
+	    //已经建立连接
 	        console.log("已连接到服务器");
-	    });
+	        public_chat.toggleChatView(public_chat.users);//连接服务器后显示聊天窗口
+	    };
 
-	    socket.on('event', function(data) {
-
-	    });
-
-	    socket.on('disconnect', function() {
-
-	    });
-
-	    socket.on('error', function(obj) {
-	        console.log(obj);
-	    });
-
-	    socket.on('reconnect', function(number) {
-	        console.log(number);
-	    });
-
-	    socket.on('reconnecting', function(number) {
-	        console.log(number);
-	    });
-
-	    socket.on('reconnet_error', function(obj) {
-	        console.log(obj);
-	    });
+	    this.socket.onclose = function (obj) {
+	    //已经关闭连接
+	    console.log("已断开到服务器");
+	    alert('请检查服务器，服务器未开启')
+	    };
+	    
+	    this.socket.onmessage = function (obj) {
+	        //收到服务器消息
+	        console.log('收到消息')
+	        data = JSON.parse(obj.data);//解析json消息
+	        console.log(data)
+	        type = data.type;//提取消息类型
+	        content = data.content;//提取消息内容
+	        switch(type){
+	            case 'notice':
+	                console.log('notice');
+	                break;
+	            case 'message':
+	                console.log('message');
+	                //存入session
+	                data.avatar = genereateAvatarImg();
+	                public_chat.users.push(data);
+	                
+	                data.unreadMsgCount = 0;
+	                public_chat.usersMap.set(data.from, data);
+	                //
+	                directive.receive(data);
+	                 break;
+	            case 'heartbreak':
+	                console.log('heartbreak');
+	                break;
+	            case 'transfer':
+	                console.log('transfer');
+	                 break;
+	            case 'transfer_ack':
+	                console.log('transfer_ack');
+	                break;
+	            default:
+	                console.log('default');
+	        }
+	    };
+	    
+	    this.socket.onerror = function (obj) {
+	    //产生异常
+	    console.log(obj);
+	    }; 
 
 	    /**
 	     * letter 是自定义的消息事件
 	     */
-	    socket.on('letter', function(letter) {
-	        console.log(letter);
-	        // letter = JSON.parse(letter);
-
-	        var key = Object.keys(letter.directive)[0];
-
-	        if (directive[key] === undefined) {
-	            console.log('directive ' + key + ' 未实现');
-	        } else {
-	            directive[key](letter);
-
-	        }
-
-	    });
+	    // socket.on('letter', function(letter) {
+	        // console.log(letter);
+	        // // letter = JSON.parse(letter);
+	// 
+	        // var key = Object.keys(letter.directive)[0];
+	// 
+	        // if (directive[key] === undefined) {
+	            // console.log('directive ' + key + ' 未实现');
+	        // } else {
+	            // directive[key](letter);
+	// 
+	        // }
+	// 
+	    // });
 	};
 
 	Connect.prototype.deliver = function(letter) {
-	    this.socket.emit("letter", JSON.stringify(letter));
+	    //this.socket.emit("letter", JSON.stringify(letter));
+	    this.socket.send(JSON.stringify(letter));
 	    console.log("deliver a letter: ");
 	    console.log(JSON.stringify(letter));
 	};
@@ -526,13 +581,15 @@
 	 * 指令对象
 	 */
 	function Directive() {
-
+	 
 	}
 
 	Directive.prototype.client = function(letter) {
+	    console.log('Directive.prototype.client  in ');
 	    var client = {};
 	    // 有其他用户上线时会调用
 	    client.user_presence = function(letter) {
+	        console.log('user_presence');
 	        var user = letter.user;
 	        user.avatar = genereateAvatarImg();
 	        public_chat.users.push(user);
@@ -542,7 +599,7 @@
 	    };
 	    // 登陆后加载当前已经登录的用户
 	    client.init_userList = function(letter) {
-
+	        console.log('init_userList');
 	        // 这样使用  第二个参数是参数数组, 而其正好就是一个数组
 	        Array.prototype.push.apply(public_chat.users, letter.directive.client.init_userList);
 
@@ -558,18 +615,22 @@
 
 	};
 
+	Directive.prototype.receive = function(letter) {
+	    console.log('Directive.prototype.receive in');
+	    console.log("letter is ");
+	    console.log(letter)
+	    //message = JSON.parse(letter);//解析消息内容和类型
+	    //var content = message.content;//消息内容
+	    //type = message.type;//消息类型
+	    //TODO:这里面的type有可能是图像，这期先不做
+	    public_chat.receiveMessage(letter);
+	};
+
 	// 随机生成一个用户的头像
 	function genereateAvatarImg() {
 	    return '/public/app/img/avatar/avatar' + (Math.floor(Math.random() * 5) + 1) + '.png';
 	}
 
-	Directive.prototype.receive = function(letter) {
-	    var receive = {};
-	    receive.message = function(letter) {
-	        var message = letter.message;
-	    };
-	    public_chat.receiveMessage(letter.message);
-	};
 
 	var directive = new Directive();
 
@@ -633,18 +694,20 @@
 	    template: `<div class='user-list'>
 	                  <div class='user-list-item' ng-click='toggleChat(user)' ng-repeat='user in users'>
 	                      <img class="user-avatar" ng-src='{{user.avatar}}' alt="" />
-	                      <span>{{user.username}}</span>
+	                      <span>{{user.from}}</span>
 	                      <span class="badge">{{user.unreadMsgCount}}</span>
 	                  </div>
 	                </div>`,
 	    controller: function UserListController($scope) {
-
-	        // 使用scope 是因为 在外界改变了 users 的值 为了使用 $scope.$apply方法
+	        // 使用scope 是因为 在外界改变了 users 的值 为了使用 $scope.$apply方法å
 	        $scope.users = chat.users;
 	        userAvatarComponent.userListScope = $scope;
 	        $scope.toggleChat = function(user) {
-	            chat.currentChat.username = user.username;
+	            console.log('useravatar.component中的function中的user');
+	            console.log(user)
+	            chat.currentChat.username = user.from;
 	            chat.currentChat.theUser = user;
+	            console.log(chat.currentChat)
 	            chat.toggleChatView(user);
 	            user.unreadMsgCount = null;
 	        };

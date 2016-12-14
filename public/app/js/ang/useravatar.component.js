@@ -8,18 +8,20 @@ angular.module('chatApp').component('userList', {
     template: `<div class='user-list'>
                   <div class='user-list-item' ng-click='toggleChat(user)' ng-repeat='user in users'>
                       <img class="user-avatar" ng-src='{{user.avatar}}' alt="" />
-                      <span>{{user.username}}</span>
+                      <span>{{user.from}}</span>
                       <span class="badge">{{user.unreadMsgCount}}</span>
                   </div>
                 </div>`,
     controller: function UserListController($scope) {
-
-        // 使用scope 是因为 在外界改变了 users 的值 为了使用 $scope.$apply方法
+        // 使用scope 是因为 在外界改变了 users 的值 为了使用 $scope.$apply方法å
         $scope.users = chat.users;
         userAvatarComponent.userListScope = $scope;
         $scope.toggleChat = function(user) {
-            chat.currentChat.username = user.username;
+            console.log('useravatar.component中的function中的user');
+            console.log(user)
+            chat.currentChat.username = user.from;
             chat.currentChat.theUser = user;
+            console.log(chat.currentChat)
             chat.toggleChatView(user);
             user.unreadMsgCount = null;
         };

@@ -8,6 +8,8 @@ pubsub.addEvent("signoutBack");
 pubsub.addEvent("msgfromUser");
 pubsub.addEvent('chat');
 
+
+
 /**
  * 聊天消息回调
  * @param content
@@ -42,87 +44,65 @@ function Connect(chat) {
 }
 
 Connect.prototype.connect = function(host) {
-    var socket = new WebSocket(host);
+    var socket = io(host);
+    //var socket = new WebSocket(host);
     this.socket = socket;
-    // this.socket = socket;
 
     // 以下是socketio 的内部事件
-
-    this.socket.onopen = function (obj) {
-    //已经建立连接
+    socket.on('open', function() {
+        console.log("webscoket打开了");
+    });
+    
+    
+    socket.on('connect', function() {
         console.log("已连接到服务器");
-        public_chat.toggleChatView(public_chat.users);//连接服务器后显示聊天窗口
-    };
+    });
 
-    this.socket.onclose = function (obj) {
-    //已经关闭连接
-    console.log("已断开到服务器");
-    alert('请检查服务器，服务器未开启')
-    };
-    
-    this.socket.onmessage = function (obj) {
-        //收到服务器消息
-        console.log('收到消息')
-        data = JSON.parse(obj.data);//解析json消息
-        console.log(data)
-        type = data.type;//提取消息类型
-        content = data.content;//提取消息内容
-        switch(type){
-            case 'notice':
-                console.log('notice');
-                break;
-            case 'message':
-                console.log('message');
-                //存入session
-                data.avatar = genereateAvatarImg();
-                public_chat.users.push(data);
-                
-                data.unreadMsgCount = 0;
-                public_chat.usersMap.set(data.from, data);
-                //
-                directive.receive(data);
-                 break;
-            case 'heartbreak':
-                console.log('heartbreak');
-                break;
-            case 'transfer':
-                console.log('transfer');
-                 break;
-            case 'transfer_ack':
-                console.log('transfer_ack');
-                break;
-            default:
-                console.log('default');
-        }
-    };
-    
-    this.socket.onerror = function (obj) {
-    //产生异常
-    console.log(obj);
-    }; 
+    socket.on('event', function(data) {
+
+    });
+
+    socket.on('disconnect', function() {
+
+    });
+
+    socket.on('error', function(obj) {
+        console.log(obj);
+    });
+
+    socket.on('reconnect', function(number) {
+        console.log(number);
+    });
+
+    socket.on('reconnecting', function(number) {
+        console.log(number);
+    });
+
+    socket.on('reconnet_error', function(obj) {
+        console.log(obj);
+    });
 
     /**
      * letter 是自定义的消息事件
      */
-    // socket.on('letter', function(letter) {
-        // console.log(letter);
-        // // letter = JSON.parse(letter);
-// 
-        // var key = Object.keys(letter.directive)[0];
-// 
-        // if (directive[key] === undefined) {
-            // console.log('directive ' + key + ' 未实现');
-        // } else {
-            // directive[key](letter);
-// 
-        // }
-// 
-    // });
+    socket.on('letter', function(letter) {
+        console.log(letter);
+        // letter = JSON.parse(letter);
+
+        var key = Object.keys(letter.directive)[0];
+
+        if (directive[key] === undefined) {
+            console.log('directive ' + key + ' 未实现');
+        } else {
+            directive[key](letter);
+
+        }
+
+    });
 };
 
 Connect.prototype.deliver = function(letter) {
-    //this.socket.emit("letter", JSON.stringify(letter));
-    this.socket.send(JSON.stringify(letter));
+    this.socket.emit("letter", JSON.stringify(letter));
     console.log("deliver a letter: ");
     console.log(JSON.stringify(letter));
 };
@@ -171,15 +151,13 @@ Connect.prototype.setUsername = function(username) {
  * 指令对象
  */
 function Directive() {
- 
+
 }
 
 Directive.prototype.client = function(letter) {
-    console.log('Directive.prototype.client  in ');
     var client = {};
     // 有其他用户上线时会调用
     client.user_presence = function(letter) {
-        console.log('user_presence');
         var user = letter.user;
         user.avatar = genereateAvatarImg();
         public_chat.users.push(user);
@@ -189,7 +167,7 @@ Directive.prototype.client = function(letter) {
     };
     // 登陆后加载当前已经登录的用户
     client.init_userList = function(letter) {
-        console.log('init_userList');
+
         // 这样使用  第二个参数是参数数组, 而其正好就是一个数组
         Array.prototype.push.apply(public_chat.users, letter.directive.client.init_userList);
 
@@ -205,22 +183,18 @@ Directive.prototype.client = function(letter) {
 
 };
 
-Directive.prototype.receive = function(letter) {
-    console.log('Directive.prototype.receive in');
-    console.log("letter is ");
-    console.log(letter)
-    //message = JSON.parse(letter);//解析消息内容和类型
-    //var content = message.content;//消息内容
-    //type = message.type;//消息类型
-    //TODO:这里面的type有可能是图像，这期先不做
-    public_chat.receiveMessage(letter);
-};
-
 // 随机生成一个用户的头像
 function genereateAvatarImg() {
     return '/public/app/img/avatar/avatar' + (Math.floor(Math.random() * 5) + 1) + '.png';
 }
 
+Directive.prototype.receive = function(letter) {
+    var receive = {};
+    receive.message = function(letter) {
+        var message = letter.message;
+    };
+    public_chat.receiveMessage(letter.message);
+};
 
 var directive = new Directive();
 

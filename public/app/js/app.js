@@ -6,7 +6,6 @@ var userAvatarComponent = require('./ang/useravatar.component');
 middle.userAvatarComponent = userAvatarComponent;
 
 $(function() {
-
     $("#init").modal('show');
 
     $("[name='my-checkbox']").bootstrapSwitch({

@@ -43,14 +43,16 @@ function insertChatMsgLeft(message) {
     var date = new Date();
     var clone = chatMsgLeft.clone();
     clone.find(".direct-chat-timestamp").html((new Date()).toLocaleTimeString());
-    clone.find(".direct-chat-text").html(message.content);
+    clone.find(".direct-chat-text").html(message);
     clone.find('img').attr('src', message.avatar);
     msg_end.before(clone);
 }
 
 function Chat() {
     this.connect = null;
+    //登入进来的用户
     this.users = [];
+    //当前聊天窗口的用户
     this.currentChat = {
         theUser: null,
         username: null,
@@ -76,16 +78,16 @@ Chat.prototype.clearUnread = function(user) {
 Chat.prototype.toggleChatView = function(user) {
 
     var chat = this;
-    console.log(chat.chatWindow);
-    console.log(this);
-
-    console.log(chat);
-    var userDom = chat.chatWindowDom.get(user.username);
+    // console.log(chat.chatWindow);
+    // console.log(this);
+// 
+    // console.log(chat);
+    var userDom = chat.chatWindowDom.get(user.from);
 
     if (userDom === undefined || userDom === null) {
         userDom = chat.chatWindow.clone();
-        chat.chatWindowDom.set(user.username, userDom);
-        userDom.find('#chatWindow-username').html(user.username);
+        chat.chatWindowDom.set(user.from, userDom);
+        userDom.find('#chatWindow-username').html(user.from);
         userDom.find('#msg-input').on('keydown', function(event) {
 
             if (event.keyCode === 13) {
@@ -106,8 +108,8 @@ Chat.prototype.toggleChatView = function(user) {
     msg_input = userDom.find("#msg-input");
     msg_end = userDom.find("#msg_end");
 
-    console.log(msg_input);
-    console.log(msg_end);
+    // console.log(msg_input);
+    // console.log(msg_end);
 
     $('#chatWindowDiv').replaceWith(userDom);
 };
@@ -118,15 +120,27 @@ Chat.prototype.toggleChatView = function(user) {
  * @return {[type]}         [description]
  */
 Chat.prototype.receiveMessage = function(message) {
+    console.log('最后的消息')
+    console.log(message)
     playMsgComingPromptTone();
-    var sendUserName = message.sendUser;
+    contentFormat = JSON.parse(message.content);
+    messageContent = contentFormat.content;
+    messageType = contentFormat.type;
+    var sendUserName = message.from;
+    //
+    console.log('sendUserName is :');
+    console.log(sendUserName);
+    console.log('this.currentChat.username is:');
+    console.log(this.currentChat.username);
     if (sendUserName === this.currentChat.username) {
-        // 正式当前聊天的
+        // 当前窗口是和发送用户
         message.avatar = this.currentChat.theUser.avatar;
-        this.listen(message);
+        this.listen(messageContent);
     } else {
         // 当前窗口并不是该用户
         var user = this.usersMap.get(sendUserName);
+        console.log('receiveMessage中获取Map用户信息:')
+        console.log(user);
         // 未读消息加1
         if (user.unreadMsgCount === undefined) {
             user.unreadMsgCount = 0;
@@ -147,6 +161,7 @@ Chat.prototype.listen = function(message) {
 };
 
 Chat.prototype.say = function() {
+    console.log('in say')    
     var msg = msg_input.val();
     if (msg !== '') {
         msg_input.val(null);
@@ -154,25 +169,24 @@ Chat.prototype.say = function() {
         msgScrollEnd();
 
         var letter = {
-            directive: {
-                send: {
-                    message: null
-                }
-            },
-            message: {
-                sendUser: chat.signinuser.username,
-                content: msg
-            }
-        };
-        if (chat.currentChat.username !== null) {
-            // 单聊
-            letter.message.receiveUser = chat.currentChat.username;
-            letter.message.type = 'one';
-        } else {
-            // 群聊
-            letter.message.receiveUser = chat.currentChat.chatname;
-            letter.message.type = 'some';
+             type:'message',
+             content:{
+                 type:'text',
+                 content:msg,
+             },
+             from:this.signinuser.username,
+             to:this.currentChat.username,
+             id:'asdfasdfasdfsadfds123',
         }
+        // if (chat.currentChat.username !== null) {
+            // // 单聊
+            // letter.message.receiveUser = chat.currentChat.username;
+            // letter.message.type = 'one';
+        // } else {
+            // // 群聊
+            // letter.message.receiveUser = chat.currentChat.chatname;
+            // letter.message.type = 'some';
+        // }
 
         // 发送到服务器
         this.connect.sendToUser(letter);
@@ -209,12 +223,10 @@ Chat.prototype.settingMsgSoundPrompt = function(value) {
 };
 
 var chat = new Chat();
-var connect = new Connect(chat);
-chat.connect = connect;
-
+// var connect = new Connect(chat);
+// chat.connect = connect;
 // 连接server
-connect.connect(config.communication_server_host);
-
+//connect.connect(config.communication_server_host);
 // TODO 防止缓存的问题
 templateDiv.load('/public/app/template/template.html', function() {
 

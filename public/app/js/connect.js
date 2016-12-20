@@ -70,18 +70,21 @@ Connect.prototype.connect = function(host) {
         switch(type){
             case 'notice':
                 console.log('notice');
+                //存入用户集合
+                data.avatar = genereateAvatarImg();
+                public_chat.users.push(data);
                 break;
             case 'message':
                 console.log('message');
-                //存入session
-                data.avatar = genereateAvatarImg();
-                public_chat.users.push(data);
-                
                 data.unreadMsgCount = 0;
+                //存入session
                 public_chat.usersMap.set(data.from, data);
                 //
                 directive.receive(data);
                  break;
+            case 'leavecs':
+                console.log('用户推出');
+                break;
             case 'heartbreak':
                 console.log('heartbreak');
                 break;

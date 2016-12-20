@@ -6,6 +6,7 @@ var Connect = require('../connect');
 var chatApp = angular.module('chatApp', []);
 
 chatApp.controller('sign', function($scope, $http) {
+    $scope.username = '210000';
     $scope.signUser = function() {
 
         if (undefined === $scope.username || $scope.username.trim() === '') {
@@ -17,7 +18,7 @@ chatApp.controller('sign', function($scope, $http) {
             var connect = new Connect(chat);
             chat.connect = connect;
             // 连接server
-            var jsonStr = "{group_id:111111,customer_id:"+$scope.username+"}";
+            var jsonStr = '{"group_id":"111111","customer_id":"'+$scope.username+'"}';
             //初始化chat信息
             //chat.users.push($scope.username);
             //chat.currentChat.theUser = $scope.username;
@@ -25,7 +26,7 @@ chatApp.controller('sign', function($scope, $http) {
             //chat.currentChat.chatname = $scope.username;
             //构造websocket通讯地址
             var socketData = window.btoa(jsonStr);
-            var socketUrl = config.communication_server_host +"?data="+ socketData;
+            var socketUrl = config.api.communication_server_host +"?data="+ socketData;
             connect.connect(socketUrl);
             //chat.refreshUserList();
             //setInterval(function(){chat.say()}, 5000);

@@ -4,7 +4,7 @@ appkey=1-20142-2e563db99a8ca41df48973b0c43ea50a-ios
 appsec=ace518dab1fde58eacb126df6521d34c
 api=http://test.api.ioyouyun.com
 gw=10.0.8.91
-debug=1
+debug=0
 
 
 hmbox=http://test.hmbox.ioyouyun.com

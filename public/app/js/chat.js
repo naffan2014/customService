@@ -43,6 +43,7 @@ function insertChatMsgLeft(message) {
     var date = new Date();
     var clone = chatMsgLeft.clone();
     clone.find(".direct-chat-timestamp").html((new Date()).toLocaleTimeString());
+    console.log(message)
     clone.find(".direct-chat-text").html(message);
     clone.find('img').attr('src', message.avatar);
     msg_end.before(clone);
@@ -77,64 +78,40 @@ Chat.prototype.clearUnread = function(user) {
 
 Chat.prototype.updateChatView = function(data){
     var chat = this;
-    console.log('updateChatView')
+    contentFormat = JSON.parse(data.content);
+    messageContent = contentFormat.content;
     var userDom = chat.chatWindowDom.get(data.from);
-     if (userDom === undefined || userDom === null) {
-         userDom = chat.chatWindow.clone();
-        console.log('ddddd')
-        console.log(userDom)
+    if (userDom === undefined || userDom === null) {
+        userDom = chat.chatWindow.clone();
         chat.chatWindowDom.set(data.from, userDom);
         userDom.find('#chatWindow-username').html(data.from);
-        userDom.find('#msg-input').on('keydown', function(event) {
-            if (event.keyCode === 13) {
-                // 回车
-                chat.say();
-            }
-        });
-        userDom.find('#say').click(function() {
-            console.log('你单击了send按钮')
-            chat.say();
-        });
      }
-    insertChatMsgLeft(data.content);
-    
-    
-    
+     msg_input = userDom.find("#msg-input");
+     msg_end = userDom.find("#msg_end");
+     insertChatMsgLeft(messageContent);
 };
 
 Chat.prototype.toggleChatView = function(user) {
-
     var chat = this;
-    // console.log(chat.chatWindow);
-    // console.log(this);
-// 
-    // console.log(chat);
     var userDom = chat.chatWindowDom.get(user.from);
-
-    if (userDom === undefined || userDom === null) {
-        userDom = chat.chatWindow.clone();
-        chat.chatWindowDom.set(user.from, userDom);
-        userDom.find('#chatWindow-username').html(user.from);
-    } else {
-        console.log('userdom is not null');
-    }
+    // if (userDom === undefined || userDom === null) {
+        // userDom = chat.chatWindow.clone();
+        // chat.chatWindowDom.set(user.from, userDom);
+        // userDom.find('#chatWindow-username').html(user.from);
+    // } else {
+        // console.log('userdom is not null');
+    // }
     userDom.find('#msg-input').on('keydown', function(event) {
         if (event.keyCode === 13) {
             // 回车
             chat.say();
         }
     });
-
     userDom.find('#say').click(function() {
-        console.log('你单击了send按钮')
         chat.say();
     });
     msg_input = userDom.find("#msg-input");
     msg_end = userDom.find("#msg_end");
-
-    // console.log(msg_input);
-    // console.log(msg_end);
-
     $('#chatWindowDiv').replaceWith(userDom);
 };
 
@@ -164,7 +141,7 @@ Chat.prototype.receiveMessage = function(message) {
         }
         user.unreadMsgCount += 1;
         this.usersMap.set(sendUserName,user);
-        
+        this.updateChatView(message)
         middle.userAvatarComponent.userListScope.$apply();
         
     }

@@ -75,6 +75,33 @@ Chat.prototype.clearUnread = function(user) {
     middle.userAvatarComponent.userListScope.$apply();
 };
 
+Chat.prototype.updateChatView = function(data){
+    var chat = this;
+    console.log('updateChatView')
+    var userDom = chat.chatWindowDom.get(data.from);
+     if (userDom === undefined || userDom === null) {
+         userDom = chat.chatWindow.clone();
+        console.log('ddddd')
+        console.log(userDom)
+        chat.chatWindowDom.set(data.from, userDom);
+        userDom.find('#chatWindow-username').html(data.from);
+        userDom.find('#msg-input').on('keydown', function(event) {
+            if (event.keyCode === 13) {
+                // 回车
+                chat.say();
+            }
+        });
+        userDom.find('#say').click(function() {
+            console.log('你单击了send按钮')
+            chat.say();
+        });
+     }
+    insertChatMsgLeft(data.content);
+    
+    
+    
+};
+
 Chat.prototype.toggleChatView = function(user) {
 
     var chat = this;
@@ -88,23 +115,20 @@ Chat.prototype.toggleChatView = function(user) {
         userDom = chat.chatWindow.clone();
         chat.chatWindowDom.set(user.from, userDom);
         userDom.find('#chatWindow-username').html(user.from);
-        userDom.find('#msg-input').on('keydown', function(event) {
-
-            if (event.keyCode === 13) {
-                // 回车
-                chat.say();
-            }
-        });
-
-        userDom.find('#say').click(function() {
-            chat.say();
-        });
-
     } else {
-
         console.log('userdom is not null');
     }
+    userDom.find('#msg-input').on('keydown', function(event) {
+        if (event.keyCode === 13) {
+            // 回车
+            chat.say();
+        }
+    });
 
+    userDom.find('#say').click(function() {
+        console.log('你单击了send按钮')
+        chat.say();
+    });
     msg_input = userDom.find("#msg-input");
     msg_end = userDom.find("#msg_end");
 
@@ -120,18 +144,11 @@ Chat.prototype.toggleChatView = function(user) {
  * @return {[type]}         [description]
  */
 Chat.prototype.receiveMessage = function(message) {
-    console.log('最后的消息')
-    console.log(message)
     playMsgComingPromptTone();
     contentFormat = JSON.parse(message.content);
     messageContent = contentFormat.content;
     messageType = contentFormat.type;
     var sendUserName = message.from;
-    //
-    console.log('sendUserName is :');
-    console.log(sendUserName);
-    console.log('this.currentChat.username is:');
-    console.log(this.currentChat.username);
     if (sendUserName === this.currentChat.username) {
         // 当前窗口是和发送用户
         message.avatar = this.currentChat.theUser.avatar;
@@ -146,7 +163,10 @@ Chat.prototype.receiveMessage = function(message) {
             user.unreadMsgCount = 0;
         }
         user.unreadMsgCount += 1;
+        this.usersMap.set(sendUserName,user);
+        
         middle.userAvatarComponent.userListScope.$apply();
+        
     }
 };
 

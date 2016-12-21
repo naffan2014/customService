@@ -210,6 +210,33 @@
 	    middle.userAvatarComponent.userListScope.$apply();
 	};
 
+	Chat.prototype.updateChatView = function(data){
+	    var chat = this;
+	    console.log('updateChatView')
+	    var userDom = chat.chatWindowDom.get(data.from);
+	     if (userDom === undefined || userDom === null) {
+	         userDom = chat.chatWindow.clone();
+	        console.log('ddddd')
+	        console.log(userDom)
+	        chat.chatWindowDom.set(data.from, userDom);
+	        userDom.find('#chatWindow-username').html(data.from);
+	        userDom.find('#msg-input').on('keydown', function(event) {
+	            if (event.keyCode === 13) {
+	                // 回车
+	                chat.say();
+	            }
+	        });
+	        userDom.find('#say').click(function() {
+	            console.log('你单击了send按钮')
+	            chat.say();
+	        });
+	     }
+	    insertChatMsgLeft(data.content);
+	    
+	    
+	    
+	};
+
 	Chat.prototype.toggleChatView = function(user) {
 
 	    var chat = this;
@@ -223,23 +250,20 @@
 	        userDom = chat.chatWindow.clone();
 	        chat.chatWindowDom.set(user.from, userDom);
 	        userDom.find('#chatWindow-username').html(user.from);
-	        userDom.find('#msg-input').on('keydown', function(event) {
-
-	            if (event.keyCode === 13) {
-	                // 回车
-	                chat.say();
-	            }
-	        });
-
-	        userDom.find('#say').click(function() {
-	            chat.say();
-	        });
-
 	    } else {
-
 	        console.log('userdom is not null');
 	    }
+	    userDom.find('#msg-input').on('keydown', function(event) {
+	        if (event.keyCode === 13) {
+	            // 回车
+	            chat.say();
+	        }
+	    });
 
+	    userDom.find('#say').click(function() {
+	        console.log('你单击了send按钮')
+	        chat.say();
+	    });
 	    msg_input = userDom.find("#msg-input");
 	    msg_end = userDom.find("#msg_end");
 
@@ -255,18 +279,11 @@
 	 * @return {[type]}         [description]
 	 */
 	Chat.prototype.receiveMessage = function(message) {
-	    console.log('最后的消息')
-	    console.log(message)
 	    playMsgComingPromptTone();
 	    contentFormat = JSON.parse(message.content);
 	    messageContent = contentFormat.content;
 	    messageType = contentFormat.type;
 	    var sendUserName = message.from;
-	    //
-	    console.log('sendUserName is :');
-	    console.log(sendUserName);
-	    console.log('this.currentChat.username is:');
-	    console.log(this.currentChat.username);
 	    if (sendUserName === this.currentChat.username) {
 	        // 当前窗口是和发送用户
 	        message.avatar = this.currentChat.theUser.avatar;
@@ -281,7 +298,10 @@
 	            user.unreadMsgCount = 0;
 	        }
 	        user.unreadMsgCount += 1;
+	        this.usersMap.set(sendUserName,user);
+	        
 	        middle.userAvatarComponent.userListScope.$apply();
+	        
 	    }
 	};
 
@@ -412,7 +432,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var Pubsub = __webpack_require__(6);
-
+	var middle = __webpack_require__(1);
 
 	var pubsub = new Pubsub();
 	// 初始化事件
@@ -481,22 +501,22 @@
 	        type = data.type;//提取消息类型
 	        content = data.content;//提取消息内容
 	        switch(type){
-	            case 'notice':
+	            case 'entercs':
 	                console.log('notice');
 	                //存入用户集合
 	                data.avatar = genereateAvatarImg();
-	                public_chat.users.push(data);
+	                public_chat.users.push(data);//为了显示用户列表埋的数据
+	                //存入session
+	                public_chat.usersMap.set(data.from, data);//为了更新未读数埋的数据
+	                middle.userAvatarComponent.userListScope.$apply();
 	                break;
 	            case 'message':
 	                console.log('message');
-	                data.unreadMsgCount = 0;
-	                //存入session
-	                public_chat.usersMap.set(data.from, data);
 	                //
 	                directive.receive(data);
 	                 break;
 	            case 'leavecs':
-	                console.log('用户推出');
+	                console.log('用户退出');
 	                break;
 	            case 'heartbreak':
 	                console.log('heartbreak');
@@ -622,8 +642,6 @@
 	};
 
 	Directive.prototype.receive = function(letter) {
-	    console.log('Directive.prototype.receive in');
-	    console.log("letter is ");
 	    console.log(letter)
 	    //message = JSON.parse(letter);//解析消息内容和类型
 	    //var content = message.content;//消息内容

@@ -1,5 +1,5 @@
 var Pubsub = require('./pubsub');
-
+var middle = require('./middle');
 
 var pubsub = new Pubsub();
 // 初始化事件
@@ -68,22 +68,22 @@ Connect.prototype.connect = function(host) {
         type = data.type;//提取消息类型
         content = data.content;//提取消息内容
         switch(type){
-            case 'notice':
+            case 'entercs':
                 console.log('notice');
                 //存入用户集合
                 data.avatar = genereateAvatarImg();
-                public_chat.users.push(data);
+                public_chat.users.push(data);//为了显示用户列表埋的数据
+                //存入session
+                public_chat.usersMap.set(data.from, data);//为了更新未读数埋的数据
+                middle.userAvatarComponent.userListScope.$apply();
                 break;
             case 'message':
                 console.log('message');
-                data.unreadMsgCount = 0;
-                //存入session
-                public_chat.usersMap.set(data.from, data);
                 //
                 directive.receive(data);
                  break;
             case 'leavecs':
-                console.log('用户推出');
+                console.log('用户退出');
                 break;
             case 'heartbreak':
                 console.log('heartbreak');
@@ -209,8 +209,6 @@ Directive.prototype.client = function(letter) {
 };
 
 Directive.prototype.receive = function(letter) {
-    console.log('Directive.prototype.receive in');
-    console.log("letter is ");
     console.log(letter)
     //message = JSON.parse(letter);//解析消息内容和类型
     //var content = message.content;//消息内容

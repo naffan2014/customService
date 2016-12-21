@@ -52,7 +52,7 @@ function insertChatMsgLeft(message) {
 function Chat() {
     this.connect = null;
     //登入进来的用户
-    this.users = [];
+    this.users = {};
     //当前聊天窗口的用户
     this.currentChat = {
         theUser: null,

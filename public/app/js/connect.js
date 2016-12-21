@@ -72,9 +72,17 @@ Connect.prototype.connect = function(host) {
                 console.log('notice');
                 //存入用户集合
                 data.avatar = genereateAvatarImg();
-                public_chat.users.push(data);//为了显示用户列表埋的数据
+                //public_chat.users.push(data);//为了显示用户列表埋的数据
+                public_chat.users[data.from] = data;
+                console.log(public_chat.users);
                 //存入session
                 public_chat.usersMap.set(data.from, data);//为了更新未读数埋的数据
+                middle.userAvatarComponent.userListScope.$apply();
+                break;
+            case 'leavecs':
+                console.log('用户退出');
+                delete public_chat.users[data.from]
+                console.log(data)
                 middle.userAvatarComponent.userListScope.$apply();
                 break;
             case 'message':
@@ -82,9 +90,6 @@ Connect.prototype.connect = function(host) {
                 //
                 directive.receive(data);
                  break;
-            case 'leavecs':
-                console.log('用户退出');
-                break;
             case 'heartbreak':
                 console.log('heartbreak');
                 break;

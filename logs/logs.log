@@ -1937,4 +1937,28 @@
 [2016-12-21 19:40:08.740] [INFO] yifan - listening on port 3000
 [2016-12-21 19:40:08.743] [INFO] yifan - You can debug your app with http://localhost:3000
 [2016-12-21 19:40:08.743] [INFO] yifan - 
+<<<<<<< HEAD
+>>>>>>> dev
+=======
+[2016-12-21 21:37:44.121] [INFO] yifan - listening on port 3000
+[2016-12-21 21:37:44.123] [INFO] yifan - You can debug your app with http://localhost:3000
+[2016-12-21 21:37:44.124] [INFO] yifan - 
+[2016-12-21 21:41:06.043] [INFO] yifan - listening on port 3000
+[2016-12-21 21:41:06.045] [INFO] yifan - You can debug your app with http://localhost:3000
+[2016-12-21 21:41:06.046] [INFO] yifan - 
+[2016-12-21 21:41:45.111] [INFO] yifan - listening on port 3000
+[2016-12-21 21:41:45.113] [INFO] yifan - You can debug your app with http://localhost:3000
+[2016-12-21 21:41:45.114] [INFO] yifan - 
+[2016-12-21 21:43:10.267] [INFO] yifan - listening on port 3000
+[2016-12-21 21:43:10.270] [INFO] yifan - You can debug your app with http://localhost:3000
+[2016-12-21 21:43:10.270] [INFO] yifan - 
+[2016-12-21 21:43:42.558] [INFO] yifan - listening on port 3000
+[2016-12-21 21:43:42.560] [INFO] yifan - You can debug your app with http://localhost:3000
+[2016-12-21 21:43:42.561] [INFO] yifan - 
+[2016-12-21 21:45:17.465] [INFO] yifan - listening on port 3000
+[2016-12-21 21:45:17.467] [INFO] yifan - You can debug your app with http://localhost:3000
+[2016-12-21 21:45:17.468] [INFO] yifan - 
+[2016-12-21 21:47:02.013] [INFO] yifan - listening on port 3000
+[2016-12-21 21:47:02.015] [INFO] yifan - You can debug your app with http://localhost:3000
+[2016-12-21 21:47:02.016] [INFO] yifan - 
 >>>>>>> dev

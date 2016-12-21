@@ -51,7 +51,7 @@ Connect.prototype.connect = function(host) {
     this.socket.onopen = function (obj) {
     //已经建立连接
         console.log("已连接到服务器");
-        public_chat.toggleChatView(public_chat.users);//连接服务器后显示聊天窗口
+        //public_chat.toggleChatView(public_chat.users);//连接服务器后显示聊天窗口
     };
 
     this.socket.onclose = function (obj) {

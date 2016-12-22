@@ -14,8 +14,22 @@ angular.module('chatApp').component('userList', {
                 </div>`,
     controller: function UserListController($scope) {
         // 使用scope 是因为 在外界改变了 users 的值 为了使用 $scope.$apply方法å
+        //构造干净的遍历数据
         $scope.users = chat.users;
         userAvatarComponent.userListScope = $scope;
+        
+        
+        
+        var storage = window.localStorage;
+        for(i in storage){
+            if("csyouyun" == i.substring(0,8)){
+                var key = JSON.parse(storage[i]).from;
+                chat.users[key] = JSON.parse(storage[i]);
+                chat.usersMap.set(key, JSON.parse(storage[i]));//为了更新未读数埋的数据
+            }
+        }
+        
+        
         $scope.toggleChat = function(user) {
             console.log('useravatar.component中的function中的user');
             console.log(user)

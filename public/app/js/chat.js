@@ -43,7 +43,6 @@ function insertChatMsgLeft(message) {
     var date = new Date();
     var clone = chatMsgLeft.clone();
     clone.find(".direct-chat-timestamp").html((new Date()).toLocaleTimeString());
-    console.log(message)
     clone.find(".direct-chat-text").html(message);
     clone.find('img').attr('src', message.avatar);
     msg_end.before(clone);
@@ -78,8 +77,8 @@ Chat.prototype.clearUnread = function(user) {
 
 Chat.prototype.updateChatView = function(data){
     var chat = this;
-    contentFormat = JSON.parse(data.content);
-    messageContent = contentFormat.content;
+    // contentFormat = JSON.parse(data.content);
+    // messageContent = contentFormat.content;
     var userDom = chat.chatWindowDom.get(data.from);
     if (userDom === undefined || userDom === null) {
         userDom = chat.chatWindow.clone();
@@ -88,19 +87,19 @@ Chat.prototype.updateChatView = function(data){
      }
      msg_input = userDom.find("#msg-input");
      msg_end = userDom.find("#msg_end");
-     insertChatMsgLeft(messageContent);
+     insertChatMsgLeft(data.content);
 };
 
 Chat.prototype.toggleChatView = function(user) {
     var chat = this;
     var userDom = chat.chatWindowDom.get(user.from);
-    // if (userDom === undefined || userDom === null) {
-        // userDom = chat.chatWindow.clone();
-        // chat.chatWindowDom.set(user.from, userDom);
-        // userDom.find('#chatWindow-username').html(user.from);
-    // } else {
-        // console.log('userdom is not null');
-    // }
+    if (userDom === undefined || userDom === null) {
+        userDom = chat.chatWindow.clone();
+        chat.chatWindowDom.set(user.from, userDom);
+        userDom.find('#chatWindow-username').html(user.from);
+    } else {
+        console.log('userdom is not null');
+    }
     userDom.find('#msg-input').on('keydown', function(event) {
         if (event.keyCode === 13) {
             // 回车
@@ -122,14 +121,15 @@ Chat.prototype.toggleChatView = function(user) {
  */
 Chat.prototype.receiveMessage = function(message) {
     playMsgComingPromptTone();
-    contentFormat = JSON.parse(message.content);
-    messageContent = contentFormat.content;
-    messageType = contentFormat.type;
+    message = specifyMessageType(message);
+    // contentFormat = JSON.parse(message.content);
+    // messageContent = contentFormat.content;
+    // messageType = contentFormat.type;
     var sendUserName = message.from;
     if (sendUserName === this.currentChat.username) {
         // 当前窗口是和发送用户
-        message.avatar = this.currentChat.theUser.avatar;
-        this.listen(messageContent);
+        //message.avatar = this.currentChat.theUser.avatar;
+        this.listen(message.content);
     } else {
         // 当前窗口并不是该用户
         var user = this.usersMap.get(sendUserName);
@@ -143,7 +143,6 @@ Chat.prototype.receiveMessage = function(message) {
         this.usersMap.set(sendUserName,user);
         this.updateChatView(message)
         middle.userAvatarComponent.userListScope.$apply();
-        
     }
 };
 
@@ -229,6 +228,7 @@ templateDiv.load('/public/app/template/template.html', function() {
 
     chatMsgRight = templateDiv.find("#msg-right>div");
     chatMsgLeft = templateDiv.find("#msg-left>div");
+    chatMsgImage = templateDiv.find("#msg-image>div");
     chatWindow = templateDiv.find("#chatWindow>div");
 
     // 加载完在赋值
@@ -246,6 +246,25 @@ function playMsgComingPromptTone() {
     if (chat.setting.msgSoundPrompt) {
         audio.play();
     }
+}
+
+function specifyMessageType(message){
+    console.log('in specifyMessageType');
+    switch(message.type){
+        case 'image':
+            console.log('消息是图片');
+            var clone = chatMsgImage.clone();
+            clone.find('a').attr("href", messageContent.image_url);
+            clone.find('img').attr("src", "data:image/jpeg;base64," + messageContent.image_thumb);
+            message.content = clone;
+            break;
+        default:
+            console.log('消息是文字');
+            message.content = message.content.content;
+    }
+    console.log('转化后的消息格式');
+    console.log(message);
+    return message;
 }
 
 

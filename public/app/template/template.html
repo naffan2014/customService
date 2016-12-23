@@ -10,9 +10,19 @@
     
     <div id="msg-image">
         <div class="direct-chat-msg">
-            <a href="" taget="_blank">
-                <img src="" alt="yifan made this">
-            </a>
+            <img src="" data-original="" alt="">
+            <script>
+                /*
+                 * 缩略图查看
+                 */
+                
+                $('#chatWindowDiv').viewer({
+                    url: 'data-original',
+                    toolbar:false,
+                    navbar:false,
+                    //movable:false,
+                });   
+            </script>
         </div>
     </div>
     <!-- 左侧的消息框,对方的消息  -->

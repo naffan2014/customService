@@ -6,8 +6,14 @@ var userAvatarComponent = require('./ang/useravatar.component');
 middle.userAvatarComponent = userAvatarComponent;
 
 $(function() {
+    /*
+     * 登录浮层
+     */
     $("#init").modal('show');
 
+    /*
+     * 声音switch
+     */
     $("[name='my-checkbox']").bootstrapSwitch({
         size: 'small',
         onColor: 'success',

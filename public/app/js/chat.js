@@ -44,7 +44,7 @@ function insertChatMsgLeft(message) {
     var clone = chatMsgLeft.clone();
     clone.find(".direct-chat-timestamp").html((new Date()).toLocaleTimeString());
     clone.find(".direct-chat-text").html(message);
-    clone.find('img').attr('src', message.avatar);
+    //clone.find('img').attr('src', message.avatar);
     msg_end.before(clone);
 }
 
@@ -128,7 +128,7 @@ Chat.prototype.receiveMessage = function(message) {
     var sendUserName = message.from;
     if (sendUserName === this.currentChat.username) {
         // 当前窗口是和发送用户
-        //message.avatar = this.currentChat.theUser.avatar;
+        message.avatar = this.currentChat.theUser.avatar;
         this.listen(message.content);
     } else {
         // 当前窗口并不是该用户
@@ -248,14 +248,17 @@ function playMsgComingPromptTone() {
     }
 }
 
+/*
+ * 获取消息，通过消息类型转化为通用的格式以待插入聊天框
+ */
 function specifyMessageType(message){
     console.log('in specifyMessageType');
-    switch(message.type){
+    switch(message.content.type){
         case 'image':
             console.log('消息是图片');
             var clone = chatMsgImage.clone();
-            clone.find('a').attr("href", messageContent.image_url);
-            clone.find('img').attr("src", "data:image/jpeg;base64," + messageContent.image_thumb);
+            clone.find('img').attr("data-original", message.content.image_url);
+            clone.find('img').attr("src", "data:image/jpeg;base64," + message.content.image_thumb);
             message.content = clone;
             break;
         default:

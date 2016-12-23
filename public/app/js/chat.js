@@ -27,11 +27,11 @@ function msgScrollEnd() {
  * 一条消息需要名字,时间,头像,内容
  * @return {[type]} [description]
  */
-function insertChatMsgRight(content) {
+function insertChatMsgRight(message) {
     var date = new Date();
     var clone = chatMsgRight.clone();
     clone.find(".direct-chat-timestamp").html((new Date()).toLocaleTimeString());
-    clone.find(".direct-chat-text").html(content);
+    clone.find(".dctr").html(message);
     msg_end.before(clone);
 }
 
@@ -43,7 +43,7 @@ function insertChatMsgLeft(message) {
     var date = new Date();
     var clone = chatMsgLeft.clone();
     clone.find(".direct-chat-timestamp").html((new Date()).toLocaleTimeString());
-    clone.find(".direct-chat-text").html(message);
+    clone.find(".dctl").html(message);
     //clone.find('img').attr('src', message.avatar);
     msg_end.before(clone);
 }

@@ -20,58 +20,124 @@
 
 <body>
     <div class="container">
-        <nav class="navbar navbar-default">
-            <div class="container-fluid">
-                <!-- Brand and toggle get grouped for better mobile display -->
-                <div class="navbar-header">
-
-                    <a class="navbar-brand" href="#">Chat</a>
-                </div>
-
-                <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <ul class="nav navbar-nav navbar-right">
-                        <li class="dropdown">
-                            <form class="navbar-form navbar-left" role="search">
-                                <div class="form-group">
-                                    <input type="text" class="form-control" placeholder="Search">
-                                </div>
-                                <button type="submit" class="btn btn-default">Submit</button>
-                            </form>
-                        </li>
-                    </ul>
-                </div>
-                <!-- /.navbar-collapse -->
-            </div>
-            <!-- /.container-fluid -->
-        </nav>
         <div class="row chat-container">
-
-            <div class="chat-container-header">
-
-            </div>
             <div class="row">
+                <!-- <form class="form-horizontal">
+                    <span class="form-group">
+                        <label for="" class='control-label'>通知声音</label>
+                        <input type="checkbox" name="my-checkbox" checked>
+                    </span>
+                </form> -->
+                <span class="exit">退出</span>
                 <!-- userList -->
                 <div class="col-sm-3 chat-userlist-container">
+                    <div class='self-avatar'>
+                        <div class="ava-pic">
+                            <img src="/public/app/img/avatar/kfavatar.png" alt="客服默认头像" />
+                        </div>
+                        <span class="uname">游云客服系统</span>
+                    </div>
                     <user-list></user-list>
                 </div>
                 <!-- chat window -->
                 <div class="col-sm-6 chat-messagewindow-container">
                     <div id="chatWindowDiv">
-
+                        <div id='chatWindowDiv' class="box direct-chat direct-chat-success">
+                            <div id="box-header" class="box-header with-border">
+                                <h3 id='chatWindow-username' class="box-title">游云客服系统</h3>
+                                <span class="close-chat">关闭</span>
+                            </div>
+                            <!-- /.box-header -->
+                            <div id="box-body" class="box-body">
+                                <!-- Conversations are loaded here -->
+                                <div class="direct-chat-messages">
+                                    <div id="msg_end" style="height:0px; overflow:hidden"></div>
+                                </div>
+                                <!--/.direct-chat-messages-->
+                                <!-- /.direct-chat-pane -->
+                            </div>
+                            <!-- /.box-body -->
+                            
+                            <div class="box-footer">
+                                <div class="btnbar">
+                                    <!-- <span>表情</span> -->
+                                    <span>图片</span>
+                                </div>
+                                <div class="chat-enter">
+                                    <textarea  id="msg-input" name="message" placeholder="请输入..."></textarea>
+                                    <!-- <input id="" type="text" name="message" placeholder="请输入..." /> -->
+                                </div>
+                                <span id="say" class="send-msg">发送</span>
+                                <!-- <div class="input-group">
+                                    <input id="msg-input" type="text" name="message" placeholder="Type Message ..." class="form-control">
+                                    <span class="input-group-btn">
+                                        <button id="say" type="button" class="btn btn-success btn-flat">Send</button>
+                                    </span>
+                                </div> -->
+                            </div>
+                            <!-- /.box-footer-->
+                        </div>
                     </div>
                 </div>
                 <!-- setting -->
-                <div class="col-sm-3 chat-setting-container">
-
-                    <form class="form-horizontal">
+                <div id="chat-setting-container" class="col-sm-3 chat-setting-container">
+                   <!--  <form class="form-horizontal">
                         <div class="form-group">
                             <label for="" class='control-label'>通知声音</label>
                             <input type="checkbox" name="my-checkbox" checked>
                         </div>
 
-                    </form>
+                    </form> -->
+                    <div class="cst-header">
+                        
+                        <div class="cst-header-tabs">用户资料</div>
+                        <div class="cst-header-tabs">其他1</div>
+                        <div class="cst-header-tabs">其他2</div>
+                    </div>
+                    <div class="users-info">
+                        <div class="userinfo">
+                            <span class="nick-namek">昵称：</span>
+                            <span class="nick-namev">小丫丫</span>
+                        </div>
+                        <div class="userinfo">
+                            <span class="sexk">性别：</span>
+                            <span class="sexv">男</span>
+                        </div>
+                        <div class="userinfo">
+                            <span class="agek">年龄：</span>
+                            <span class="agev">24</span>
+                        </div>
+                    </div>
+                    <div class="users-info tohide">
+                        <div class="userinfo">
+                            <span class="nick-namek">其他1昵称：</span>
+                            <span class="nick-namev">111</span>
+                        </div>
+                        <div class="userinfo">
+                            <span class="sexk">其他1性别：</span>
+                            <span class="sexv">男1</span>
+                        </div>
+                        <div class="userinfo">
+                            <span class="agek">其他1年龄：</span>
+                            <span class="agev">11</span>
+                        </div>
+                    </div>
+                    <div class="users-info tohide">
+                        <div class="userinfo">
+                            <span class="nick-namek">其他2昵称：</span>
+                            <span class="nick-namev">222</span>
+                        </div>
+                        <div class="userinfo">
+                            <span class="sexk">其他2性别：</span>
+                            <span class="sexv">男2</span>
+                        </div>
+                        <div class="userinfo">
+                            <span class="agek">其他2年龄：</span>
+                            <span class="agev">24</span>
+                        </div>
+                    </div>   
                 </div>
+                
             </div>
 
         </div>
@@ -84,17 +150,27 @@
             <div ng-controller="sign" class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">登录步骤简化为用客服标示表示</h4>
+                    <h4 class="modal-title" id="myModalLabel">登录</h4>
                 </div>
                 <div class="modal-body">
                     <form novalidate class="form-horizontal">
                         <div class="form-group">
-                            <label for="username" class="col-sm-2 control-label">客服标示</label>
-                            <div class="col-sm-9">
-                                <input ng-model='username' type="text" class="form-control" name="username" id="username" placeholder="">
+                            <div class="user-box">
+                                <span class="wname">用户名</span>
+                                <input ng-model='username' class="enter-box" type="text" name="username" id="username" placeholder="请输入用户名"/>
                             </div>
+                            <div class="passsword-box">
+                                <span class="wname">密码</span>
+                                <input class="enter-box" type="password" placeholder="请输入密码"/>
+                            </div>
+                            <!-- <div class="security-code_box">
+                                <span class="wname">验证码</span>
+                                <div class="enter-box">
+                                     <input class="inupt-lbox" type="text" placeholder="请输入验证码"/>
+                                    <img src="" alt="" />
+                                </div>
+                            </div> -->
                         </div>
-
                     </form>
                 </div>
 
@@ -119,9 +195,17 @@
 <script src="/public/libs/angular/angular.js" charset="utf-8"></script>
 <script src="/public/libs/viewer/viewer-jquery.min.js" charset="utf-8"></script>
 
-
 <script src="/dist/app.js" charset="utf-8"></script>
 <script type="text/javascript">
+    var tabList = $(".cst-header-tabs");
+    var usersIs = $(".users-info");
+    for (var i = 0; i < tabList.length; i++) {
+        tabList[i].index = i;
+        tabList[i].onclick = function(){
+             usersIs.hide();
+             usersIs[this.index].style.display = "block";
+        };
+    };
 </script>
 
 </html>

@@ -101,13 +101,14 @@ Chat.prototype.toggleChatView = function(user) {
         console.log('userdom is not null');
     }
     userDom.find('#msg-input').on('keydown', function(event) {
-        if (event.keyCode === 13) {
+        if (event.ctrlKey && event.keyCode == 13) {
             // 回车
             chat.say();
+            
         }
     });
     userDom.find('#say').click(function() {
-        chat.say();
+         chat.say();
     });
     msg_input = userDom.find("#msg-input");
     msg_end = userDom.find("#msg_end");

@@ -66,6 +66,7 @@ Connect.prototype.connect = function(host) {
         //收到服务器消息
         // var data = eval("("+obj.data+")");//构造完整json消息
         var data = JSON.parse(obj.data);
+        console.log("java原始数据",data);
         // if(data.type == 'message'){
             // //是发的消息的时候才进行转义
             // data.content = JSON.parse(data.content);
@@ -78,7 +79,7 @@ Connect.prototype.connect = function(host) {
             case 'entercs':
                 console.log('有用户接入');
                 //存入用户集合
-                data.avatar = genereateAvatarImg();
+                //data.avatar = genereateAvatarImg();
                 //public_chat.users.push(data);
                 
                 var jsonfyData = JSON.stringify(data); //为了显示用户列表埋的数据(替换成存入localstorage)
@@ -90,13 +91,11 @@ Connect.prototype.connect = function(host) {
                 break;
             case 'leavecs':
                 console.log('用户退出');
-                delete public_chat.users[data.from]
-                console.log(data)
-                middle.userAvatarComponent.userListScope.$apply();
+                //delete public_chat.users[data.from]
+                //middle.userAvatarComponent.userListScope.$apply();
                 break;
             case 'message':
                 console.log('message');
-                //
                 directive.receive(data);
                  break;
             case 'heartbreak':
@@ -114,27 +113,9 @@ Connect.prototype.connect = function(host) {
     };
     
     this.socket.onerror = function (obj) {
-    //产生异常
-    console.log(obj);
+        //产生异常
+        console.log("socket产生异常",obj);
     }; 
-
-    /**
-     * letter 是自定义的消息事件
-     */
-    // socket.on('letter', function(letter) {
-        // console.log(letter);
-        // // letter = JSON.parse(letter);
-// 
-        // var key = Object.keys(letter.directive)[0];
-// 
-        // if (directive[key] === undefined) {
-            // console.log('directive ' + key + ' 未实现');
-        // } else {
-            // directive[key](letter);
-// 
-        // }
-// 
-    // });
 };
 
 Connect.prototype.deliver = function(letter) {

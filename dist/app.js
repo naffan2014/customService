@@ -180,12 +180,12 @@
 	 * 对方的消息
 	 * @return {[type]} [description]
 	 */
-	function insertChatMsgLeft(message) {
+	function insertChatMsgLeft(data) {
 	    var date = new Date();
 	    var clone = chatMsgLeft.clone();
 	    clone.find(".direct-chat-timestamp").html((new Date()).toLocaleTimeString());
-	    clone.find(".dctl").html(message);
-	    //clone.find('img').attr('src', message.avatar);
+	    clone.find(".dctl").html(data.content);
+	    clone.find('img').attr('src',chat.users[data.from].ext_content.pic);
 	    msg_end.before(clone);
 	}
 
@@ -216,6 +216,11 @@
 	    middle.userAvatarComponent.userListScope.$apply();
 	};
 
+	/*
+	 * 当前窗口不是聊天窗口时，也应该建立聊天框，
+	 * 这样当点击toggleChatView后切换的页面才能够有数据
+	 * 
+	 */
 	Chat.prototype.updateChatView = function(data){
 	    var chat = this;
 	    // contentFormat = JSON.parse(data.content);
@@ -224,20 +229,24 @@
 	    if (userDom === undefined || userDom === null) {
 	        userDom = chat.chatWindow.clone();
 	        chat.chatWindowDom.set(data.from, userDom);
-	        userDom.find('#chatWindow-username').html(data.from);
+	        userDom.find('#chatWindow-username').html(this.users[data.from].ext_content.name);
 	     }
 	     msg_input = userDom.find("#msg-input");
 	     msg_end = userDom.find("#msg_end");
-	     insertChatMsgLeft(data.content);
+	     insertChatMsgLeft(data);
 	};
 
-	Chat.prototype.toggleChatView = function(user) {
+
+	/*
+	 * 切换聊天窗口
+	 */
+	Chat.prototype.toggleChatView = function(data) {
 	    var chat = this;
-	    var userDom = chat.chatWindowDom.get(user.from);
+	    var userDom = chat.chatWindowDom.get(data.from);
 	    if (userDom === undefined || userDom === null) {
 	        userDom = chat.chatWindow.clone();
-	        chat.chatWindowDom.set(user.from, userDom);
-	        userDom.find('#chatWindow-username').html(user.from);
+	        chat.chatWindowDom.set(data.from, userDom);
+	        userDom.find('#chatWindow-username').html(this.users[data.from].ext_content.name);
 	    } else {
 	        console.log('userdom is not null');
 	    }
@@ -245,7 +254,6 @@
 	        if (event.ctrlKey && event.keyCode == 13) {
 	            // 回车
 	            chat.say();
-	            
 	        }
 	    });
 	    userDom.find('#say').click(function() {
@@ -271,7 +279,7 @@
 	    if (sendUserName === this.currentChat.username) {
 	        // 当前窗口是和发送用户
 	        message.avatar = this.currentChat.theUser.avatar;
-	        this.listen(message.content);
+	        this.listen(message);
 	    } else {
 	        // 当前窗口并不是该用户
 	        var user = this.usersMap.get(sendUserName);
@@ -293,8 +301,8 @@
 	 * @param  {[type]} message [description]
 	 * @return {[type]}         [description]
 	 */
-	Chat.prototype.listen = function(message) {
-	    insertChatMsgLeft(message);
+	Chat.prototype.listen = function(data) {
+	    insertChatMsgLeft(data);
 	    msgScrollEnd();
 	};
 
@@ -428,7 +436,15 @@
 	        communication_server_host: 'ws://10.0.8.91:8097/websocket',
 	        // communication_server_host: 'ws://192.168.33.191:8097/websocket?data=eyJncm91cF9pZCI6IjIyMjIyMiIsImN1c3RvbWVyX2lkIjoiMTExMTExIiwidG9rZW4iOiJjZjRmZDg4OGI1MjhlNzkzMzMyZGMyMTM1NGU4OTJlYjMyYTA1ZWE3ZTM0OGZiNmVmOTJjYjJhNGQyNTg5MTlmIn0='
 	    },
-	   };
+	    avatar:{
+	        kf:'/public/app/img/avatar/kfavatar.png',
+	        kr:'/public/app/img/avatar/kravatar.gif'
+	    },
+	    name:{
+	        kf:'默认客服',
+	        kr:'默认客人',  
+	    },
+	};
 
 	module.exports = my_config;
 
@@ -439,6 +455,8 @@
 
 	var Pubsub = __webpack_require__(6);
 	var middle = __webpack_require__(1);
+	var config = __webpack_require__(4);
+
 
 	var pubsub = new Pubsub();
 	// 初始化事件
@@ -500,27 +518,22 @@
 	    };
 	    
 	    this.socket.onmessage = function (obj) {
-	        // console.log('java原始数据');
-	        // console.log(obj)
+	        //console.log('java原始数据',obj);
 	        //收到服务器消息
-	        // var data = eval("("+obj.data+")");//构造完整json消息
 	        var data = JSON.parse(obj.data);
-	        console.log("java原始数据",data);
-	        // if(data.type == 'message'){
-	            // //是发的消息的时候才进行转义
-	            // data.content = JSON.parse(data.content);
-	        // }
 	        // console.log('总消息结构');
 	        // console.dir(data);
 	        type = data.type;//提取socket消息类型
-	        //content = data.content;//提取消息内容
 	        switch(type){
 	            case 'entercs':
 	                console.log('有用户接入');
+	                //考虑某些缺少默认数据的用户，自动给他加上默认值
+	                if(undefined == data.ext_content){
+	                    data.ext_content = {};
+	                    data.ext_content.name = config.name.kr;
+	                    data.ext_content.pic = config.avatar.kr;   
+	                }
 	                //存入用户集合
-	                //data.avatar = genereateAvatarImg();
-	                //public_chat.users.push(data);
-	                
 	                var jsonfyData = JSON.stringify(data); //为了显示用户列表埋的数据(替换成存入localstorage)
 	                localStorage.setItem('csyouyun'+data.from,jsonfyData);
 	                public_chat.users[data.from] = data;
@@ -718,7 +731,7 @@
 	angular.module('chatApp').component('userList', {
 	    template: `<div class='user-list'>
 	                  <div class='user-list-item' ng-click='toggleChat(user)' ng-repeat='user in users'>
-	                      <span>{{user.from}}</span>
+	                      <span>{{user.ext_content.name}}</span>
 	                      <span class="badge">{{user.unreadMsgCount}}</span>
 	                  </div>
 	                </div>`,

@@ -39,12 +39,12 @@ function insertChatMsgRight(message) {
  * 对方的消息
  * @return {[type]} [description]
  */
-function insertChatMsgLeft(message) {
+function insertChatMsgLeft(data) {
     var date = new Date();
     var clone = chatMsgLeft.clone();
     clone.find(".direct-chat-timestamp").html((new Date()).toLocaleTimeString());
-    clone.find(".dctl").html(message);
-    //clone.find('img').attr('src', message.avatar);
+    clone.find(".dctl").html(data.content);
+    clone.find('img').attr('src',chat.users[data.from].ext_content.pic);
     msg_end.before(clone);
 }
 
@@ -75,6 +75,11 @@ Chat.prototype.clearUnread = function(user) {
     middle.userAvatarComponent.userListScope.$apply();
 };
 
+/*
+ * 当前窗口不是聊天窗口时，也应该建立聊天框，
+ * 这样当点击toggleChatView后切换的页面才能够有数据
+ * 
+ */
 Chat.prototype.updateChatView = function(data){
     var chat = this;
     // contentFormat = JSON.parse(data.content);
@@ -83,20 +88,24 @@ Chat.prototype.updateChatView = function(data){
     if (userDom === undefined || userDom === null) {
         userDom = chat.chatWindow.clone();
         chat.chatWindowDom.set(data.from, userDom);
-        userDom.find('#chatWindow-username').html(data.from);
+        userDom.find('#chatWindow-username').html(this.users[data.from].ext_content.name);
      }
      msg_input = userDom.find("#msg-input");
      msg_end = userDom.find("#msg_end");
-     insertChatMsgLeft(data.content);
+     insertChatMsgLeft(data);
 };
 
-Chat.prototype.toggleChatView = function(user) {
+
+/*
+ * 切换聊天窗口
+ */
+Chat.prototype.toggleChatView = function(data) {
     var chat = this;
-    var userDom = chat.chatWindowDom.get(user.from);
+    var userDom = chat.chatWindowDom.get(data.from);
     if (userDom === undefined || userDom === null) {
         userDom = chat.chatWindow.clone();
-        chat.chatWindowDom.set(user.from, userDom);
-        userDom.find('#chatWindow-username').html(user.from);
+        chat.chatWindowDom.set(data.from, userDom);
+        userDom.find('#chatWindow-username').html(this.users[data.from].ext_content.name);
     } else {
         console.log('userdom is not null');
     }
@@ -104,7 +113,6 @@ Chat.prototype.toggleChatView = function(user) {
         if (event.ctrlKey && event.keyCode == 13) {
             // 回车
             chat.say();
-            
         }
     });
     userDom.find('#say').click(function() {
@@ -130,7 +138,7 @@ Chat.prototype.receiveMessage = function(message) {
     if (sendUserName === this.currentChat.username) {
         // 当前窗口是和发送用户
         message.avatar = this.currentChat.theUser.avatar;
-        this.listen(message.content);
+        this.listen(message);
     } else {
         // 当前窗口并不是该用户
         var user = this.usersMap.get(sendUserName);
@@ -152,8 +160,8 @@ Chat.prototype.receiveMessage = function(message) {
  * @param  {[type]} message [description]
  * @return {[type]}         [description]
  */
-Chat.prototype.listen = function(message) {
-    insertChatMsgLeft(message);
+Chat.prototype.listen = function(data) {
+    insertChatMsgLeft(data);
     msgScrollEnd();
 };
 

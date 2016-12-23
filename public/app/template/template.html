@@ -29,14 +29,14 @@
     <div id="msg-left">
         <div class="direct-chat-msg">
             <div class="direct-chat-info clearfix">
-                <span class="direct-chat-name pull-left">用户</span>
-                <span class="direct-chat-timestamp pull-right"></span>
+                <!-- <span class="direct-chat-name pull-left">用户</span> -->
+                <span class="direct-chat-timestamp pull-left"></span>
             </div>
             <!-- /.direct-chat-info -->
             <img id='chatWindow-avatar' alt="message user image" src="/public/libs/adminLTE/img/user1-128x128.jpg" class="direct-chat-img">
             <!-- /.direct-chat-img -->
-            <div class="direct-chat-text">
-            </div>
+            <!-- <div class="direct-chat-text"></div> -->
+            <div class="dctl"></div>
             <!-- /.direct-chat-text -->
         </div>
     </div>
@@ -45,32 +45,26 @@
         <!-- 右侧的消息框,本人的消息 -->
         <div class="direct-chat-msg right">
             <div class="direct-chat-info clearfix">
-                <span class="direct-chat-name pull-right">客服</span>
-                <span class="direct-chat-timestamp pull-left"></span>
+                <!-- <span class="direct-chat-name pull-right">客服</span> -->
+                <span class="direct-chat-timestamp pull-right"></span>
             </div>
             <!-- /.direct-chat-info -->
             <img alt="message user image" src="/public/libs/adminLTE/img/user3-128x128.jpg" class="direct-chat-img">
             <!-- /.direct-chat-img -->
-            <div style="text-align:right;" class="direct-chat-text">
-            </div>
+            <!-- <div style="text-align:right;" class="direct-chat-text"></div> -->
+            <div class="dctr"></div>
             <!-- /.direct-chat-text -->
         </div>
     </div>
-
+                        
     <div id='chatWindow'>
-        <div id='chatWindowDiv' class="box box-success direct-chat direct-chat-success">
-            <div class="box-header with-border">
+        <div id='chatWindowDiv' class="box direct-chat direct-chat-success">
+            <div id="box-header" class="box-header with-border">
                 <h3 id='chatWindow-username' class="box-title"></h3>
-                <div class="box-tools pull-right">
-                    <span data-toggle="tooltip" title="3 New Messages" class="badge bg-green">3</span>
-                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                    <!-- In box-tools add this button if you intend to use the contacts pane -->
-                    <button class="btn btn-box-tool" data-toggle="tooltip" title="Contacts" data-widget="chat-pane-toggle"><i class="fa fa-comments"></i></button>
-                    <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-                </div>
+                <span class="close-chat">关闭</span>
             </div>
             <!-- /.box-header -->
-            <div class="box-body">
+            <div id="box-body" class="box-body">
                 <!-- Conversations are loaded here -->
                 <div class="direct-chat-messages">
                     <div id="msg_end" style="height:0px; overflow:hidden"></div>
@@ -79,13 +73,23 @@
                 <!-- /.direct-chat-pane -->
             </div>
             <!-- /.box-body -->
+            
             <div class="box-footer">
-                <div class="input-group">
+                <div class="btnbar">
+                    <!-- <span>表情</span> -->
+                    <span>图片</span>
+                </div>
+                <div class="chat-enter">
+                   <textarea  id="msg-input" name="message" placeholder="请输入..."></textarea>
+                    <!-- <input id="msg-input" type="text" name="message" placeholder="请输入..." /> -->
+                </div>
+                <span id="say" class="send-msg">发送</span>
+                <!-- <div class="input-group">
                     <input id="msg-input" type="text" name="message" placeholder="Type Message ..." class="form-control">
                     <span class="input-group-btn">
-        <button id="say" type="button" class="btn btn-success btn-flat">Send</button>
-      </span>
-                </div>
+                        <button id="say" type="button" class="btn btn-success btn-flat">Send</button>
+                    </span>
+                </div> -->
             </div>
             <!-- /.box-footer-->
         </div>

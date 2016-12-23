@@ -168,11 +168,11 @@
 	 * 一条消息需要名字,时间,头像,内容
 	 * @return {[type]} [description]
 	 */
-	function insertChatMsgRight(content) {
+	function insertChatMsgRight(message) {
 	    var date = new Date();
 	    var clone = chatMsgRight.clone();
 	    clone.find(".direct-chat-timestamp").html((new Date()).toLocaleTimeString());
-	    clone.find(".direct-chat-text").html(content);
+	    clone.find(".dctr").html(message);
 	    msg_end.before(clone);
 	}
 
@@ -184,7 +184,7 @@
 	    var date = new Date();
 	    var clone = chatMsgLeft.clone();
 	    clone.find(".direct-chat-timestamp").html((new Date()).toLocaleTimeString());
-	    clone.find(".direct-chat-text").html(message);
+	    clone.find(".dctl").html(message);
 	    //clone.find('img').attr('src', message.avatar);
 	    msg_end.before(clone);
 	}
@@ -736,7 +736,6 @@
 	angular.module('chatApp').component('userList', {
 	    template: `<div class='user-list'>
 	                  <div class='user-list-item' ng-click='toggleChat(user)' ng-repeat='user in users'>
-	                      <img class="user-avatar" ng-src='{{user.avatar}}' alt="" />
 	                      <span>{{user.from}}</span>
 	                      <span class="badge">{{user.unreadMsgCount}}</span>
 	                  </div>

@@ -19,7 +19,7 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="container" id="container">
         <div class="row chat-container">
             <div class="row">
                 <!-- <form class="form-horizontal">
@@ -90,7 +90,7 @@
                     </form> -->
                     <div class="cst-header">
                         
-                        <div class="cst-header-tabs">用户资料</div>
+                        <div class="cst-header-tabs highlight">用户资料</div>
                         <div class="cst-header-tabs">其他1</div>
                         <div class="cst-header-tabs">其他2</div>
                     </div>
@@ -197,15 +197,16 @@
 
 <script src="/dist/app.js" charset="utf-8"></script>
 <script type="text/javascript">
-    var tabList = $(".cst-header-tabs");
-    var usersIs = $(".users-info");
-    for (var i = 0; i < tabList.length; i++) {
-        tabList[i].index = i;
-        tabList[i].onclick = function(){
-             usersIs.hide();
-             usersIs[this.index].style.display = "block";
+    var $tabList = $(".cst-header-tabs");
+    var $usersIs = $(".users-info");
+    for (var i = 0; i < $tabList.length; i++) {
+        $tabList[i].index = i;
+        $tabList[i].onclick = function(){
+            $(".cst-header-tabs").removeClass("highlight");
+            $(this).addClass("highlight");
+            $usersIs.hide();
+            $usersIs[this.index].style.display = "block";
         };
     };
 </script>
-
 </html>

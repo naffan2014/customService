@@ -1,5 +1,7 @@
 var Pubsub = require('./pubsub');
 var middle = require('./middle');
+var config = require('./config');
+
 
 var pubsub = new Pubsub();
 // 初始化事件
@@ -61,27 +63,22 @@ Connect.prototype.connect = function(host) {
     };
     
     this.socket.onmessage = function (obj) {
-        // console.log('java原始数据');
-        // console.log(obj)
+        //console.log('java原始数据',obj);
         //收到服务器消息
-        // var data = eval("("+obj.data+")");//构造完整json消息
         var data = JSON.parse(obj.data);
-        console.log("java原始数据",data);
-        // if(data.type == 'message'){
-            // //是发的消息的时候才进行转义
-            // data.content = JSON.parse(data.content);
-        // }
         // console.log('总消息结构');
         // console.dir(data);
         type = data.type;//提取socket消息类型
-        //content = data.content;//提取消息内容
         switch(type){
             case 'entercs':
                 console.log('有用户接入');
+                //考虑某些缺少默认数据的用户，自动给他加上默认值
+                if(undefined == data.ext_content){
+                    data.ext_content = {};
+                    data.ext_content.name = config.name.kr;
+                    data.ext_content.pic = config.avatar.kr;   
+                }
                 //存入用户集合
-                //data.avatar = genereateAvatarImg();
-                //public_chat.users.push(data);
-                
                 var jsonfyData = JSON.stringify(data); //为了显示用户列表埋的数据(替换成存入localstorage)
                 localStorage.setItem('csyouyun'+data.from,jsonfyData);
                 public_chat.users[data.from] = data;

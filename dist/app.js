@@ -70,7 +70,7 @@
 	            chat.settingMsgSoundPrompt();
 	        }
 	    });
-
+	    
 	});
 
 
@@ -250,6 +250,7 @@
 	    } else {
 	        console.log('userdom is not null');
 	    }
+	    //只需要在这里绑定窗口中的按钮事件，updateChatView则不用，因为都会走这个方法。
 	    userDom.find('#msg-input').on('keydown', function(event) {
 	        if (event.ctrlKey && event.keyCode == 13) {
 	            // 回车
@@ -258,6 +259,37 @@
 	    });
 	    userDom.find('#say').click(function() {
 	         chat.say();
+	    });
+	    //绑定上传图片
+	    var tmpTimestamp = Date.parse(new Date());
+	     userDom.find('#imageUpload').ajaxfileupload({
+	      action: config.api.upload,
+	      valid_extensions : ['jpeg','gif','png','jpg'],
+	      params: {
+	        'from':data.to,
+	        'to':data.from,
+	        'fid':data.to+ '-' + data.from +'-'+ tmpTimestamp,
+	      },
+	      onComplete: function(response) {
+	        console.log('custom handler for file:',response);
+	        alert(JSON.stringify(response));
+	        if(response.result){
+	            alert('yes');
+	        }else{
+	            alert('no');
+	        }
+	      },
+	      onStart: function() {
+	        //if(weWantedTo) return false; // cancels upload
+	      },
+	      onCancel: function() {
+	        console.log('no file selected');
+	        alert('图片上传出现了问题')
+	      }
+	    });
+	    //关闭会话逻辑
+	    userDom.find('#closeChat').click(function(){
+	       chat.sayEnd(data);
 	    });
 	    msg_input = userDom.find("#msg-input");
 	    msg_end = userDom.find("#msg_end");
@@ -272,9 +304,6 @@
 	Chat.prototype.receiveMessage = function(message) {
 	    playMsgComingPromptTone();
 	    message = specifyMessageType(message);
-	    // contentFormat = JSON.parse(message.content);
-	    // messageContent = contentFormat.content;
-	    // messageType = contentFormat.type;
 	    var sendUserName = message.from;
 	    if (sendUserName === this.currentChat.username) {
 	        // 当前窗口是和发送用户
@@ -306,8 +335,10 @@
 	    msgScrollEnd();
 	};
 
+	/*
+	 * 发送说话的消息
+	 */
 	Chat.prototype.say = function() {
-	    console.log('in say')    
 	    var msg = msg_input.val();
 	    if (msg !== '') {
 	        msg_input.val(null);
@@ -324,20 +355,25 @@
 	             to:this.currentChat.username,
 	             id:'asdfasdfasdfsadfds123',
 	        }
-	        // if (chat.currentChat.username !== null) {
-	            // // 单聊
-	            // letter.message.receiveUser = chat.currentChat.username;
-	            // letter.message.type = 'one';
-	        // } else {
-	            // // 群聊
-	            // letter.message.receiveUser = chat.currentChat.chatname;
-	            // letter.message.type = 'some';
-	        // }
-
 	        // 发送到服务器
-	        this.connect.sendToUser(letter);
+	        this.connect.send(letter);
 	    }
 	};
+
+	/*
+	 * 客服断开连接
+	 */
+	Chat.prototype.sayEnd = function(data){
+	     var letter = {
+	         type : 'kill_user',
+	         customer_id : data.to,
+	         uids : data.from,
+	    }
+	    console.log('kill user的消息',letter);
+	    this.connect.send(letter);
+	    //TODO:增加删除后续动作
+	    
+	}
 
 	Chat.prototype.refreshUserList = function() {
 	    middle.userAvatarComponent.userListScope.$apply();
@@ -369,8 +405,8 @@
 	};
 
 	var chat = new Chat();
-	// var connect = new Connect(chat);
-	// chat.connect = connect;
+	var connect = new Connect(chat);
+	chat.connect = connect;
 	// 连接server
 	//connect.connect(config.communication_server_host);
 	// TODO 防止缓存的问题
@@ -435,6 +471,7 @@
 	        //communication_server_host: 'ws://10.0.8.101:8081/websocket?data=eyJncm91cF9pZCI6IjIyMjIyMiIsImN1c3RvbWVyX2lkIjoiMTExMTExIiwidG9rZW4iOiJjZjRmZDg4OGI1MjhlNzkzMzMyZGMyMTM1NGU4OTJlYjMyYTA1ZWE3ZTM0OGZiNmVmOTJjYjJhNGQyNTg5MTlmIn0='
 	        communication_server_host: 'ws://10.0.8.91:8097/websocket',
 	        // communication_server_host: 'ws://192.168.33.191:8097/websocket?data=eyJncm91cF9pZCI6IjIyMjIyMiIsImN1c3RvbWVyX2lkIjoiMTExMTExIiwidG9rZW4iOiJjZjRmZDg4OGI1MjhlNzkzMzMyZGMyMTM1NGU4OTJlYjMyYTA1ZWE3ZTM0OGZiNmVmOTJjYjJhNGQyNTg5MTlmIn0='
+	        upload: 'http://10.0.8.91:8096/fileProcess/custUploadFile',
 	    },
 	    avatar:{
 	        kf:'/public/app/img/avatar/kfavatar.png',
@@ -550,6 +587,9 @@
 	                console.log('message');
 	                directive.receive(data);
 	                 break;
+	            case 'kill_user':
+	                console.log(data+'被kill掉了');
+	                break;
 	            case 'heartbreak':
 	                console.log('heartbreak');
 	                break;
@@ -570,14 +610,15 @@
 	    }; 
 	};
 
+	/*
+	 * 发送消息
+	 */
 	Connect.prototype.deliver = function(letter) {
-	    //this.socket.emit("letter", JSON.stringify(letter));
 	    this.socket.send(JSON.stringify(letter));
-	    console.log("deliver a letter: ");
-	    console.log(JSON.stringify(letter));
+	    console.log('发出的消息是',JSON.stringify(letter));
 	};
 
-	Connect.prototype.sendToUser = function(letter) {
+	Connect.prototype.send = function(letter) {
 	    this.deliver(letter);
 	};
 

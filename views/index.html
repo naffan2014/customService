@@ -45,12 +45,12 @@
                         <div id='chatWindowDiv' class="box direct-chat direct-chat-success">
                             <div id="box-header" class="box-header with-border">
                                 <h3 id='chatWindow-username' class="box-title">游云客服系统</h3>
-                                <span class="close-chat">关闭</span>
+                                <!-- <span class="close-chat">关闭</span> -->
                             </div>
                             <!-- /.box-header -->
-                            <div id="box-body" class="box-body">
+                            <div  class="box-body">
                                 <!-- Conversations are loaded here -->
-                                <div class="direct-chat-messages">
+                                <div id="box-body" class="direct-chat-messages">
                                     <div id="msg_end" style="height:0px; overflow:hidden"></div>
                                 </div>
                                 <!--/.direct-chat-messages-->
@@ -61,7 +61,7 @@
                             <div class="box-footer">
                                 <div class="btnbar">
                                     <!-- <span>表情</span> -->
-                                    <span>图片</span>
+                                    <!-- <span>图片</span> -->
                                 </div>
                                 <div class="chat-enter">
                                     <textarea  id="msg-input" name="message" placeholder="请输入..."></textarea>
@@ -194,7 +194,7 @@
 <script src="/public/libs/bootstrap.switch/js/bootstrap-switch.js" charset="utf-8"></script>
 <script src="/public/libs/angular/angular.js" charset="utf-8"></script>
 <script src="/public/libs/viewer/viewer-jquery.min.js" charset="utf-8"></script>
-
+<script src="/public/libs/ajaxfileupload/jquery.ajaxfileupload.js" charset="utf-8"></script>
 <script src="/dist/app.js" charset="utf-8"></script>
 <script type="text/javascript">
     var $tabList = $(".cst-header-tabs");

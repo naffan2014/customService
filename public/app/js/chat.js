@@ -96,7 +96,8 @@ Chat.prototype.toggleChatView = function(data) {
       params: {
         'from':data.to,
         'to':data.from,
-        'fid':data.to+ '-' + data.from +'-'+ tmpTimestamp,//210000-547240-1482758314000
+        //'fid':data.to+ '-' + data.from +'-'+ tmpTimestamp,//210000-547240-1482758314000
+        'fid':210000-547240-1482758314000
       },
       onComplete: function(response) {
         console.log('上传图片成功:',response);
@@ -105,8 +106,12 @@ Chat.prototype.toggleChatView = function(data) {
             clone.find('img').attr("data-original", "http://bpic.588ku.com/element_origin_min_pic/16/12/15/2c68d0b69c867cf3d4b046a02fc0a65d.jpg");
             clone.find('img').attr("src", "http://bpic.588ku.com/element_origin_min_pic/16/12/18/2b17c25c340f388835ddf2646aa0afb6.jpg");
             insertChatMsgRight(clone);
-            
-            chat.sayUpload();
+            var uploadData = {
+                from:data.to,
+                to:data.from,
+                fid:'547240-549341-19',
+            }
+            chat.sayUpload(uploadData);
         }else{
             alert('上传图片失败，请重试。');
         }
@@ -201,6 +206,17 @@ Chat.prototype.say = function() {
  */
 Chat.prototype.sayUpload = function(data){
     //#TODO上传图片封装给服务器
+    var letter = {
+        type: 'message',
+        content:{
+            type: "image",
+            fid:data.fid,
+        },
+        from: data.from,
+        to: data.to, 
+    }
+    console.log('传过去图片：',letter);
+    this.connect.send(letter);
 }
 
 /*
@@ -214,8 +230,6 @@ Chat.prototype.sayEnd = function(data){
     }
     console.log('kill user的消息',letter);
     this.connect.send(letter);
-    //TODO:增加删除后续动作
-    
 }
 
 Chat.prototype.refreshUserList = function() {
@@ -304,7 +318,7 @@ function insertChatMsgLeft(data) {
     var clone = chatMsgLeft.clone();
     clone.find(".direct-chat-timestamp").html((new Date()).toLocaleTimeString());
     clone.find(".dctl").html(data.content);
-    clone.find('img').attr('src',chat.users[data.from].ext_content.pic);
+    //clone.find('img').attr('src',chat.users[data.from].ext_content.pic);
     msg_end.before(clone);
 }
 
@@ -325,7 +339,7 @@ function getSpecifyMessageType(message){
             console.log('消息是图片');
             var clone = chatMsgImage.clone();
             clone.find('img').attr("data-original", message.content.image_url);
-            clone.find('img').attr("src", "data:image/jpeg;base64," + message.content.image_thumb);
+            clone.find('img').attr("src",message.content.image_thumb);
             message.content = clone;
             break;
         default:

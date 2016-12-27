@@ -88,15 +88,19 @@ Connect.prototype.connect = function(host) {
                 break;
             case 'leavecs':
                 console.log('用户退出');
-                //delete public_chat.users[data.from]
-                //middle.userAvatarComponent.userListScope.$apply();
                 break;
             case 'message':
                 console.log('message');
                 directive.receive(data);
                  break;
             case 'kill_user':
-                console.log(data+'被kill掉了');
+                console.log(data,'被kill掉了');
+                for(var key in data.uids){
+                    console.log(data.uids[key]);
+                    delete public_chat.users[data.uids[key]];
+                    localStorage.removeItem('csyouyun'+data.uids[key]);
+                }
+                middle.userAvatarComponent.userListScope.$apply();
                 break;
             case 'heartbreak':
                 console.log('heartbreak');

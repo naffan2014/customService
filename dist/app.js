@@ -158,37 +158,6 @@
 
 	var msg_end;
 
-	// 聊天框显示出最新的
-	function msgScrollEnd() {
-	    msg_end[0].scrollIntoView();
-	}
-
-	/**
-	 * 自己的消息
-	 * 一条消息需要名字,时间,头像,内容
-	 * @return {[type]} [description]
-	 */
-	function insertChatMsgRight(message) {
-	    var date = new Date();
-	    var clone = chatMsgRight.clone();
-	    clone.find(".direct-chat-timestamp").html((new Date()).toLocaleTimeString());
-	    clone.find(".dctr").html(message);
-	    msg_end.before(clone);
-	}
-
-	/**
-	 * 对方的消息
-	 * @return {[type]} [description]
-	 */
-	function insertChatMsgLeft(data) {
-	    var date = new Date();
-	    var clone = chatMsgLeft.clone();
-	    clone.find(".direct-chat-timestamp").html((new Date()).toLocaleTimeString());
-	    clone.find(".dctl").html(data.content);
-	    clone.find('img').attr('src',chat.users[data.from].ext_content.pic);
-	    msg_end.before(clone);
-	}
-
 	function Chat() {
 	    this.connect = null;
 	    //登入进来的用户
@@ -268,15 +237,19 @@
 	      params: {
 	        'from':data.to,
 	        'to':data.from,
-	        'fid':data.to+ '-' + data.from +'-'+ tmpTimestamp,
+	        'fid':data.to+ '-' + data.from +'-'+ tmpTimestamp,//210000-547240-1482758314000
 	      },
 	      onComplete: function(response) {
-	        console.log('custom handler for file:',response);
-	        alert(JSON.stringify(response));
-	        if(response.result){
-	            alert('yes');
+	        console.log('上传图片成功:',response);
+	        if(response.result = 1){
+	            var clone = chatMsgImage.clone();
+	            clone.find('img').attr("data-original", "http://bpic.588ku.com/element_origin_min_pic/16/12/15/2c68d0b69c867cf3d4b046a02fc0a65d.jpg");
+	            clone.find('img').attr("src", "http://bpic.588ku.com/element_origin_min_pic/16/12/18/2b17c25c340f388835ddf2646aa0afb6.jpg");
+	            insertChatMsgRight(clone);
+	            
+	            chat.sayUpload();
 	        }else{
-	            alert('no');
+	            alert('上传图片失败，请重试。');
 	        }
 	      },
 	      onStart: function() {
@@ -289,7 +262,10 @@
 	    });
 	    //关闭会话逻辑
 	    userDom.find('#closeChat').click(function(){
-	       chat.sayEnd(data);
+	        if(confirm("确定结束本次对话吗？"))
+	        {
+	            chat.sayEnd(data);
+	        }
 	    });
 	    msg_input = userDom.find("#msg-input");
 	    msg_end = userDom.find("#msg_end");
@@ -303,7 +279,7 @@
 	 */
 	Chat.prototype.receiveMessage = function(message) {
 	    playMsgComingPromptTone();
-	    message = specifyMessageType(message);
+	    message = getSpecifyMessageType(message);
 	    var sendUserName = message.from;
 	    if (sendUserName === this.currentChat.username) {
 	        // 当前窗口是和发送用户
@@ -336,7 +312,7 @@
 	};
 
 	/*
-	 * 发送说话的消息
+	 * 发送内容为文字的消息
 	 */
 	Chat.prototype.say = function() {
 	    var msg = msg_input.val();
@@ -359,6 +335,14 @@
 	        this.connect.send(letter);
 	    }
 	};
+
+
+	/*
+	 * 发送图片消息
+	 */
+	Chat.prototype.sayUpload = function(data){
+	    //#TODO上传图片封装给服务器
+	}
 
 	/*
 	 * 客服断开连接
@@ -434,11 +418,49 @@
 	    }
 	}
 
+	// 聊天框显示出最新的
+	function msgScrollEnd() {
+	    msg_end[0].scrollIntoView();
+	}
+
+	/**
+	 * 自己的消息
+	 * 一条消息需要名字,时间,头像,内容
+	 * @return {[type]} [description]
+	 */
+	function insertChatMsgRight(message) {
+	    var date = new Date();
+	    var clone = chatMsgRight.clone();
+	    clone.find(".direct-chat-timestamp").html((new Date()).toLocaleTimeString());
+	    clone.find(".dctr").html(message);
+	    msg_end.before(clone);
+	}
+
+	/**
+	 * 对方的消息
+	 * @return {[type]} [description]
+	 */
+	function insertChatMsgLeft(data) {
+	    var date = new Date();
+	    var clone = chatMsgLeft.clone();
+	    clone.find(".direct-chat-timestamp").html((new Date()).toLocaleTimeString());
+	    clone.find(".dctl").html(data.content);
+	    clone.find('img').attr('src',chat.users[data.from].ext_content.pic);
+	    msg_end.before(clone);
+	}
+
+	/*
+	 * 发送消息，通过消息类型转化为通用的格式以待插入聊天框
+	 */
+	function sendSpecifyMessageType(message){
+	    //#TODO:统一进行发消息时的组装，现在暂时用不同方法
+	}
+
 	/*
 	 * 获取消息，通过消息类型转化为通用的格式以待插入聊天框
 	 */
-	function specifyMessageType(message){
-	    console.log('in specifyMessageType');
+	function getSpecifyMessageType(message){
+	    console.log('in getSpecifyMessageType');
 	    switch(message.content.type){
 	        case 'image':
 	            console.log('消息是图片');
@@ -580,15 +602,19 @@
 	                break;
 	            case 'leavecs':
 	                console.log('用户退出');
-	                //delete public_chat.users[data.from]
-	                //middle.userAvatarComponent.userListScope.$apply();
 	                break;
 	            case 'message':
 	                console.log('message');
 	                directive.receive(data);
 	                 break;
 	            case 'kill_user':
-	                console.log(data+'被kill掉了');
+	                console.log(data,'被kill掉了');
+	                for(var key in data.uids){
+	                    console.log(data.uids[key]);
+	                    delete public_chat.users[data.uids[key]];
+	                    localStorage.removeItem('csyouyun'+data.uids[key]);
+	                }
+	                middle.userAvatarComponent.userListScope.$apply();
 	                break;
 	            case 'heartbreak':
 	                console.log('heartbreak');

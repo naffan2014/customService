@@ -155,6 +155,7 @@
                 }
                 html += '<input type="hidden" name="' + key + '" value="' + paramVal + '" />';
               }
+              html += '<script>document.domain = "17youyun.com"</script>';
               return html;
             });
           }

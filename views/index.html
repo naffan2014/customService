@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>chat</title>
+    <title><%=title%></title>
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
     <link rel="stylesheet" href="/public/libs/bootstrap/css/bootstrap.min.css">
     <!-- <link rel="stylesheet" href="/public/libs/flat-ui/css/flat-ui.css"> -->
@@ -14,10 +14,8 @@
     <link rel="stylesheet" href="/public/app/css/chat.css">
     <link rel="stylesheet" href="/public/app/css/viewer/viewer.css">
     <style media="screen">
-
     </style>
 </head>
-
 <body>
     <div class="container" id="container">
         <div class="row chat-container">
@@ -35,7 +33,7 @@
                         <div class="ava-pic">
                             <img src="/public/app/img/avatar/kfavatar.png" alt="客服默认头像" />
                         </div>
-                        <span class="uname">游云客服系统</span>
+                        <span class="uname"><%=title%></span>
                     </div>
                     <user-list></user-list>
                 </div>
@@ -44,7 +42,7 @@
                     <div id="chatWindowDiv">
                         <div id='chatWindowDiv' class="box direct-chat direct-chat-success">
                             <div id="box-header" class="box-header with-border">
-                                <h3 id='chatWindow-username' class="box-title">游云客服系统</h3>
+                                <h3 id='chatWindow-username' class="box-title"><%=title%></h3>
                                 <!-- <span class="close-chat">关闭</span> -->
                             </div>
                             <!-- /.box-header -->
@@ -97,7 +95,7 @@
                     <div class="users-info">
                         <div class="userinfo">
                             <span class="nick-namek">昵称：</span>
-                            <span class="nick-namev">小丫丫</span>
+                            <span class="nick-namev">小丫丫1</span>
                         </div>
                         <div class="userinfo">
                             <span class="sexk">性别：</span>

@@ -5,7 +5,9 @@ var my_config = {
         //communication_server_host: 'ws://10.0.8.101:8081/websocket?data=eyJncm91cF9pZCI6IjIyMjIyMiIsImN1c3RvbWVyX2lkIjoiMTExMTExIiwidG9rZW4iOiJjZjRmZDg4OGI1MjhlNzkzMzMyZGMyMTM1NGU4OTJlYjMyYTA1ZWE3ZTM0OGZiNmVmOTJjYjJhNGQyNTg5MTlmIn0='
         communication_server_host: 'ws://10.0.8.91:8097/websocket',
         // communication_server_host: 'ws://192.168.33.191:8097/websocket?data=eyJncm91cF9pZCI6IjIyMjIyMiIsImN1c3RvbWVyX2lkIjoiMTExMTExIiwidG9rZW4iOiJjZjRmZDg4OGI1MjhlNzkzMzMyZGMyMTM1NGU4OTJlYjMyYTA1ZWE3ZTM0OGZiNmVmOTJjYjJhNGQyNTg5MTlmIn0='
-        upload: 'http://10.0.8.91:8096/fileProcess/custUploadFile',
+        //upload: 'http://10.0.8.91:8096/fileProcess/custUploadFile',
+        upload: 'http://csws.17youyun.com：8096/fileProcess/custUploadFile',
+        //upload: 'http://localhost:3000/file/upload',
     },
     avatar:{
         kf:'/public/app/img/avatar/kfavatar.png',

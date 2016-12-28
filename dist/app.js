@@ -221,8 +221,12 @@
 	    }
 	    //只需要在这里绑定窗口中的按钮事件，updateChatView则不用，因为都会走这个方法。
 	    userDom.find('#msg-input').on('keydown', function(event) {
+	        var content = userDom.find('#msg-input').val();
 	        if (event.ctrlKey && event.keyCode == 13) {
-	            // 回车
+	            // ctrl+回车
+	            userDom.find('#msg-input').append('\r\n')
+	        }else if(event.keyCode == 13){
+	            //回车
 	            chat.say();
 	        }
 	    });
@@ -237,20 +241,24 @@
 	      params: {
 	        'from':data.to,
 	        'to':data.from,
-	        //'fid':data.to+ '-' + data.from +'-'+ tmpTimestamp,//210000-547240-1482758314000
-	        'fid':210000-547240-1482758314000
+	        'fid':data.to+ '-' + data.from +'-'+ tmpTimestamp,//目前没有用
+	        //'fid':210000-547240-1482758314000
 	      },
 	      onComplete: function(response) {
-	        console.log('上传图片成功:',response);
-	        if(response.result = 1){
+	        var indexOfSearchWord = response.indexOf('\{');
+	        var temp = response.slice(indexOfSearchWord);
+	        data = JSON.parse(temp);
+	        console.log('上传图片结果:',response);
+	        if(true == data.result.secess){
 	            var clone = chatMsgImage.clone();
-	            clone.find('img').attr("data-original", "http://bpic.588ku.com/element_origin_min_pic/16/12/15/2c68d0b69c867cf3d4b046a02fc0a65d.jpg");
-	            clone.find('img').attr("src", "http://bpic.588ku.com/element_origin_min_pic/16/12/18/2b17c25c340f388835ddf2646aa0afb6.jpg");
+	            clone.find('img').attr("data-original", data.result.filePath );
+	            clone.find('img').attr("src", data.result.thumbFilePath);
 	            insertChatMsgRight(clone);
+	            msgScrollEnd();
 	            var uploadData = {
 	                from:data.to,
 	                to:data.from,
-	                fid:'547240-549341-19',
+	                fid:data.result.fid,
 	            }
 	            chat.sayUpload(uploadData);
 	        }else{
@@ -507,7 +515,9 @@
 	        //communication_server_host: 'ws://10.0.8.101:8081/websocket?data=eyJncm91cF9pZCI6IjIyMjIyMiIsImN1c3RvbWVyX2lkIjoiMTExMTExIiwidG9rZW4iOiJjZjRmZDg4OGI1MjhlNzkzMzMyZGMyMTM1NGU4OTJlYjMyYTA1ZWE3ZTM0OGZiNmVmOTJjYjJhNGQyNTg5MTlmIn0='
 	        communication_server_host: 'ws://10.0.8.91:8097/websocket',
 	        // communication_server_host: 'ws://192.168.33.191:8097/websocket?data=eyJncm91cF9pZCI6IjIyMjIyMiIsImN1c3RvbWVyX2lkIjoiMTExMTExIiwidG9rZW4iOiJjZjRmZDg4OGI1MjhlNzkzMzMyZGMyMTM1NGU4OTJlYjMyYTA1ZWE3ZTM0OGZiNmVmOTJjYjJhNGQyNTg5MTlmIn0='
-	        upload: 'http://10.0.8.91:8096/fileProcess/custUploadFile',
+	        //upload: 'http://10.0.8.91:8096/fileProcess/custUploadFile',
+	        upload: 'http://csws.17youyun.com：8096/fileProcess/custUploadFile',
+	        //upload: 'http://localhost:3000/file/upload',
 	    },
 	    avatar:{
 	        kf:'/public/app/img/avatar/kfavatar.png',

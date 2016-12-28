@@ -52,5 +52,6 @@ var server = app.listen(config.port, function() {
     logger.info('');
 });
 
+
 exports.app = app;
 exports.server = server;

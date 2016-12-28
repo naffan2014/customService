@@ -1,6 +1,6 @@
 var config = {
     hostname: 'localhost',
-    debug: true,
+    debug: false,
     port: 3000,
     redis: {
         port: 12312,

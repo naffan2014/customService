@@ -45,12 +45,12 @@
                         <div id='chatWindowDiv' class="box direct-chat direct-chat-success">
                             <div id="box-header" class="box-header with-border">
                                 <h3 id='chatWindow-username' class="box-title">游云客服系统</h3>
-                                <span class="close-chat">关闭</span>
+                                <!-- <span class="close-chat">关闭</span> -->
                             </div>
                             <!-- /.box-header -->
-                            <div id="box-body" class="box-body">
+                            <div  class="box-body">
                                 <!-- Conversations are loaded here -->
-                                <div class="direct-chat-messages">
+                                <div id="box-body" class="direct-chat-messages">
                                     <div id="msg_end" style="height:0px; overflow:hidden"></div>
                                 </div>
                                 <!--/.direct-chat-messages-->
@@ -61,7 +61,7 @@
                             <div class="box-footer">
                                 <div class="btnbar">
                                     <!-- <span>表情</span> -->
-                                    <span>图片</span>
+                                    <!-- <span>图片</span> -->
                                 </div>
                                 <div class="chat-enter">
                                     <textarea  id="msg-input" name="message" placeholder="请输入..."></textarea>
@@ -91,8 +91,8 @@
                     <div class="cst-header">
                         
                         <div class="cst-header-tabs highlight">用户资料</div>
-                        <div class="cst-header-tabs">其他1</div>
-                        <div class="cst-header-tabs">其他2</div>
+                        <!-- <div class="cst-header-tabs">其他1</div>
+                        <div class="cst-header-tabs">其他2</div> -->
                     </div>
                     <div class="users-info">
                         <div class="userinfo">
@@ -108,7 +108,7 @@
                             <span class="agev">24</span>
                         </div>
                     </div>
-                    <div class="users-info tohide">
+                    <!-- <div class="users-info tohide">
                         <div class="userinfo">
                             <span class="nick-namek">其他1昵称：</span>
                             <span class="nick-namev">111</span>
@@ -135,7 +135,7 @@
                             <span class="agek">其他2年龄：</span>
                             <span class="agev">24</span>
                         </div>
-                    </div>   
+                    </div>   --> 
                 </div>
                 
             </div>
@@ -194,7 +194,7 @@
 <script src="/public/libs/bootstrap.switch/js/bootstrap-switch.js" charset="utf-8"></script>
 <script src="/public/libs/angular/angular.js" charset="utf-8"></script>
 <script src="/public/libs/viewer/viewer-jquery.min.js" charset="utf-8"></script>
-
+<script src="/public/libs/ajaxfileupload/jquery.ajaxfileupload.js" charset="utf-8"></script>
 <script src="/dist/app.js" charset="utf-8"></script>
 <script type="text/javascript">
     var $tabList = $(".cst-header-tabs");

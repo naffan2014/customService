@@ -7,7 +7,7 @@
 </head>
 
 <body>
-    
+    <!-- 发送图片的模板 -->
     <div id="msg-image">
         <div class="direct-chat-msg">
             <img src="" data-original="" alt="">
@@ -15,7 +15,6 @@
                 /*
                  * 缩略图查看
                  */
-                
                 $('#chatWindowDiv').viewer({
                     url: 'data-original',
                     toolbar:false,
@@ -25,6 +24,7 @@
             </script>
         </div>
     </div>
+    
     <!-- 左侧的消息框,对方的消息  -->
     <div id="msg-left">
         <div class="direct-chat-msg">
@@ -49,7 +49,7 @@
                 <span class="direct-chat-timestamp pull-right"></span>
             </div>
             <!-- /.direct-chat-info -->
-            <img alt="message user image" src="/public/libs/adminLTE/img/user3-128x128.jpg" class="direct-chat-img">
+            <img alt="message user image" src="/public/app/img/avatar/kfavatar.png" class="direct-chat-img">
             <!-- /.direct-chat-img -->
             <!-- <div style="text-align:right;" class="direct-chat-text"></div> -->
             <div class="dctr"></div>
@@ -61,12 +61,12 @@
         <div id='chatWindowDiv' class="box direct-chat direct-chat-success">
             <div id="box-header" class="box-header with-border">
                 <h3 id='chatWindow-username' class="box-title"></h3>
-                <span class="close-chat">关闭</span>
+                <span class="close-chat" id="closeChat">关闭</span>
             </div>
             <!-- /.box-header -->
-            <div id="box-body" class="box-body">
+            <div  class="box-body">
                 <!-- Conversations are loaded here -->
-                <div class="direct-chat-messages">
+                <div id="box-body" class="direct-chat-messages">
                     <div id="msg_end" style="height:0px; overflow:hidden"></div>
                 </div>
                 <!--/.direct-chat-messages-->
@@ -77,7 +77,10 @@
             <div class="box-footer">
                 <div class="btnbar">
                     <!-- <span>表情</span> -->
-                    <span>图片</span>
+                    <form method="post"  action="" enctype="multipart/form-data" style="display: none;">
+                        <input id="imageUpload" type="file" name="fileUpload" />
+                    </form>
+                    <span onclick="$('#imageUpload').click();">图片</span>
                 </div>
                 <div class="chat-enter">
                    <textarea  id="msg-input" name="message" placeholder="请输入..."></textarea>

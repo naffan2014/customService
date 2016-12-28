@@ -24,5 +24,5 @@ $(function() {
             chat.settingMsgSoundPrompt();
         }
     });
-
+    
 });

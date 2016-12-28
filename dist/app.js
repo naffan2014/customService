@@ -70,7 +70,7 @@
 	            chat.settingMsgSoundPrompt();
 	        }
 	    });
-
+	    
 	});
 
 
@@ -158,37 +158,6 @@
 
 	var msg_end;
 
-	// 聊天框显示出最新的
-	function msgScrollEnd() {
-	    msg_end[0].scrollIntoView();
-	}
-
-	/**
-	 * 自己的消息
-	 * 一条消息需要名字,时间,头像,内容
-	 * @return {[type]} [description]
-	 */
-	function insertChatMsgRight(message) {
-	    var date = new Date();
-	    var clone = chatMsgRight.clone();
-	    clone.find(".direct-chat-timestamp").html((new Date()).toLocaleTimeString());
-	    clone.find(".dctr").html(message);
-	    msg_end.before(clone);
-	}
-
-	/**
-	 * 对方的消息
-	 * @return {[type]} [description]
-	 */
-	function insertChatMsgLeft(data) {
-	    var date = new Date();
-	    var clone = chatMsgLeft.clone();
-	    clone.find(".direct-chat-timestamp").html((new Date()).toLocaleTimeString());
-	    clone.find(".dctl").html(data.content);
-	    clone.find('img').attr('src',chat.users[data.from].ext_content.pic);
-	    msg_end.before(clone);
-	}
-
 	function Chat() {
 	    this.connect = null;
 	    //登入进来的用户
@@ -250,6 +219,7 @@
 	    } else {
 	        console.log('userdom is not null');
 	    }
+	    //只需要在这里绑定窗口中的按钮事件，updateChatView则不用，因为都会走这个方法。
 	    userDom.find('#msg-input').on('keydown', function(event) {
 	        if (event.ctrlKey && event.keyCode == 13) {
 	            // 回车
@@ -258,6 +228,49 @@
 	    });
 	    userDom.find('#say').click(function() {
 	         chat.say();
+	    });
+	    //绑定上传图片
+	    var tmpTimestamp = Date.parse(new Date());
+	     userDom.find('#imageUpload').ajaxfileupload({
+	      action: config.api.upload,
+	      valid_extensions : ['jpeg','gif','png','jpg'],
+	      params: {
+	        'from':data.to,
+	        'to':data.from,
+	        //'fid':data.to+ '-' + data.from +'-'+ tmpTimestamp,//210000-547240-1482758314000
+	        'fid':210000-547240-1482758314000
+	      },
+	      onComplete: function(response) {
+	        console.log('上传图片成功:',response);
+	        if(response.result = 1){
+	            var clone = chatMsgImage.clone();
+	            clone.find('img').attr("data-original", "http://bpic.588ku.com/element_origin_min_pic/16/12/15/2c68d0b69c867cf3d4b046a02fc0a65d.jpg");
+	            clone.find('img').attr("src", "http://bpic.588ku.com/element_origin_min_pic/16/12/18/2b17c25c340f388835ddf2646aa0afb6.jpg");
+	            insertChatMsgRight(clone);
+	            var uploadData = {
+	                from:data.to,
+	                to:data.from,
+	                fid:'547240-549341-19',
+	            }
+	            chat.sayUpload(uploadData);
+	        }else{
+	            alert('上传图片失败，请重试。');
+	        }
+	      },
+	      onStart: function() {
+	        //if(weWantedTo) return false; // cancels upload
+	      },
+	      onCancel: function() {
+	        console.log('no file selected');
+	        alert('图片上传出现了问题')
+	      }
+	    });
+	    //关闭会话逻辑
+	    userDom.find('#closeChat').click(function(){
+	        if(confirm("确定结束本次对话吗？"))
+	        {
+	            chat.sayEnd(data);
+	        }
 	    });
 	    msg_input = userDom.find("#msg-input");
 	    msg_end = userDom.find("#msg_end");
@@ -271,10 +284,7 @@
 	 */
 	Chat.prototype.receiveMessage = function(message) {
 	    playMsgComingPromptTone();
-	    message = specifyMessageType(message);
-	    // contentFormat = JSON.parse(message.content);
-	    // messageContent = contentFormat.content;
-	    // messageType = contentFormat.type;
+	    message = getSpecifyMessageType(message);
 	    var sendUserName = message.from;
 	    if (sendUserName === this.currentChat.username) {
 	        // 当前窗口是和发送用户
@@ -306,8 +316,10 @@
 	    msgScrollEnd();
 	};
 
+	/*
+	 * 发送内容为文字的消息
+	 */
 	Chat.prototype.say = function() {
-	    console.log('in say')    
 	    var msg = msg_input.val();
 	    if (msg !== '') {
 	        msg_input.val(null);
@@ -324,20 +336,42 @@
 	             to:this.currentChat.username,
 	             id:'asdfasdfasdfsadfds123',
 	        }
-	        // if (chat.currentChat.username !== null) {
-	            // // 单聊
-	            // letter.message.receiveUser = chat.currentChat.username;
-	            // letter.message.type = 'one';
-	        // } else {
-	            // // 群聊
-	            // letter.message.receiveUser = chat.currentChat.chatname;
-	            // letter.message.type = 'some';
-	        // }
-
 	        // 发送到服务器
-	        this.connect.sendToUser(letter);
+	        this.connect.send(letter);
 	    }
 	};
+
+
+	/*
+	 * 发送图片消息
+	 */
+	Chat.prototype.sayUpload = function(data){
+	    //#TODO上传图片封装给服务器
+	    var letter = {
+	        type: 'message',
+	        content:{
+	            type: "image",
+	            fid:data.fid,
+	        },
+	        from: data.from,
+	        to: data.to, 
+	    }
+	    console.log('传过去图片：',letter);
+	    this.connect.send(letter);
+	}
+
+	/*
+	 * 客服断开连接
+	 */
+	Chat.prototype.sayEnd = function(data){
+	     var letter = {
+	         type : 'kill_user',
+	         customer_id : data.to,
+	         uids : data.from,
+	    }
+	    console.log('kill user的消息',letter);
+	    this.connect.send(letter);
+	}
 
 	Chat.prototype.refreshUserList = function() {
 	    middle.userAvatarComponent.userListScope.$apply();
@@ -369,8 +403,8 @@
 	};
 
 	var chat = new Chat();
-	// var connect = new Connect(chat);
-	// chat.connect = connect;
+	var connect = new Connect(chat);
+	chat.connect = connect;
 	// 连接server
 	//connect.connect(config.communication_server_host);
 	// TODO 防止缓存的问题
@@ -398,17 +432,55 @@
 	    }
 	}
 
+	// 聊天框显示出最新的
+	function msgScrollEnd() {
+	    msg_end[0].scrollIntoView();
+	}
+
+	/**
+	 * 自己的消息
+	 * 一条消息需要名字,时间,头像,内容
+	 * @return {[type]} [description]
+	 */
+	function insertChatMsgRight(message) {
+	    var date = new Date();
+	    var clone = chatMsgRight.clone();
+	    clone.find(".direct-chat-timestamp").html((new Date()).toLocaleTimeString());
+	    clone.find(".dctr").html(message);
+	    msg_end.before(clone);
+	}
+
+	/**
+	 * 对方的消息
+	 * @return {[type]} [description]
+	 */
+	function insertChatMsgLeft(data) {
+	    var date = new Date();
+	    var clone = chatMsgLeft.clone();
+	    clone.find(".direct-chat-timestamp").html((new Date()).toLocaleTimeString());
+	    clone.find(".dctl").html(data.content);
+	    //clone.find('img').attr('src',chat.users[data.from].ext_content.pic);
+	    msg_end.before(clone);
+	}
+
+	/*
+	 * 发送消息，通过消息类型转化为通用的格式以待插入聊天框
+	 */
+	function sendSpecifyMessageType(message){
+	    //#TODO:统一进行发消息时的组装，现在暂时用不同方法
+	}
+
 	/*
 	 * 获取消息，通过消息类型转化为通用的格式以待插入聊天框
 	 */
-	function specifyMessageType(message){
-	    console.log('in specifyMessageType');
+	function getSpecifyMessageType(message){
+	    console.log('in getSpecifyMessageType');
 	    switch(message.content.type){
 	        case 'image':
 	            console.log('消息是图片');
 	            var clone = chatMsgImage.clone();
 	            clone.find('img').attr("data-original", message.content.image_url);
-	            clone.find('img').attr("src", "data:image/jpeg;base64," + message.content.image_thumb);
+	            clone.find('img').attr("src",message.content.image_thumb);
 	            message.content = clone;
 	            break;
 	        default:
@@ -435,6 +507,7 @@
 	        //communication_server_host: 'ws://10.0.8.101:8081/websocket?data=eyJncm91cF9pZCI6IjIyMjIyMiIsImN1c3RvbWVyX2lkIjoiMTExMTExIiwidG9rZW4iOiJjZjRmZDg4OGI1MjhlNzkzMzMyZGMyMTM1NGU4OTJlYjMyYTA1ZWE3ZTM0OGZiNmVmOTJjYjJhNGQyNTg5MTlmIn0='
 	        communication_server_host: 'ws://10.0.8.91:8097/websocket',
 	        // communication_server_host: 'ws://192.168.33.191:8097/websocket?data=eyJncm91cF9pZCI6IjIyMjIyMiIsImN1c3RvbWVyX2lkIjoiMTExMTExIiwidG9rZW4iOiJjZjRmZDg4OGI1MjhlNzkzMzMyZGMyMTM1NGU4OTJlYjMyYTA1ZWE3ZTM0OGZiNmVmOTJjYjJhNGQyNTg5MTlmIn0='
+	        upload: 'http://10.0.8.91:8096/fileProcess/custUploadFile',
 	    },
 	    avatar:{
 	        kf:'/public/app/img/avatar/kfavatar.png',
@@ -543,13 +616,20 @@
 	                break;
 	            case 'leavecs':
 	                console.log('用户退出');
-	                //delete public_chat.users[data.from]
-	                //middle.userAvatarComponent.userListScope.$apply();
 	                break;
 	            case 'message':
 	                console.log('message');
 	                directive.receive(data);
 	                 break;
+	            case 'kill_user':
+	                console.log(data,'被kill掉了');
+	                for(var key in data.uids){
+	                    console.log(data.uids[key]);
+	                    delete public_chat.users[data.uids[key]];
+	                    localStorage.removeItem('csyouyun'+data.uids[key]);
+	                }
+	                middle.userAvatarComponent.userListScope.$apply();
+	                break;
 	            case 'heartbreak':
 	                console.log('heartbreak');
 	                break;
@@ -570,14 +650,15 @@
 	    }; 
 	};
 
+	/*
+	 * 发送消息
+	 */
 	Connect.prototype.deliver = function(letter) {
-	    //this.socket.emit("letter", JSON.stringify(letter));
 	    this.socket.send(JSON.stringify(letter));
-	    console.log("deliver a letter: ");
-	    console.log(JSON.stringify(letter));
+	    console.log('发出的消息是',JSON.stringify(letter));
 	};
 
-	Connect.prototype.sendToUser = function(letter) {
+	Connect.prototype.send = function(letter) {
 	    this.deliver(letter);
 	};
 

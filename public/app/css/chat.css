@@ -261,7 +261,7 @@
     float: left;
     display: inline-block;
     /*width: 50%;*/
-    width: 33.33%;
+    width: 100%;
 }
 /*tab高亮*/
 .highlight{

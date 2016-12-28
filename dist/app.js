@@ -459,7 +459,7 @@
 	    var clone = chatMsgLeft.clone();
 	    clone.find(".direct-chat-timestamp").html((new Date()).toLocaleTimeString());
 	    clone.find(".dctl").html(data.content);
-	    //clone.find('img').attr('src',chat.users[data.from].ext_content.pic);
+	    clone.find('img#chatWindow-avatar').attr('src',chat.users[data.from].ext_content.pic);
 	    msg_end.before(clone);
 	}
 

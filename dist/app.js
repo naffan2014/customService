@@ -100,36 +100,54 @@
 	var chatApp = angular.module('chatApp', []);
 
 	chatApp.controller('sign', function($scope, $http) {
-	    $scope.username = '210000';
+	    $scope.username = '13522480935';
+	    $scope.password = '123456';
+	    
 	    $scope.signUser = function() {
-
-	        if (undefined === $scope.username || $scope.username.trim() === '') {
-	            alert('请输入客服标示');
-	        } else {
-	            $("#init").modal('hide');
-	            chat.signinuser.username = $scope.username;
-	            //chat.signIn($scope.username);
-	            var connect = new Connect(chat);
-	            chat.connect = connect;
-	            // 连接server
-	            var jsonStr = '{"group_id":"111111","customer_id":"'+$scope.username+'"}';
-	            //初始化chat信息
-	            //chat.users.push($scope.username);
-	            //chat.currentChat.theUser = $scope.username;
-	            //chat.currentChat.username = $scope.username;
-	            //chat.currentChat.chatname = $scope.username;
-	            //构造websocket通讯地址
-	            var socketData = window.btoa(jsonStr);
-	            var socketUrl = config.api.communication_server_host +"?data="+ socketData;
-	            connect.connect(socketUrl);
-	            //chat.refreshUserList();
-	            //setInterval(function(){chat.say()}, 5000);
+	        if(undefined === $scope.username || $scope.username.trim() === ''){
+	            alert('请输入用户名');
+	            return false;
 	        }
-	        
-	        
+	        if(undefined === $scope.password || $scope.password.trim() === ''){
+	            alert('请输入密码');
+	            return false;
+	        }
+	        $.ajax({
+	          url: config.api.login,
+	          data: "phone_number="+$scope.username+"&password="+$scope.password,
+	          type: 'post',
+	          dataType:'jsonp',
+	          jsonp:'json_callback',
+	          jsonpCallback:"success_jsonpCallback",
+	          success: function(data){
+	              if('success' == data.api_status){
+	                  console.log(data)
+	                    chat.signinuser.username = $scope.username;
+	                    //chat.signIn($scope.username);
+	                    var connect = new Connect(chat);
+	                    chat.connect = connect;
+	                    // 连接server
+	                    var jsonStr = '{"group_id":"'+ data.result.group_id +'","customer_id":"' + data.result.customer_id + '","token":"'+ data.result.token +'"}';
+	                    //初始化chat信息
+	                    //chat.users.push($scope.username);
+	                    //chat.currentChat.theUser = $scope.username;
+	                    //chat.currentChat.username = $scope.username;
+	                    //chat.currentChat.chatname = $scope.username;
+	                    //构造websocket通讯地址
+	                    var socketData = window.btoa(jsonStr);
+	                    var socketUrl = config.api.communication_server_host +"?data="+ socketData;
+	                    var socketRes = connect.connect(socketUrl);
+	              }else{
+	                  alert('登录失败')
+	                  return false;
+	              }
+	          },
+	          error:function(){
+	              alert('进了error');
+	          }
+	        });
+	        $("#init").modal('hide');
 	    };
-
-
 	});
 
 	module.exports = chatApp;
@@ -143,20 +161,15 @@
 	var Connect = __webpack_require__(5);
 	var middle = __webpack_require__(1);
 
-	// 没有<> 就变成选取元素了
-	var templateDiv = $("<div>");
-
-	// 自己的聊天消息
-	var chatMsgRight;
-	// 他人的聊天消息
-	var chatMsgLeft;
-	// 聊天窗口
-	var chatWindow;
-
-
-	var msg_input;
-
-	var msg_end;
+	var templateDiv = $("<div>");// 没有<> 就变成选取元素了
+	var chatMsgRight; // 自己的聊天消息
+	var chatMsgLeft; // 他人的聊天消息
+	var chatWindow; // 聊天窗口
+	var msg_input; //聊天输入
+	var msg_star; //聊天框最上端
+	var msg_end; //聊天框最下端
+	var lastHistoryId = 0; //拉取历史记录的最后一条
+	var HistoryNum = 20;
 
 	function Chat() {
 	    this.connect = null;
@@ -201,10 +214,10 @@
 	        userDom.find('#chatWindow-username').html(this.users[data.from].ext_content.name);
 	     }
 	     msg_input = userDom.find("#msg-input");
+	     msg_start = userDom.find("#box-body");
 	     msg_end = userDom.find("#msg_end");
 	     insertChatMsgLeft(data);
 	};
-
 
 	/*
 	 * 切换聊天窗口
@@ -217,7 +230,7 @@
 	        chat.chatWindowDom.set(data.from, userDom);
 	        $('#chatWindow-username',userDom).html(this.users[data.from].ext_content.name);
 	    } else {
-	        console.log('userdom is not null');
+	        console.log('userdom不是空的');
 	    }
 	    //更新用户资料
 	    $("#users-info #nick").html(parseInt(Math.random()*10+2, 10))
@@ -230,8 +243,36 @@
 	    //绑定下拉框到顶部后加载聊天记录
 	    $('div#box-body',userDom).scroll(function(){
 	        if(0 == $(this).scrollTop()){
-	            //$(this).scrollTop(20);
 	            console.log('拉到顶部')
+	            $.ajax({
+	              url: config.api.history,
+	              data: "user_id="+ data.from +"&num="+ HistoryNum +"&next_id="+ lastHistoryId,
+	              type: 'get',
+	              dataType:'jsonp',
+	              jsonp:'json_callback',
+	              jsonpCallback:"success_jsonpCallback",
+	              success: function(res){
+	                console.log(res);
+	                for(var key in res){
+	                    res[key].content = JSON.parse(res[key].content);
+	                    console.log(res[key])
+	                    var resContent = getSpecifyMessageType(res[key])
+	                    if( chat.currentChat.username == res[key].from){
+	                        insertChatMsgLeft(resContent)
+	                    }else{
+	                        insertChatHistoryRight(resContent)
+	                    }
+	                    //记录历史记录最后一条
+	                    lastHistoryId = resContent.id;
+	                }
+	                //拉取到记录后要把滚动条往下来一点，这是用户体验
+	                var height = $('div#box-body',userDom).height() * 0.3;
+	                $('div#box-body',userDom).scrollTop(height);
+	              },
+	              error:function(){
+	                  alert('获取消息失败，请重试');
+	              }
+	            });
 	        }
 	    });
 	    //只需要在这里绑定窗口中的按钮事件，updateChatView则不用，因为都会走这个方法。
@@ -297,7 +338,10 @@
 	            chat.sayEnd(data);
 	        }
 	    });
+	    
+	    //
 	    msg_input = userDom.find("#msg-input");
+	    msg_start = userDom.find("#box-body");
 	    msg_end = userDom.find("#msg_end");
 	    $('#chatWindowDiv').replaceWith(userDom);
 	};
@@ -466,7 +510,7 @@
 	}
 
 	/**
-	 * 自己的消息
+	 * 插入即时聊天客服的消息
 	 * 一条消息需要名字,时间,头像,内容
 	 * @return {[type]} [description]
 	 */
@@ -479,18 +523,43 @@
 	}
 
 	/**
-	 * 对方的消息
+	 * 插入即时聊天用户的消息
 	 * @return {[type]} [description]
 	 */
-	function insertChatMsgLeft(data) {
+	function insertChatMsgLeft(message) {
 	    var date = new Date();
 	    var clone = chatMsgLeft.clone();
-	    clone.find(".direct-chat-timestamp").html((new Date()).toLocaleTimeString());
-	    clone.find(".dctl").html(data.content);
-	    clone.find('img#chatWindow-avatar').attr('src',chat.users[data.from].ext_content.pic);
+	    clone.find(".direct-chat-timestamp").html(date.toLocaleTimeString());
+	    clone.find(".dctl").html(message.content);
+	    clone.find('img#chatWindow-avatar').attr('src',chat.users[message.from].ext_content.pic);
 	    msg_end.before(clone);
 	}
 
+	/*
+	 * 插入历史记录客服的消息
+	 */
+	function insertChatHistoryRight(message){
+	    var date = new Date();
+	    date.setTime(message.createTime)
+	    var clone = chatMsgRight.clone();
+	    $(".direct-chat-timestamp",clone).html(date.toLocaleTimeString());
+	    $(".dctr",clone).html(message.content);
+	    msg_start.prepend(clone)
+	    
+	}
+
+	/*
+	 * 插入劣势记录客户的消息
+	 */
+	function insertChatHistoryLeft(message){
+	    var date = new Date();
+	    date.setTime(message.createTime)
+	    var clone = chatMsgLeft.clone();
+	    clone.find(".direct-chat-timestamp").html(date.toLocaleTimeString());
+	    clone.find(".dctl").html(message.content);
+	    clone.find('img#chatWindow-avatar').attr('src',chat.users[data.from].ext_content.pic);
+	    msg_start.prepend(clone);
+	}
 	/*
 	 * 发送消息，通过消息类型转化为通用的格式以待插入聊天框
 	 */
@@ -502,7 +571,7 @@
 	 * 获取消息，通过消息类型转化为通用的格式以待插入聊天框
 	 */
 	function getSpecifyMessageType(message){
-	    console.log('in getSpecifyMessageType');
+	    console.log('in getSpecifyMessageType',message);
 	    switch(message.content.type){
 	        case 'image':
 	            console.log('消息是图片');
@@ -515,8 +584,7 @@
 	            console.log('消息是文字');
 	            message.content = message.content.content;
 	    }
-	    console.log('转化后的消息格式');
-	    console.log(message);
+	    console.log('转化后的消息格式',message);
 	    return message;
 	}
 
@@ -536,8 +604,11 @@
 	        communication_server_host: 'ws://10.0.8.91:8097/websocket',
 	        // communication_server_host: 'ws://192.168.33.191:8097/websocket?data=eyJncm91cF9pZCI6IjIyMjIyMiIsImN1c3RvbWVyX2lkIjoiMTExMTExIiwidG9rZW4iOiJjZjRmZDg4OGI1MjhlNzkzMzMyZGMyMTM1NGU4OTJlYjMyYTA1ZWE3ZTM0OGZiNmVmOTJjYjJhNGQyNTg5MTlmIn0='
 	        //upload: 'http://10.0.8.91:8096/fileProcess/custUploadFile',
-	        upload: 'http://csws.17youyun.com：8096/fileProcess/custUploadFile',
+	        upload: 'http://csws.17youyun.com:8096/fileProcess/custUploadFile',
 	        //upload: 'http://localhost:3000/file/upload',
+	        history: 'http://csws.17youyun.com:8096/history/getHistory',
+	        //login: 'http://csws.17youyun.com:8096/customer/login',
+	        login: 'http://csws.17youyun.com:8096/customer/login',
 	    },
 	    avatar:{
 	        kf:'/public/app/img/avatar/kfavatar.png',

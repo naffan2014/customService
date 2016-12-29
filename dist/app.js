@@ -215,12 +215,27 @@
 	    if (userDom === undefined || userDom === null) {
 	        userDom = chat.chatWindow.clone();
 	        chat.chatWindowDom.set(data.from, userDom);
-	        userDom.find('#chatWindow-username').html(this.users[data.from].ext_content.name);
+	        $('#chatWindow-username',userDom).html(this.users[data.from].ext_content.name);
 	    } else {
 	        console.log('userdom is not null');
 	    }
+	    //更新用户资料
+	    $("#users-info #nick").html(parseInt(Math.random()*10+2, 10))
+	    $("#users-info #uid").html(parseInt(Math.random()*10+2, 10))
+	    $("#users-info #phoneNum").html(parseInt(Math.random()*10+2, 10))
+	    $("#users-info #prvalue").html(parseInt(Math.random()*10+2, 10))
+	    $("#users-info #sumCount").html(parseInt(Math.random()*10+2, 10))
+	    $("#users-info #dealCount").html(parseInt(Math.random()*10+2, 10))
+	    $("#users-info #schoolCount").html(parseInt(Math.random()*10+2, 10))
+	    //绑定下拉框到顶部后加载聊天记录
+	    $('div#box-body',userDom).scroll(function(){
+	        if(0 == $(this).scrollTop()){
+	            //$(this).scrollTop(20);
+	            console.log('拉到顶部')
+	        }
+	    });
 	    //只需要在这里绑定窗口中的按钮事件，updateChatView则不用，因为都会走这个方法。
-	    userDom.find('#msg-input').on('keydown', function(event) {
+	    $('#msg-input',userDom).on('keydown', function(event) {
 	        var content = userDom.find('#msg-input').val();
 	        if (event.ctrlKey && event.keyCode == 13) {
 	            // ctrl+回车
@@ -230,12 +245,12 @@
 	            chat.say();
 	        }
 	    });
-	    userDom.find('#say').click(function() {
+	    $('#say',userDom).click(function() {
 	         chat.say();
 	    });
 	    //绑定上传图片
 	    var tmpTimestamp = Date.parse(new Date());
-	     userDom.find('#imageUpload').ajaxfileupload({
+	    $('#imageUpload',userDom).ajaxfileupload({
 	      action: config.api.upload,
 	      valid_extensions : ['jpeg','gif','png','jpg'],
 	      params: {
@@ -245,20 +260,22 @@
 	        //'fid':210000-547240-1482758314000
 	      },
 	      onComplete: function(response) {
+	          console.log('上传图片结果:',response);
+	        //#TODO:由于跨域的问题导致response回传的数据不规则，所以需要将数据规则化以后在进行判断是否成功。
 	        var indexOfSearchWord = response.indexOf('\{');
 	        var temp = response.slice(indexOfSearchWord);
-	        data = JSON.parse(temp);
-	        console.log('上传图片结果:',response);
-	        if(true == data.result.secess){
+	        responseData = JSON.parse(temp);
+	        console.log(responseData)
+	        if(true == responseData.result.secess){
 	            var clone = chatMsgImage.clone();
-	            clone.find('img').attr("data-original", data.result.filePath );
-	            clone.find('img').attr("src", data.result.thumbFilePath);
+	            clone.find('img').attr("data-original", responseData.result.filePath );
+	            clone.find('img').attr("src", responseData.result.thumbFilePath);
 	            insertChatMsgRight(clone);
 	            msgScrollEnd();
 	            var uploadData = {
 	                from:data.to,
 	                to:data.from,
-	                fid:data.result.fid,
+	                fid:responseData.result.fid,
 	            }
 	            chat.sayUpload(uploadData);
 	        }else{
@@ -379,6 +396,9 @@
 	    }
 	    console.log('kill user的消息',letter);
 	    this.connect.send(letter);
+	    //客服想关就关
+	    delete chat.users[data.from];
+	    localStorage.removeItem('csyouyun'+data.from);
 	}
 
 	Chat.prototype.refreshUserList = function() {

@@ -2,20 +2,15 @@ var config = require('./config');
 var Connect = require('./connect');
 var middle = require('./middle');
 
-// 没有<> 就变成选取元素了
-var templateDiv = $("<div>");
-
-// 自己的聊天消息
-var chatMsgRight;
-// 他人的聊天消息
-var chatMsgLeft;
-// 聊天窗口
-var chatWindow;
-
-
-var msg_input;
-
-var msg_end;
+var templateDiv = $("<div>");// 没有<> 就变成选取元素了
+var chatMsgRight; // 自己的聊天消息
+var chatMsgLeft; // 他人的聊天消息
+var chatWindow; // 聊天窗口
+var msg_input; //聊天输入
+var msg_star; //聊天框最上端
+var msg_end; //聊天框最下端
+var lastHistoryId = 0; //拉取历史记录的最后一条
+var HistoryNum = 20;
 
 function Chat() {
     this.connect = null;
@@ -60,10 +55,10 @@ Chat.prototype.updateChatView = function(data){
         userDom.find('#chatWindow-username').html(this.users[data.from].ext_content.name);
      }
      msg_input = userDom.find("#msg-input");
+     msg_start = userDom.find("#box-body");
      msg_end = userDom.find("#msg_end");
      insertChatMsgLeft(data);
 };
-
 
 /*
  * 切换聊天窗口
@@ -74,12 +69,55 @@ Chat.prototype.toggleChatView = function(data) {
     if (userDom === undefined || userDom === null) {
         userDom = chat.chatWindow.clone();
         chat.chatWindowDom.set(data.from, userDom);
-        userDom.find('#chatWindow-username').html(this.users[data.from].ext_content.name);
+        $('#chatWindow-username',userDom).html(this.users[data.from].ext_content.name);
     } else {
-        console.log('userdom is not null');
+        console.log('userdom不是空的');
     }
+    //更新用户资料
+    $("#users-info #nick").html(parseInt(Math.random()*10+2, 10))
+    $("#users-info #uid").html(parseInt(Math.random()*10+2, 10))
+    $("#users-info #phoneNum").html(parseInt(Math.random()*10+2, 10))
+    $("#users-info #prvalue").html(parseInt(Math.random()*10+2, 10))
+    $("#users-info #sumCount").html(parseInt(Math.random()*10+2, 10))
+    $("#users-info #dealCount").html(parseInt(Math.random()*10+2, 10))
+    $("#users-info #schoolCount").html(parseInt(Math.random()*10+2, 10))
+    //绑定下拉框到顶部后加载聊天记录
+    $('div#box-body',userDom).scroll(function(){
+        if(0 == $(this).scrollTop()){
+            console.log('拉到顶部')
+            $.ajax({
+              url: config.api.history,
+              data: "user_id="+ data.from +"&num="+ HistoryNum +"&next_id="+ lastHistoryId,
+              type: 'get',
+              dataType:'jsonp',
+              jsonp:'json_callback',
+              jsonpCallback:"success_jsonpCallback",
+              success: function(res){
+                console.log(res);
+                for(var key in res){
+                    res[key].content = JSON.parse(res[key].content);
+                    console.log(res[key])
+                    var resContent = getSpecifyMessageType(res[key])
+                    if( chat.currentChat.username == res[key].from){
+                        insertChatMsgLeft(resContent)
+                    }else{
+                        insertChatHistoryRight(resContent)
+                    }
+                    //记录历史记录最后一条
+                    lastHistoryId = resContent.id;
+                }
+                //拉取到记录后要把滚动条往下来一点，这是用户体验
+                var height = $('div#box-body',userDom).height() * 0.3;
+                $('div#box-body',userDom).scrollTop(height);
+              },
+              error:function(){
+                  alert('获取消息失败，请重试');
+              }
+            });
+        }
+    });
     //只需要在这里绑定窗口中的按钮事件，updateChatView则不用，因为都会走这个方法。
-    userDom.find('#msg-input').on('keydown', function(event) {
+    $('#msg-input',userDom).on('keydown', function(event) {
         var content = userDom.find('#msg-input').val();
         if (event.ctrlKey && event.keyCode == 13) {
             // ctrl+回车
@@ -89,12 +127,12 @@ Chat.prototype.toggleChatView = function(data) {
             chat.say();
         }
     });
-    userDom.find('#say').click(function() {
+    $('#say',userDom).click(function() {
          chat.say();
     });
     //绑定上传图片
     var tmpTimestamp = Date.parse(new Date());
-     userDom.find('#imageUpload').ajaxfileupload({
+    $('#imageUpload',userDom).ajaxfileupload({
       action: config.api.upload,
       valid_extensions : ['jpeg','gif','png','jpg'],
       params: {
@@ -104,20 +142,22 @@ Chat.prototype.toggleChatView = function(data) {
         //'fid':210000-547240-1482758314000
       },
       onComplete: function(response) {
+          console.log('上传图片结果:',response);
+        //#TODO:由于跨域的问题导致response回传的数据不规则，所以需要将数据规则化以后在进行判断是否成功。
         var indexOfSearchWord = response.indexOf('\{');
         var temp = response.slice(indexOfSearchWord);
-        data = JSON.parse(temp);
-        console.log('上传图片结果:',response);
-        if(true == data.result.secess){
+        responseData = JSON.parse(temp);
+        console.log(responseData)
+        if(true == responseData.result.secess){
             var clone = chatMsgImage.clone();
-            clone.find('img').attr("data-original", data.result.filePath );
-            clone.find('img').attr("src", data.result.thumbFilePath);
+            clone.find('img').attr("data-original", responseData.result.filePath );
+            clone.find('img').attr("src", responseData.result.thumbFilePath);
             insertChatMsgRight(clone);
             msgScrollEnd();
             var uploadData = {
                 from:data.to,
                 to:data.from,
-                fid:data.result.fid,
+                fid:responseData.result.fid,
             }
             chat.sayUpload(uploadData);
         }else{
@@ -139,7 +179,10 @@ Chat.prototype.toggleChatView = function(data) {
             chat.sayEnd(data);
         }
     });
+    
+    //
     msg_input = userDom.find("#msg-input");
+    msg_start = userDom.find("#box-body");
     msg_end = userDom.find("#msg_end");
     $('#chatWindowDiv').replaceWith(userDom);
 };
@@ -238,6 +281,9 @@ Chat.prototype.sayEnd = function(data){
     }
     console.log('kill user的消息',letter);
     this.connect.send(letter);
+    //客服想关就关
+    delete chat.users[data.from];
+    localStorage.removeItem('csyouyun'+data.from);
 }
 
 Chat.prototype.refreshUserList = function() {
@@ -305,7 +351,7 @@ function msgScrollEnd() {
 }
 
 /**
- * 自己的消息
+ * 插入即时聊天客服的消息
  * 一条消息需要名字,时间,头像,内容
  * @return {[type]} [description]
  */
@@ -318,18 +364,43 @@ function insertChatMsgRight(message) {
 }
 
 /**
- * 对方的消息
+ * 插入即时聊天用户的消息
  * @return {[type]} [description]
  */
-function insertChatMsgLeft(data) {
+function insertChatMsgLeft(message) {
     var date = new Date();
     var clone = chatMsgLeft.clone();
-    clone.find(".direct-chat-timestamp").html((new Date()).toLocaleTimeString());
-    clone.find(".dctl").html(data.content);
-    clone.find('img#chatWindow-avatar').attr('src',chat.users[data.from].ext_content.pic);
+    clone.find(".direct-chat-timestamp").html(date.toLocaleTimeString());
+    clone.find(".dctl").html(message.content);
+    clone.find('img#chatWindow-avatar').attr('src',chat.users[message.from].ext_content.pic);
     msg_end.before(clone);
 }
 
+/*
+ * 插入历史记录客服的消息
+ */
+function insertChatHistoryRight(message){
+    var date = new Date();
+    date.setTime(message.createTime)
+    var clone = chatMsgRight.clone();
+    $(".direct-chat-timestamp",clone).html(date.toLocaleTimeString());
+    $(".dctr",clone).html(message.content);
+    msg_start.prepend(clone)
+    
+}
+
+/*
+ * 插入劣势记录客户的消息
+ */
+function insertChatHistoryLeft(message){
+    var date = new Date();
+    date.setTime(message.createTime)
+    var clone = chatMsgLeft.clone();
+    clone.find(".direct-chat-timestamp").html(date.toLocaleTimeString());
+    clone.find(".dctl").html(message.content);
+    clone.find('img#chatWindow-avatar').attr('src',chat.users[data.from].ext_content.pic);
+    msg_start.prepend(clone);
+}
 /*
  * 发送消息，通过消息类型转化为通用的格式以待插入聊天框
  */
@@ -341,7 +412,7 @@ function sendSpecifyMessageType(message){
  * 获取消息，通过消息类型转化为通用的格式以待插入聊天框
  */
 function getSpecifyMessageType(message){
-    console.log('in getSpecifyMessageType');
+    console.log('in getSpecifyMessageType',message);
     switch(message.content.type){
         case 'image':
             console.log('消息是图片');
@@ -354,8 +425,7 @@ function getSpecifyMessageType(message){
             console.log('消息是文字');
             message.content = message.content.content;
     }
-    console.log('转化后的消息格式');
-    console.log(message);
+    console.log('转化后的消息格式',message);
     return message;
 }
 

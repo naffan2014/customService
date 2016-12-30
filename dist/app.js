@@ -96,58 +96,75 @@
 	var chat = __webpack_require__(3);
 	var config = __webpack_require__(4);
 	var Connect = __webpack_require__(5);
-
+	var mycookie = __webpack_require__(8);
 	var chatApp = angular.module('chatApp', []);
 
 	chatApp.controller('sign', function($scope, $http) {
-	    $scope.username = '13522480935';
-	    $scope.password = '123456';
-	    
-	    $scope.signUser = function() {
-	        if(undefined === $scope.username || $scope.username.trim() === ''){
-	            alert('请输入用户名');
-	            return false;
-	        }
-	        if(undefined === $scope.password || $scope.password.trim() === ''){
-	            alert('请输入密码');
-	            return false;
-	        }
-	        $.ajax({
-	          url: config.api.login,
-	          data: "phone_number="+$scope.username+"&password="+$scope.password,
-	          type: 'post',
-	          dataType:'jsonp',
-	          jsonp:'json_callback',
-	          jsonpCallback:"success_jsonpCallback",
-	          success: function(data){
-	              if('success' == data.api_status){
-	                  console.log(data)
-	                    chat.signinuser.username = $scope.username;
-	                    //chat.signIn($scope.username);
-	                    var connect = new Connect(chat);
-	                    chat.connect = connect;
-	                    // 连接server
-	                    var jsonStr = '{"group_id":"'+ data.result.group_id +'","customer_id":"' + data.result.customer_id + '","token":"'+ data.result.token +'"}';
-	                    //初始化chat信息
-	                    //chat.users.push($scope.username);
-	                    //chat.currentChat.theUser = $scope.username;
-	                    //chat.currentChat.username = $scope.username;
-	                    //chat.currentChat.chatname = $scope.username;
-	                    //构造websocket通讯地址
-	                    var socketData = window.btoa(jsonStr);
-	                    var socketUrl = config.api.communication_server_host +"?data="+ socketData;
-	                    var socketRes = connect.connect(socketUrl);
-	              }else{
-	                  alert('登录失败')
-	                  return false;
-	              }
-	          },
-	          error:function(){
-	              alert('进了error');
-	          }
-	        });
+	    var connect = new Connect(chat);
+	    chat.connect = connect;
+	    if(mycookie.getCookie('loginToken')){
+	        var loginGid = mycookie.getCookie('loginGid');
+	        var loginCid = mycookie.getCookie('loginCid');
+	        var loginToken = mycookie.getCookie('loginToken');
+	        //初始化chat信息
+	        chat.signinuser.username = loginCid;
+	        //chat.users.push($scope.username);
+	        //chat.currentChat.theUser = $scope.username;
+	        //chat.currentChat.username = $scope.username;
+	        //chat.currentChat.chatname = $scope.username;
+	        //构造websocket通讯地址
+	         var jsonStr = '{"group_id":"'+ loginGid +'","customer_id":"' + loginCid + '","token":"'+ loginToken +'"}';
+	        var socketData = window.btoa(jsonStr);
+	        var socketUrl = config.api.communication_server_host +"?data="+ socketData;
+	        var socketRes = connect.connect(socketUrl);
+	    }else{
+	        $scope.username = '13522480935';
+	        $scope.password = '123456';
 	        $("#init").modal('hide');
-	    };
+	        $scope.signUser = function() {
+	            if(undefined === $scope.username || $scope.username.trim() === ''){
+	                alert('请输入用户名');
+	                return false;
+	            }
+	            if(undefined === $scope.password || $scope.password.trim() === ''){
+	                alert('请输入密码');
+	                return false;
+	            }
+	            $.ajax({
+	              url: config.api.login,
+	              data: "phone_number="+$scope.username+"&password="+$scope.password,
+	              dataType:'jsonp',
+	              jsonp:'json_callback',
+	              jsonpCallback:"success_jsonpCallback",
+	              success: function(data){
+	                  if('success' == data.api_status){
+	                      //设置cookie
+	                      mycookie.setCookie('loginGid',data.result.group_id);
+	                      mycookie.setCookie('loginCid',data.result.customer_id);
+	                      mycookie.setCookie('loginToken',data.result.token);
+	                      console.log(data)
+	                      //初始化chat信息
+	                      chat.signinuser.username = data.result.customer_id;
+	                      //chat.users.push($scope.username);
+	                      //chat.currentChat.theUser = $scope.username;
+	                      //chat.currentChat.username = $scope.username;
+	                      //chat.currentChat.chatname = $scope.username;
+	                      //构造websocket通讯地址
+	                      var jsonStr = '{"group_id":"'+ data.result.group_id +'","customer_id":"' + data.result.customer_id + '","token":"'+ data.result.token +'"}';
+	                      var socketData = window.btoa(jsonStr);
+	                      var socketUrl = config.api.communication_server_host +"?data="+ socketData;
+	                      var socketRes = connect.connect(socketUrl);
+	                  }else{
+	                      alert('登录失败')
+	                      return false;
+	                  }
+	              },
+	              error:function(){
+	                  alert('进了error');
+	              }
+	           });
+	        };
+	    }
 	});
 
 	module.exports = chatApp;
@@ -257,8 +274,8 @@
 	                    res[key].content = JSON.parse(res[key].content);
 	                    console.log(res[key])
 	                    var resContent = getSpecifyMessageType(res[key])
-	                    if( chat.currentChat.username == res[key].from){
-	                        insertChatMsgLeft(resContent)
+	                    if( res[key].from == res[key].userId){
+	                        insertChatHistoryLeft(resContent)
 	                    }else{
 	                        insertChatHistoryRight(resContent)
 	                    }
@@ -266,7 +283,7 @@
 	                    lastHistoryId = resContent.id;
 	                }
 	                //拉取到记录后要把滚动条往下来一点，这是用户体验
-	                var height = $('div#box-body',userDom).height() * 0.3;
+	                var height = $('div#box-body',userDom).height() * 0.6;
 	                $('div#box-body',userDom).scrollTop(height);
 	              },
 	              error:function(){
@@ -557,7 +574,7 @@
 	    var clone = chatMsgLeft.clone();
 	    clone.find(".direct-chat-timestamp").html(date.toLocaleTimeString());
 	    clone.find(".dctl").html(message.content);
-	    clone.find('img#chatWindow-avatar').attr('src',chat.users[data.from].ext_content.pic);
+	    clone.find('img#chatWindow-avatar').attr('src',chat.users[message.userId].ext_content.pic);
 	    msg_start.prepend(clone);
 	}
 	/*
@@ -601,7 +618,7 @@
 	        // 通讯服务器地址
 	        //communication_server_host: window.location.href
 	        //communication_server_host: 'ws://10.0.8.101:8081/websocket?data=eyJncm91cF9pZCI6IjIyMjIyMiIsImN1c3RvbWVyX2lkIjoiMTExMTExIiwidG9rZW4iOiJjZjRmZDg4OGI1MjhlNzkzMzMyZGMyMTM1NGU4OTJlYjMyYTA1ZWE3ZTM0OGZiNmVmOTJjYjJhNGQyNTg5MTlmIn0='
-	        communication_server_host: 'ws://10.0.8.91:8097/websocket',
+	        communication_server_host: 'ws://csws.17youyun.com:8097/websocket',
 	        // communication_server_host: 'ws://192.168.33.191:8097/websocket?data=eyJncm91cF9pZCI6IjIyMjIyMiIsImN1c3RvbWVyX2lkIjoiMTExMTExIiwidG9rZW4iOiJjZjRmZDg4OGI1MjhlNzkzMzMyZGMyMTM1NGU4OTJlYjMyYTA1ZWE3ZTM0OGZiNmVmOTJjYjJhNGQyNTg5MTlmIn0='
 	        //upload: 'http://10.0.8.91:8096/fileProcess/custUploadFile',
 	        upload: 'http://csws.17youyun.com:8096/fileProcess/custUploadFile',
@@ -949,6 +966,51 @@
 
 	module.exports = userAvatarComponent;
 
+
+/***/ },
+/* 8 */
+/***/ function(module, exports) {
+
+	function Mycookie(){
+	    
+	}
+	/*
+	 * 设置cookie
+	 */
+	Mycookie.prototype.setCookie = function(name,value)
+	{
+	var Days = 30;
+	var exp = new Date();
+	exp.setTime(exp.getTime() + Days*24*60*60*1000);
+	document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString();
+	}
+
+	/*
+	 * 读取cookie
+	 */
+	Mycookie.prototype.getCookie = function(name)
+	{
+	var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+	if(arr=document.cookie.match(reg))
+	return unescape(arr[2]);
+	else
+	return null;
+	}
+
+	/*
+	 * 删除cookie
+	 */
+	Mycookie.prototype.delCookie = function(name)
+	{
+	var exp = new Date();
+	exp.setTime(exp.getTime() - 1);
+	var cval=getCookie(name);
+	if(cval!=null)
+	document.cookie= name + "="+cval+";expires="+exp.toGMTString();
+	}
+
+	var mycookie = new Mycookie();
+	module.exports = mycookie;
 
 /***/ }
 /******/ ]);

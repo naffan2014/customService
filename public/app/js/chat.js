@@ -98,8 +98,8 @@ Chat.prototype.toggleChatView = function(data) {
                     res[key].content = JSON.parse(res[key].content);
                     console.log(res[key])
                     var resContent = getSpecifyMessageType(res[key])
-                    if( chat.currentChat.username == res[key].from){
-                        insertChatMsgLeft(resContent)
+                    if( res[key].from == res[key].userId){
+                        insertChatHistoryLeft(resContent)
                     }else{
                         insertChatHistoryRight(resContent)
                     }
@@ -107,7 +107,7 @@ Chat.prototype.toggleChatView = function(data) {
                     lastHistoryId = resContent.id;
                 }
                 //拉取到记录后要把滚动条往下来一点，这是用户体验
-                var height = $('div#box-body',userDom).height() * 0.3;
+                var height = $('div#box-body',userDom).height() * 0.6;
                 $('div#box-body',userDom).scrollTop(height);
               },
               error:function(){
@@ -398,7 +398,7 @@ function insertChatHistoryLeft(message){
     var clone = chatMsgLeft.clone();
     clone.find(".direct-chat-timestamp").html(date.toLocaleTimeString());
     clone.find(".dctl").html(message.content);
-    clone.find('img#chatWindow-avatar').attr('src',chat.users[data.from].ext_content.pic);
+    clone.find('img#chatWindow-avatar').attr('src',chat.users[message.userId].ext_content.pic);
     msg_start.prepend(clone);
 }
 /*

@@ -279,6 +279,11 @@
 	              jsonpCallback:"success_jsonpCallback",
 	              success: function(res){
 	                console.log(res);
+	                if(res == undefined){
+	                    console.log('mei');
+	                }else{
+	                    console.log('you');
+	                }
 	                for(var key in res){
 	                    res[key].content = JSON.parse(res[key].content);
 	                    console.log(res[key])
@@ -638,11 +643,11 @@
 	        communication_server_host: 'ws://csws.17youyun.com:8097/websocket',
 	        // communication_server_host: 'ws://192.168.33.191:8097/websocket?data=eyJncm91cF9pZCI6IjIyMjIyMiIsImN1c3RvbWVyX2lkIjoiMTExMTExIiwidG9rZW4iOiJjZjRmZDg4OGI1MjhlNzkzMzMyZGMyMTM1NGU4OTJlYjMyYTA1ZWE3ZTM0OGZiNmVmOTJjYjJhNGQyNTg5MTlmIn0='
 	        //upload: 'http://10.0.8.91:8096/fileProcess/custUploadFile',
-	        upload: 'http://csws.17youyun.com:8096/fileProcess/custUploadFile',
+	        upload: 'http://csapi.17youyun.com:8096/fileProcess/custUploadFile',
 	        //upload: 'http://localhost:3000/file/upload',
-	        history: 'http://csws.17youyun.com:8096/history/getHistory',
+	        history: 'http://csapi.17youyun.com:8096/history/getHistory',
 	        //login: 'http://csws.17youyun.com:8096/customer/login',
-	        login: 'http://csws.17youyun.com:8096/customer/login',
+	        login: 'http://csapi.17youyun.com:8096/customer/login',
 	    },
 	    avatar:{
 	        kf:'/public/app/img/avatar/kfavatar.png',

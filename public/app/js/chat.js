@@ -93,6 +93,11 @@ Chat.prototype.toggleChatView = function(data) {
               jsonpCallback:"success_jsonpCallback",
               success: function(res){
                 console.log(res);
+                if(res == undefined){
+                    console.log('mei');
+                }else{
+                    console.log('you');
+                }
                 for(var key in res){
                     res[key].content = JSON.parse(res[key].content);
                     console.log(res[key])

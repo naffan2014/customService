@@ -1,7 +1,7 @@
 var Pubsub = require('./pubsub');
 var middle = require('./middle');
 var config = require('./config');
-
+var mycookie = require('./cookie');
 
 var pubsub = new Pubsub();
 // 初始化事件
@@ -126,10 +126,19 @@ Connect.prototype.connect = function(host) {
  * 发送消息
  */
 Connect.prototype.deliver = function(letter) {
-    this.socket.send(JSON.stringify(letter));
-    console.log('发出的消息是',JSON.stringify(letter));
+    if(mycookie.getCookie('loginGid') && mycookie.getCookie('loginCid') && mycookie.getCookie('loginToken')){
+        this.socket.send(JSON.stringify(letter));
+        console.log('发出的消息是',JSON.stringify(letter));
+    }else{
+        alert('你还没有登录，请先登录');
+        window.location.reload();
+        return false;
+    }
 };
 
+/*
+ * 接受发送消息，吐给最终消息
+ */
 Connect.prototype.send = function(letter) {
     this.deliver(letter);
 };

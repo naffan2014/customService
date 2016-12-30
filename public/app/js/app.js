@@ -1,16 +1,21 @@
 var middle = require('./middle');
 var chatApp = require('./ang/chatapp');
+var mycookie = require('./cookie');
 
 var chat = require('./chat');
 var userAvatarComponent = require('./ang/useravatar.component');
 middle.userAvatarComponent = userAvatarComponent;
 
 $(function() {
-    /*
-     * 登录浮层
-     */
-    $("#init").modal('show');
-
+    $('#exit').click(function(){
+         if(confirm("确定要退出吗？")){
+             mycookie.delCookie('loginGid');
+             mycookie.delCookie('loginCid');
+             mycookie.delCookie('loginToken');
+             window.location.reload();
+         }
+        
+    });
     /*
      * 声音switch
      */

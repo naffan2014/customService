@@ -10,7 +10,7 @@ var msg_input; //聊天输入
 var msg_star; //聊天框最上端
 var msg_end; //聊天框最下端
 var lastHistoryId = 0; //拉取历史记录的最后一条
-var HistoryNum = 20;
+var HistoryNum = 20; //历史记录一次拉回条数
 
 function Chat() {
     this.connect = null;

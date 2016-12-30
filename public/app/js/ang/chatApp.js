@@ -19,14 +19,17 @@ chatApp.controller('sign', function($scope, $http) {
         //chat.currentChat.username = $scope.username;
         //chat.currentChat.chatname = $scope.username;
         //构造websocket通讯地址
-         var jsonStr = '{"group_id":"'+ loginGid +'","customer_id":"' + loginCid + '","token":"'+ loginToken +'"}';
+        var jsonStr = '{"group_id":"'+ loginGid +'","customer_id":"' + loginCid + '","token":"'+ loginToken +'"}';
         var socketData = window.btoa(jsonStr);
         var socketUrl = config.api.communication_server_host +"?data="+ socketData;
         var socketRes = connect.connect(socketUrl);
     }else{
+          /*
+         * 登录浮层
+         */
+        $("#init").modal('show');
         $scope.username = '13522480935';
         $scope.password = '123456';
-        $("#init").modal('hide');
         $scope.signUser = function() {
             if(undefined === $scope.username || $scope.username.trim() === ''){
                 alert('请输入用户名');
@@ -44,10 +47,6 @@ chatApp.controller('sign', function($scope, $http) {
               jsonpCallback:"success_jsonpCallback",
               success: function(data){
                   if('success' == data.api_status){
-                      //设置cookie
-                      mycookie.setCookie('loginGid',data.result.group_id);
-                      mycookie.setCookie('loginCid',data.result.customer_id);
-                      mycookie.setCookie('loginToken',data.result.token);
                       console.log(data)
                       //初始化chat信息
                       chat.signinuser.username = data.result.customer_id;
@@ -60,13 +59,17 @@ chatApp.controller('sign', function($scope, $http) {
                       var socketData = window.btoa(jsonStr);
                       var socketUrl = config.api.communication_server_host +"?data="+ socketData;
                       var socketRes = connect.connect(socketUrl);
+                      $("#init").modal('hide');
+                      //设置cookie
+                      mycookie.setCookie('loginGid',data.result.group_id);
+                      mycookie.setCookie('loginCid',data.result.customer_id);
+                      mycookie.setCookie('loginToken',data.result.token);
                   }else{
-                      alert('登录失败')
-                      return false;
+                      alert('验证失败，请重新登录');
                   }
               },
               error:function(){
-                  alert('进了error');
+                  alert('网络出现问题，请稍后尝试。');
               }
            });
         };

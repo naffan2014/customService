@@ -195,7 +195,6 @@
 	var msg_input; //聊天输入
 	var msg_star; //聊天框最上端
 	var msg_end; //聊天框最下端
-	var lastHistoryId = 0; //拉取历史记录的最后一条
 	var HistoryNum = 20; //历史记录一次拉回条数
 
 	function Chat() {
@@ -273,7 +272,7 @@
 	            console.log('拉到顶部')
 	            $.ajax({
 	              url: config.api.history,
-	              data: "user_id="+ data.from +"&num="+ HistoryNum +"&next_id="+ lastHistoryId,
+	              data: "user_id="+ data.from +"&num="+ HistoryNum +"&next_id="+ $('#lastHistoryId',userDom).html(),
 	              type: 'get',
 	              dataType:'jsonp',
 	              jsonp:'json_callback',
@@ -285,19 +284,19 @@
 	                    console.log(res[key])
 	                    var resContent = getSpecifyMessageType(res[key])
 	                    if( res[key].from == res[key].userId){
-	                        insertChatHistoryLeft(resContent)
+	                        insertChatHistoryLeft(resContent);
 	                    }else{
-	                        insertChatHistoryRight(resContent)
+	                        insertChatHistoryRight(resContent);
 	                    }
 	                    //记录历史记录最后一条
-	                    lastHistoryId = resContent.id;
+	                    $('#lastHistoryId',userDom).html(resContent.id);
 	                }
 	                //拉取到记录后要把滚动条往下来一点，这是用户体验
 	                var height = $('div#box-body',userDom).height() * 0.6;
 	                $('div#box-body',userDom).scrollTop(height);
 	              },
 	              error:function(){
-	                  alert('获取消息失败，请重试');
+	                  console.log('获取消息失败，请重试');
 	              }
 	            });
 	        }

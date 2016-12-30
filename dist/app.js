@@ -147,7 +147,7 @@
 	              jsonp:'json_callback',
 	              jsonpCallback:"success_jsonpCallback",
 	              success: function(data){
-	                  if('success' == data.api_status){
+	                  if(1 == data.api_status){
 	                      console.log(data)
 	                      //初始化chat信息
 	                      chat.signinuser.username = data.result.customer_id;

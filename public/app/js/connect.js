@@ -46,22 +46,16 @@ function Connect(chat) {
 Connect.prototype.connect = function(host) {
     var socket = new WebSocket(host);
     this.socket = socket;
-    // this.socket = socket;
-
-    // 以下是socketio 的内部事件
-
     this.socket.onopen = function (obj) {
     //已经建立连接
         console.log("已连接到服务器");
         //public_chat.toggleChatView(public_chat.users);//连接服务器后显示聊天窗口
     };
-
     this.socket.onclose = function (obj) {
     //已经关闭连接
     console.log("已断开到服务器");
     alert('请检查服务器，服务器未开启')
     };
-    
     this.socket.onmessage = function (obj) {
         //console.log('java原始数据',obj);
         //收到服务器消息
@@ -115,7 +109,6 @@ Connect.prototype.connect = function(host) {
                 console.log('default');
         }
     };
-    
     this.socket.onerror = function (obj) {
         //产生异常
         console.log("socket产生异常",obj);
@@ -126,6 +119,8 @@ Connect.prototype.connect = function(host) {
  * 发送消息
  */
 Connect.prototype.deliver = function(letter) {
+    console.log('this socket',this.socket)
+    console.log('deliver',letter)
     if(mycookie.getCookie('loginGid') && mycookie.getCookie('loginCid') && mycookie.getCookie('loginToken')){
         this.socket.send(JSON.stringify(letter));
         console.log('发出的消息是',JSON.stringify(letter));

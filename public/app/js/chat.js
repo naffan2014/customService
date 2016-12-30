@@ -286,6 +286,14 @@ Chat.prototype.sayEnd = function(data){
     localStorage.removeItem('csyouyun'+data.from);
 }
 
+Chat.prototype.sayExit = function(){
+     var letter = {
+         type : "leavecs",
+         customer_id: chat.signinuser.username,
+     }
+     this.connect.send(letter);
+}
+
 Chat.prototype.refreshUserList = function() {
     middle.userAvatarComponent.userListScope.$apply();
 };

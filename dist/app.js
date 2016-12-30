@@ -47,14 +47,16 @@
 	var middle = __webpack_require__(1);
 	var chatApp = __webpack_require__(2);
 	var mycookie = __webpack_require__(8);
-
 	var chat = __webpack_require__(3);
+	var Connect = __webpack_require__(5);
+
 	var userAvatarComponent = __webpack_require__(7);
 	middle.userAvatarComponent = userAvatarComponent;
 
 	$(function() {
 	    $('#exit').click(function(){
 	         if(confirm("确定要退出吗？")){
+	             chat.sayExit();
 	             mycookie.delCookie('loginGid');
 	             mycookie.delCookie('loginCid');
 	             mycookie.delCookie('loginToken');
@@ -470,6 +472,14 @@
 	    localStorage.removeItem('csyouyun'+data.from);
 	}
 
+	Chat.prototype.sayExit = function(){
+	     var letter = {
+	         type : "leavecs",
+	         customer_id: chat.signinuser.username,
+	     }
+	     this.connect.send(letter);
+	}
+
 	Chat.prototype.refreshUserList = function() {
 	    middle.userAvatarComponent.userListScope.$apply();
 	};
@@ -700,22 +710,16 @@
 	Connect.prototype.connect = function(host) {
 	    var socket = new WebSocket(host);
 	    this.socket = socket;
-	    // this.socket = socket;
-
-	    // 以下是socketio 的内部事件
-
 	    this.socket.onopen = function (obj) {
 	    //已经建立连接
 	        console.log("已连接到服务器");
 	        //public_chat.toggleChatView(public_chat.users);//连接服务器后显示聊天窗口
 	    };
-
 	    this.socket.onclose = function (obj) {
 	    //已经关闭连接
 	    console.log("已断开到服务器");
 	    alert('请检查服务器，服务器未开启')
 	    };
-	    
 	    this.socket.onmessage = function (obj) {
 	        //console.log('java原始数据',obj);
 	        //收到服务器消息
@@ -769,7 +773,6 @@
 	                console.log('default');
 	        }
 	    };
-	    
 	    this.socket.onerror = function (obj) {
 	        //产生异常
 	        console.log("socket产生异常",obj);
@@ -780,6 +783,8 @@
 	 * 发送消息
 	 */
 	Connect.prototype.deliver = function(letter) {
+	    console.log('this socket',this.socket)
+	    console.log('deliver',letter)
 	    if(mycookie.getCookie('loginGid') && mycookie.getCookie('loginCid') && mycookie.getCookie('loginToken')){
 	        this.socket.send(JSON.stringify(letter));
 	        console.log('发出的消息是',JSON.stringify(letter));

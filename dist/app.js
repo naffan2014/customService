@@ -479,7 +479,7 @@
 
 	Chat.prototype.sayExit = function(){
 	     var letter = {
-	         type : "leavecs",
+	         type : "off_line",
 	         customer_id: chat.signinuser.username,
 	     }
 	     this.connect.send(letter);
@@ -1031,7 +1031,7 @@
 	// angular 好像使用不了map
 	angular.module('chatApp').component('userList', {
 	    template: `<div class='user-list'>
-	                  <div class='user-list-item' ng-click='toggleChat(user)' ng-repeat='user in users'>
+	                  <div class='user-list-item' ng-click='toggleChat(user,$event)' ng-repeat='user in users'>
 	                      <span>{{user.ext_content.name}}</span>
 	                      <span class="badge">{{user.unreadMsgCount}}</span>
 	                  </div>
@@ -1042,8 +1042,6 @@
 	        $scope.users = chat.users;
 	        userAvatarComponent.userListScope = $scope;
 	        
-	        
-	        
 	        var storage = window.localStorage;
 	        for(i in storage){
 	            if("csyouyun" == i.substring(0,8)){
@@ -1053,8 +1051,13 @@
 	            }
 	        }
 	        
-	        
-	        $scope.toggleChat = function(user) {
+	        $scope.toggleChat = function(user,event) {
+	            //点击用户时只有这个用户反色，其他的置灰
+	            $(".user-list-item").css('background-color','#999999');
+	            $(".user-list-item").css('border-bottom-color','#999999');
+	            $(event.delegateTarget).css('background-color','#f2f2f2');
+	            $(event.delegateTarget).css('border-bottom-color','#f2f2f2');
+	            
 	            console.log('useravatar.component中的function中的user');
 	            console.log(user)
 	            chat.currentChat.username = user.from;

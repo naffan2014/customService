@@ -294,7 +294,7 @@ Chat.prototype.sayEnd = function(data){
 
 Chat.prototype.sayExit = function(){
      var letter = {
-         type : "leavecs",
+         type : "off_line",
          customer_id: chat.signinuser.username,
      }
      this.connect.send(letter);

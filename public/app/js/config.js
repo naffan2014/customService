@@ -1,16 +1,46 @@
+/*
+ * 此文件为客服工作台所需要的所有接口。
+ * 根据env变量（从pm2传过来，由controller/home中转到index.html,再由js接收）来判断不同环境的不同调用接口。
+ */
+var communication_server_host = '';
+var upload = '';
+var history = '';
+var login = '';
+
+switch(env){
+     case 'production':
+        communication_server_host = 'ws://csws.17youyun.com/websocket';
+        upload = 'http://csapi.17youyun.com/fileProcess/custUploadFile';
+        history = 'http://csapi.17youyun.com/history/getHistory';
+        login = 'http://csapi.17youyun.com/customer/login';
+        break;
+     case 'development':
+        communication_server_host = 'ws://test.csws.17youyun.com/websocket';
+        upload = 'http://test.csapi.17youyun.com/fileProcess/custUploadFile';
+        history = 'http://test.csapi.17youyun.com/history/getHistory';
+        login = 'http://test.csapi.17youyun.com/customer/login';
+        break;
+     case 'test':
+        communication_server_host = 'ws://test.csws.17youyun.com/websocket';
+        upload = 'http://test.csapi.17youyun.com/fileProcess/custUploadFile';
+        history = 'http://test.csapi.17youyun.com/history/getHistory';
+        login = 'http://test.csapi.17youyun.com/customer/login';
+        break;
+     default://默认用正式的
+        communication_server_host = 'ws://csws.17youyun.com/websocket';
+        upload = 'http://csapi.17youyun.com/fileProcess/custUploadFile';
+        history = 'http://csapi.17youyun.com/history/getHistory';
+        login = 'http://csapi.17youyun.com/customer/login';
+     
+}
+
 var my_config = {
     api:{
         // 通讯服务器地址
-        //communication_server_host: window.location.href
-        //communication_server_host: 'ws://10.0.8.101:8081/websocket?data=eyJncm91cF9pZCI6IjIyMjIyMiIsImN1c3RvbWVyX2lkIjoiMTExMTExIiwidG9rZW4iOiJjZjRmZDg4OGI1MjhlNzkzMzMyZGMyMTM1NGU4OTJlYjMyYTA1ZWE3ZTM0OGZiNmVmOTJjYjJhNGQyNTg5MTlmIn0='
-        communication_server_host: 'ws://csws.17youyun.com/websocket',
-        // communication_server_host: 'ws://192.168.33.191:8097/websocket?data=eyJncm91cF9pZCI6IjIyMjIyMiIsImN1c3RvbWVyX2lkIjoiMTExMTExIiwidG9rZW4iOiJjZjRmZDg4OGI1MjhlNzkzMzMyZGMyMTM1NGU4OTJlYjMyYTA1ZWE3ZTM0OGZiNmVmOTJjYjJhNGQyNTg5MTlmIn0='
-        //upload: 'http://10.0.8.91:8096/fileProcess/custUploadFile',
-        upload: 'http://csapi.17youyun.com/fileProcess/custUploadFile',
-        //upload: 'http://localhost:3000/file/upload',
-        history: 'http://csapi.17youyun.com/history/getHistory',
-        //login: 'http://csws.17youyun.com:8096/customer/login',
-        login: 'http://csapi.17youyun.com/customer/login',
+        communication_server_host: communication_server_host,
+        upload: upload,
+        history: history,
+        login: login,
     },
     avatar:{
         kf:'/public/app/img/avatar/kfavatar.png',

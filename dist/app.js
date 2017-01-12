@@ -90,7 +90,6 @@
 
 
 	var middle = {};
-
 	middle.my_connect = null;
 	module.exports = middle;
 
@@ -332,7 +331,7 @@
 	        //'fid':210000-547240-1482758314000
 	      },
 	      onComplete: function(response) {
-	          console.log('上传图片结果:',response);
+	        console.log('上传图片结果:',response);
 	        //#TODO:由于跨域的问题导致response回传的数据不规则，所以需要将数据规则化以后在进行判断是否成功。
 	        var indexOfSearchWord = response.indexOf('\{');
 	        var temp = response.slice(indexOfSearchWord);
@@ -348,6 +347,7 @@
 	                from:data.to,
 	                to:data.from,
 	                fid:responseData.result.fid,
+	                file_length_byte:responseData.result.fileLengthByte,
 	            }
 	            chat.sayUpload(uploadData);
 	        }else{
@@ -452,6 +452,7 @@
 	        content:{
 	            type: "image",
 	            fid:data.fid,
+	            file_length_byte:data.file_length_byte,
 	        },
 	        from: data.from,
 	        to: data.to, 

@@ -46,11 +46,11 @@
 
 	var middle = __webpack_require__(1);
 	var chatApp = __webpack_require__(2);
-	var mycookie = __webpack_require__(8);
+	var mycookie = __webpack_require__(7);
 	var chat = __webpack_require__(3);
 	var Connect = __webpack_require__(5);
 
-	var userAvatarComponent = __webpack_require__(7);
+	var userAvatarComponent = __webpack_require__(8);
 	middle.userAvatarComponent = userAvatarComponent;
 
 	$(function() {
@@ -103,7 +103,7 @@
 	var chat = __webpack_require__(3);
 	var config = __webpack_require__(4);
 	var Connect = __webpack_require__(5);
-	var mycookie = __webpack_require__(8);
+	var mycookie = __webpack_require__(7);
 	var chatApp = angular.module('chatApp', []);
 
 	chatApp.controller('sign', function($scope, $http) {
@@ -669,7 +669,7 @@
 	var Pubsub = __webpack_require__(6);
 	var middle = __webpack_require__(1);
 	var config = __webpack_require__(4);
-	var mycookie = __webpack_require__(8);
+	var mycookie = __webpack_require__(7);
 
 	var pubsub = new Pubsub();
 	// 初始化事件
@@ -945,6 +945,51 @@
 
 /***/ },
 /* 7 */
+/***/ function(module, exports) {
+
+	function Mycookie(){
+	    
+	}
+	/*
+	 * 设置cookie
+	 */
+	Mycookie.prototype.setCookie = function(name,value)
+	{
+	var Days = 30;
+	var exp = new Date();
+	exp.setTime(exp.getTime() + Days*24*60*60*1000);
+	document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString();
+	}
+
+	/*
+	 * 读取cookie
+	 */
+	Mycookie.prototype.getCookie = function(name)
+	{
+	var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+	if(arr=document.cookie.match(reg))
+	return unescape(arr[2]);
+	else
+	return null;
+	}
+
+	/*
+	 * 删除cookie
+	 */
+	Mycookie.prototype.delCookie = function(name)
+	{
+	var exp = new Date();
+	exp.setTime(exp.getTime() - 1);
+	var cval= this.getCookie(name);
+	if(cval!=null)
+	document.cookie= name + "="+cval+";expires="+exp.toGMTString();
+	}
+
+	var mycookie = new Mycookie();
+	module.exports = mycookie;
+
+/***/ },
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var chat = __webpack_require__(3);
@@ -992,51 +1037,6 @@
 
 	module.exports = userAvatarComponent;
 
-
-/***/ },
-/* 8 */
-/***/ function(module, exports) {
-
-	function Mycookie(){
-	    
-	}
-	/*
-	 * 设置cookie
-	 */
-	Mycookie.prototype.setCookie = function(name,value)
-	{
-	var Days = 30;
-	var exp = new Date();
-	exp.setTime(exp.getTime() + Days*24*60*60*1000);
-	document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString();
-	}
-
-	/*
-	 * 读取cookie
-	 */
-	Mycookie.prototype.getCookie = function(name)
-	{
-	var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
-	if(arr=document.cookie.match(reg))
-	return unescape(arr[2]);
-	else
-	return null;
-	}
-
-	/*
-	 * 删除cookie
-	 */
-	Mycookie.prototype.delCookie = function(name)
-	{
-	var exp = new Date();
-	exp.setTime(exp.getTime() - 1);
-	var cval= this.getCookie(name);
-	if(cval!=null)
-	document.cookie= name + "="+cval+";expires="+exp.toGMTString();
-	}
-
-	var mycookie = new Mycookie();
-	module.exports = mycookie;
 
 /***/ }
 /******/ ]);

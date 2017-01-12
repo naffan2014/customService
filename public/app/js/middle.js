@@ -3,6 +3,5 @@
 
 
 var middle = {};
-
 middle.my_connect = null;
 module.exports = middle;

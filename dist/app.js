@@ -46,11 +46,11 @@
 
 	var middle = __webpack_require__(1);
 	var chatApp = __webpack_require__(2);
-	var mycookie = __webpack_require__(8);
+	var mycookie = __webpack_require__(7);
 	var chat = __webpack_require__(3);
 	var Connect = __webpack_require__(5);
 
-	var userAvatarComponent = __webpack_require__(7);
+	var userAvatarComponent = __webpack_require__(8);
 	middle.userAvatarComponent = userAvatarComponent;
 
 	$(function() {
@@ -90,7 +90,6 @@
 
 
 	var middle = {};
-
 	middle.my_connect = null;
 	module.exports = middle;
 
@@ -103,7 +102,7 @@
 	var chat = __webpack_require__(3);
 	var config = __webpack_require__(4);
 	var Connect = __webpack_require__(5);
-	var mycookie = __webpack_require__(8);
+	var mycookie = __webpack_require__(7);
 	var chatApp = angular.module('chatApp', []);
 
 	chatApp.controller('sign', function($scope, $http) {
@@ -332,7 +331,7 @@
 	        //'fid':210000-547240-1482758314000
 	      },
 	      onComplete: function(response) {
-	          console.log('上传图片结果:',response);
+	        console.log('上传图片结果:',response);
 	        //#TODO:由于跨域的问题导致response回传的数据不规则，所以需要将数据规则化以后在进行判断是否成功。
 	        var indexOfSearchWord = response.indexOf('\{');
 	        var temp = response.slice(indexOfSearchWord);
@@ -348,6 +347,7 @@
 	                from:data.to,
 	                to:data.from,
 	                fid:responseData.result.fid,
+	                file_length_byte:responseData.result.fileLengthByte,
 	            }
 	            chat.sayUpload(uploadData);
 	        }else{
@@ -452,6 +452,7 @@
 	        content:{
 	            type: "image",
 	            fid:data.fid,
+	            file_length_byte:data.file_length_byte,
 	        },
 	        from: data.from,
 	        to: data.to, 
@@ -669,7 +670,7 @@
 	var Pubsub = __webpack_require__(6);
 	var middle = __webpack_require__(1);
 	var config = __webpack_require__(4);
-	var mycookie = __webpack_require__(8);
+	var mycookie = __webpack_require__(7);
 
 	var pubsub = new Pubsub();
 	// 初始化事件
@@ -945,6 +946,51 @@
 
 /***/ },
 /* 7 */
+/***/ function(module, exports) {
+
+	function Mycookie(){
+	    
+	}
+	/*
+	 * 设置cookie
+	 */
+	Mycookie.prototype.setCookie = function(name,value)
+	{
+	var Days = 30;
+	var exp = new Date();
+	exp.setTime(exp.getTime() + Days*24*60*60*1000);
+	document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString();
+	}
+
+	/*
+	 * 读取cookie
+	 */
+	Mycookie.prototype.getCookie = function(name)
+	{
+	var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+	if(arr=document.cookie.match(reg))
+	return unescape(arr[2]);
+	else
+	return null;
+	}
+
+	/*
+	 * 删除cookie
+	 */
+	Mycookie.prototype.delCookie = function(name)
+	{
+	var exp = new Date();
+	exp.setTime(exp.getTime() - 1);
+	var cval= this.getCookie(name);
+	if(cval!=null)
+	document.cookie= name + "="+cval+";expires="+exp.toGMTString();
+	}
+
+	var mycookie = new Mycookie();
+	module.exports = mycookie;
+
+/***/ },
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var chat = __webpack_require__(3);
@@ -992,51 +1038,6 @@
 
 	module.exports = userAvatarComponent;
 
-
-/***/ },
-/* 8 */
-/***/ function(module, exports) {
-
-	function Mycookie(){
-	    
-	}
-	/*
-	 * 设置cookie
-	 */
-	Mycookie.prototype.setCookie = function(name,value)
-	{
-	var Days = 30;
-	var exp = new Date();
-	exp.setTime(exp.getTime() + Days*24*60*60*1000);
-	document.cookie = name + "="+ escape (value) + ";expires=" + exp.toGMTString();
-	}
-
-	/*
-	 * 读取cookie
-	 */
-	Mycookie.prototype.getCookie = function(name)
-	{
-	var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
-	if(arr=document.cookie.match(reg))
-	return unescape(arr[2]);
-	else
-	return null;
-	}
-
-	/*
-	 * 删除cookie
-	 */
-	Mycookie.prototype.delCookie = function(name)
-	{
-	var exp = new Date();
-	exp.setTime(exp.getTime() - 1);
-	var cval= this.getCookie(name);
-	if(cval!=null)
-	document.cookie= name + "="+cval+";expires="+exp.toGMTString();
-	}
-
-	var mycookie = new Mycookie();
-	module.exports = mycookie;
 
 /***/ }
 /******/ ]);

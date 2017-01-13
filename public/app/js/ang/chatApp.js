@@ -7,6 +7,7 @@ var chatApp = angular.module('chatApp', []);
 
 chatApp.controller('sign', function($scope, $http) {
     var connect = new Connect(chat);
+    middle.connect = connect;
     chat.connect = connect;
     if(mycookie.getCookie('loginToken')){
         var loginGid = mycookie.getCookie('loginGid');

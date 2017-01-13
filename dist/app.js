@@ -87,10 +87,16 @@
 
 	//  持有 后端 和前台渲染的公共变量
 	//  解决互相依赖导致某些前端渲染被超前执行
+	var middle = {
+	'connect' : null, //当前连接
+	'my_connect' : null, //连接状态
+	'my_connect_hint': '',//连接错误提示
+	'heartBeatFlag' : null, //心跳器
+	'heartBeatTimer' : 0, //重连次数
+	'currentUserDom': document, //当前开启的窗口
+	};
 
 
-	var middle = {};
-	middle.my_connect = null;
 	module.exports = middle;
 
 
@@ -107,6 +113,7 @@
 
 	chatApp.controller('sign', function($scope, $http) {
 	    var connect = new Connect(chat);
+	    middle.connect = connect;
 	    chat.connect = connect;
 	    if(mycookie.getCookie('loginToken')){
 	        var loginGid = mycookie.getCookie('loginGid');
@@ -256,6 +263,7 @@
 	        $('#chatWindow-username',userDom).html(this.users[data.from].ext_content.name);
 	    } else {
 	        console.log('userdom不是空的');
+	        middle.currentUserDom = userDom
 	    }
 	    //更新用户资料
 	    $("#users-info #nick").html(parseInt(Math.random()*10+2, 10))
@@ -441,6 +449,18 @@
 	    }
 	};
 
+	/*
+	 * 心跳
+	 */
+	Chat.prototype.heartBeat = function(kfid){
+	    var letter = {
+	        type:'heartBeat',
+	        customer_id:kfid,
+	        message: 1,
+	    }
+	    // 发送到服务器
+	    this.connect.send(letter);
+	}
 
 	/*
 	 * 发送图片消息
@@ -746,15 +766,56 @@
 	    var socket = new WebSocket(host);
 	    this.socket = socket;
 	    this.socket.onopen = function (obj) {
-	    //已经建立连接
+	        //已经建立连接
 	        console.log("已连接到服务器");
+	        //重连时的重置操作
+	        middle.my_connect = true;
+	        middle.my_connect_hint = '';
+	        middle.heartBeatTimer = 0;
+	        $('#alertHint',middle.currentUserDom).css('display','none');
 	        //public_chat.toggleChatView(public_chat.users);//连接服务器后显示聊天窗口
+	        middle.my_connect = true //连接开启
+	        //定时心跳
+	        middle.heartBeatFlag = setInterval(function () {
+	            middle.heartBeatTimer ++;//记录心跳次数
+	            public_chat.heartBeat(mycookie.getCookie('loginCid')); 
+	            console.log('middle.heartBeatTimer',middle.heartBeatTimer)
+	            if(middle.heartBeatTimer > 3 && middle.heartBeatTimer <= 6){
+	                middle.my_connect_hint = '网络中断，正在连接中...';
+	                $('#alertHint',middle.currentUserDom).css('display','block');
+	                $('#alertHint',middle.currentUserDom).html(middle.my_connect_hint);
+	                
+	                //进行重连
+	                console.log('开始重连')
+	                var loginGid = mycookie.getCookie('loginGid');
+	                var loginCid = mycookie.getCookie('loginCid');
+	                var loginToken = mycookie.getCookie('loginToken');
+	                //构造websocket通讯地址
+	                var jsonStr = '{"group_id":"'+ loginGid +'","customer_id":"' + loginCid + '","token":"'+ loginToken +'"}';
+	                var socketData = window.btoa(jsonStr);
+	                var socketUrl = config.api.communication_server_host +"?data="+ socketData;
+	                var socketRes = middle.connect.connect(socketUrl);
+	            }else if(middle.heartBeatTimer > 6){
+	                middle.my_connect_hint = '已断开连接，请重新登录';
+	                $('#alertHint',middle.currentUserDom).css('display','block');
+	                $('#alertHint',middle.currentUserDom).html(middle.my_connect_hint);
+	                clearInterval(middle.heartBeatFlag);
+	                middle.my_connect = false;
+	            }else{
+	                
+	                $('#alertHint',middle.currentUserDom).css('display','none');
+	            }
+	        }, 30000);
 	    };
-	    this.socket.onclose = function (obj) {
-	    //已经关闭连接
-	    console.log("已断开到服务器");
-	    alert('请检查服务器，服务器未开启')
-	    };
+	    // this.socket.onclose = function (obj) {
+	        // console.log("已断开与服务器的连接");
+	        // //已经关闭连接
+	        // //clearInterval(middle.heartBeatFlag);//断开连接了就没有必要再走心跳了
+	        // middle.my_connect = false;
+	        // middle.my_connect_hint = '已断开与服务器的连接';
+	        // $('#alertHint',middle.currentUserDom).css('display','block');
+	        // $('#alertHint',middle.currentUserDom).html(middle.my_connect_hint);
+	    // };
 	    this.socket.onmessage = function (obj) {
 	        //console.log('java原始数据',obj);
 	        //收到服务器消息
@@ -795,8 +856,8 @@
 	                }
 	                middle.userAvatarComponent.userListScope.$apply();
 	                break;
-	            case 'heartbreak':
-	                console.log('heartbreak');
+	            case 'heartBeat':
+	                middle.heartBeatTimer --;
 	                break;
 	            case 'transfer':
 	                console.log('transfer');
@@ -818,7 +879,6 @@
 	 * 发送消息
 	 */
 	Connect.prototype.deliver = function(letter) {
-	    console.log('this socket',this.socket)
 	    console.log('deliver',letter)
 	    if(mycookie.getCookie('loginGid') && mycookie.getCookie('loginCid') && mycookie.getCookie('loginToken')){
 	        this.socket.send(JSON.stringify(letter));

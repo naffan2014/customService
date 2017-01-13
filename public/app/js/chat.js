@@ -71,6 +71,7 @@ Chat.prototype.toggleChatView = function(data) {
         $('#chatWindow-username',userDom).html(this.users[data.from].ext_content.name);
     } else {
         console.log('userdom不是空的');
+        middle.currentUserDom = userDom
     }
     //更新用户资料
     $("#users-info #nick").html(parseInt(Math.random()*10+2, 10))
@@ -256,6 +257,18 @@ Chat.prototype.say = function() {
     }
 };
 
+/*
+ * 心跳
+ */
+Chat.prototype.heartBeat = function(kfid){
+    var letter = {
+        type:'heartBeat',
+        customer_id:kfid,
+        message: 1,
+    }
+    // 发送到服务器
+    this.connect.send(letter);
+}
 
 /*
  * 发送图片消息

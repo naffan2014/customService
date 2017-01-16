@@ -242,8 +242,8 @@
 	    var userDom = chat.chatWindowDom.get(data.from);
 	    if (userDom === undefined || userDom === null) {
 	        userDom = chat.chatWindow.clone();
-	        chat.chatWindowDom.set(data.from, userDom);
 	        userDom.find('#chatWindow-username').html(this.users[data.from].ext_content.name);
+	        chat.chatWindowDom.set(data.from, userDom);
 	     }
 	     
 	     //当涉及多个人会话时userDom会变成当前未激活窗口的用户,所以我们要临时将当前激活的存起来，完成这个事件以后再归还
@@ -877,6 +877,9 @@
 	                break;
 	            case 'time_out_user':
 	                console.log('用户长时间没有说话自动断开',data.uid);
+	                var userDom = public_chat.chatWindowDom.get(data.uid);
+	                $('#alertHint',userDom).css('display','block');
+	                $('#alertHint',userDom).html("客户长时间未应答，已结束回话");
 	                //将connect位置为0,用来客服关闭的时候判断是否再发消息，庆磊提出
 	                var oneInformation = JSON.parse(localStorage.getItem('csyouyun'+data.uid));
 	                oneInformation.connect = 0;

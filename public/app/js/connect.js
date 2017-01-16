@@ -143,6 +143,9 @@ Connect.prototype.connect = function(host) {
                 break;
             case 'time_out_user':
                 console.log('用户长时间没有说话自动断开',data.uid);
+                var userDom = public_chat.chatWindowDom.get(data.uid);
+                $('#alertHint',userDom).css('display','block');
+                $('#alertHint',userDom).html("客户长时间未应答，已结束回话");
                 //将connect位置为0,用来客服关闭的时候判断是否再发消息，庆磊提出
                 var oneInformation = JSON.parse(localStorage.getItem('csyouyun'+data.uid));
                 oneInformation.connect = 0;

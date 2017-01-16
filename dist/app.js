@@ -247,6 +247,7 @@
 	     }
 	     
 	     //当涉及多个人会话时userDom会变成当前未激活窗口的用户,所以我们要临时将当前激活的存起来，完成这个事件以后再归还
+	     var msg_start = (msg_start != undefined)?msg_start:'';
 	     var msg_input_tmp = msg_input;
 	     var msg_start_tmp = msg_start;
 	     var msg_end_tmp =  msg_end;
@@ -385,6 +386,7 @@
 	        {
 	            chat.sayEnd(data);
 	        }
+	        return false;
 	    });
 	    
 	    //
@@ -494,16 +496,20 @@
 	 * 客服断开连接
 	 */
 	Chat.prototype.sayEnd = function(data){
-	     var letter = {
-	         type : 'kill_user',
-	         customer_id : data.to,
-	         uids : data.from,
+	    var forConnect = JSON.parse(localStorage.getItem('csyouyun'+data.from));
+	    if(0 != forConnect.connect){
+	        var letter = {
+	             type : 'kill_user',
+	             customer_id : data.to,
+	             uids : data.from,
+	        }
+	        console.log('kill user的消息',letter);
+	        this.connect.send(letter);
 	    }
-	    console.log('kill user的消息',letter);
-	    this.connect.send(letter);
 	    //客服想关就关
 	    delete chat.users[data.from];
 	    localStorage.removeItem('csyouyun'+data.from);
+	    middle.userAvatarComponent.userListScope.$apply();
 	}
 
 	Chat.prototype.sayExit = function(){
@@ -839,8 +845,9 @@
 	                if(undefined == data.ext_content){
 	                    data.ext_content = {};
 	                    data.ext_content.name = config.name.kr;
-	                    data.ext_content.pic = config.avatar.kr;   
+	                    data.ext_content.pic = config.avatar.kr;
 	                }
+	                data.connect = 1; //用户连接着
 	                //存入用户集合
 	                var jsonfyData = JSON.stringify(data); //为了显示用户列表埋的数据(替换成存入localstorage)
 	                localStorage.setItem('csyouyun'+data.from,jsonfyData);
@@ -868,6 +875,13 @@
 	            case 'heartBeat':
 	                middle.heartBeatTimer --;
 	                break;
+	            case 'time_out_user':
+	                console.log('用户长时间没有说话自动断开',data.uid);
+	                //将connect位置为0,用来客服关闭的时候判断是否再发消息，庆磊提出
+	                var oneInformation = JSON.parse(localStorage.getItem('csyouyun'+data.uid));
+	                oneInformation.connect = 0;
+	                localStorage.setItem('csyouyun'+data.uid,JSON.stringify(oneInformation));
+	                break;
 	            case 'transfer':
 	                console.log('transfer');
 	                 break;
@@ -888,10 +902,19 @@
 	 * 发送消息
 	 */
 	Connect.prototype.deliver = function(letter) {
-	    console.log('deliver',letter)
+	    //增加ext_content信息
+	    var localStorageInformation = JSON.parse(localStorage.getItem('csyouyun'+letter.to));
+	    if(null != localStorageInformation){
+	        letter.ext_content = {
+	            name:localStorageInformation.ext_content.name,
+	            id:localStorageInformation.from,
+	            pic:localStorageInformation.ext_content.pic,
+	        };
+	         console.log('deliver',letter)
+	    }
 	    if(mycookie.getCookie('loginGid') && mycookie.getCookie('loginCid') && mycookie.getCookie('loginToken')){
 	        this.socket.send(JSON.stringify(letter));
-	        console.log('发出的消息是',JSON.stringify(letter));
+	        //console.log('发出的消息是',JSON.stringify(letter));
 	    }else{
 	        alert('你还没有登录，请先登录');
 	        window.location.reload();

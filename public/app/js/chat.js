@@ -55,6 +55,7 @@ Chat.prototype.updateChatView = function(data){
      }
      
      //当涉及多个人会话时userDom会变成当前未激活窗口的用户,所以我们要临时将当前激活的存起来，完成这个事件以后再归还
+     var msg_start = (msg_start != undefined)?msg_start:'';
      var msg_input_tmp = msg_input;
      var msg_start_tmp = msg_start;
      var msg_end_tmp =  msg_end;
@@ -193,6 +194,7 @@ Chat.prototype.toggleChatView = function(data) {
         {
             chat.sayEnd(data);
         }
+        return false;
     });
     
     //
@@ -302,16 +304,20 @@ Chat.prototype.sayUpload = function(data){
  * 客服断开连接
  */
 Chat.prototype.sayEnd = function(data){
-     var letter = {
-         type : 'kill_user',
-         customer_id : data.to,
-         uids : data.from,
+    var forConnect = JSON.parse(localStorage.getItem('csyouyun'+data.from));
+    if(0 != forConnect.connect){
+        var letter = {
+             type : 'kill_user',
+             customer_id : data.to,
+             uids : data.from,
+        }
+        console.log('kill user的消息',letter);
+        this.connect.send(letter);
     }
-    console.log('kill user的消息',letter);
-    this.connect.send(letter);
     //客服想关就关
     delete chat.users[data.from];
     localStorage.removeItem('csyouyun'+data.from);
+    middle.userAvatarComponent.userListScope.$apply();
 }
 
 Chat.prototype.sayExit = function(){

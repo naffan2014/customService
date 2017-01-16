@@ -111,8 +111,9 @@ Connect.prototype.connect = function(host) {
                 if(undefined == data.ext_content){
                     data.ext_content = {};
                     data.ext_content.name = config.name.kr;
-                    data.ext_content.pic = config.avatar.kr;   
+                    data.ext_content.pic = config.avatar.kr;
                 }
+                data.connect = 1; //用户连接着
                 //存入用户集合
                 var jsonfyData = JSON.stringify(data); //为了显示用户列表埋的数据(替换成存入localstorage)
                 localStorage.setItem('csyouyun'+data.from,jsonfyData);
@@ -140,6 +141,13 @@ Connect.prototype.connect = function(host) {
             case 'heartBeat':
                 middle.heartBeatTimer --;
                 break;
+            case 'time_out_user':
+                console.log('用户长时间没有说话自动断开',data.uid);
+                //将connect位置为0,用来客服关闭的时候判断是否再发消息，庆磊提出
+                var oneInformation = JSON.parse(localStorage.getItem('csyouyun'+data.uid));
+                oneInformation.connect = 0;
+                localStorage.setItem('csyouyun'+data.uid,JSON.stringify(oneInformation));
+                break;
             case 'transfer':
                 console.log('transfer');
                  break;
@@ -160,10 +168,19 @@ Connect.prototype.connect = function(host) {
  * 发送消息
  */
 Connect.prototype.deliver = function(letter) {
-    console.log('deliver',letter)
+    //增加ext_content信息
+    var localStorageInformation = JSON.parse(localStorage.getItem('csyouyun'+letter.to));
+    if(null != localStorageInformation){
+        letter.ext_content = {
+            name:localStorageInformation.ext_content.name,
+            id:localStorageInformation.from,
+            pic:localStorageInformation.ext_content.pic,
+        };
+         console.log('deliver',letter)
+    }
     if(mycookie.getCookie('loginGid') && mycookie.getCookie('loginCid') && mycookie.getCookie('loginToken')){
         this.socket.send(JSON.stringify(letter));
-        console.log('发出的消息是',JSON.stringify(letter));
+        //console.log('发出的消息是',JSON.stringify(letter));
     }else{
         alert('你还没有登录，请先登录');
         window.location.reload();

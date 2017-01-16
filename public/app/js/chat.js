@@ -50,8 +50,8 @@ Chat.prototype.updateChatView = function(data){
     var userDom = chat.chatWindowDom.get(data.from);
     if (userDom === undefined || userDom === null) {
         userDom = chat.chatWindow.clone();
-        chat.chatWindowDom.set(data.from, userDom);
         userDom.find('#chatWindow-username').html(this.users[data.from].ext_content.name);
+        chat.chatWindowDom.set(data.from, userDom);
      }
      
      //当涉及多个人会话时userDom会变成当前未激活窗口的用户,所以我们要临时将当前激活的存起来，完成这个事件以后再归还

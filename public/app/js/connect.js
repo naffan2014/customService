@@ -60,7 +60,7 @@ Connect.prototype.connect = function(host) {
         middle.heartBeatFlag = setInterval(function () {
             middle.heartBeatTimer ++;//记录心跳次数
             public_chat.heartBeat(mycookie.getCookie('loginCid')); 
-            console.log('middle.heartBeatTimer',middle.heartBeatTimer)
+            //console.log('middle.heartBeatTimer',middle.heartBeatTimer)
             if(middle.heartBeatTimer > 3 && middle.heartBeatTimer <= 6){
                 middle.my_connect_hint = '网络中断，正在连接中...';
                 $('#alertHint',middle.currentUserDom).css('display','block');

@@ -245,10 +245,19 @@
 	        chat.chatWindowDom.set(data.from, userDom);
 	        userDom.find('#chatWindow-username').html(this.users[data.from].ext_content.name);
 	     }
+	     
+	     //当涉及多个人会话时userDom会变成当前未激活窗口的用户,所以我们要临时将当前激活的存起来，完成这个事件以后再归还
+	     var msg_input_tmp = msg_input;
+	     var msg_start_tmp = msg_start;
+	     var msg_end_tmp =  msg_end;
 	     msg_input = userDom.find("#msg-input");
 	     msg_start = userDom.find("#box-body");
 	     msg_end = userDom.find("#msg_end");
 	     insertChatMsgLeft(data);
+	     //归还
+	     msg_input = msg_input_tmp;
+	     msg_start = msg_start_tmp;
+	     msg_end = msg_end_tmp;
 	};
 
 	/*
@@ -262,7 +271,7 @@
 	        chat.chatWindowDom.set(data.from, userDom);
 	        $('#chatWindow-username',userDom).html(this.users[data.from].ext_content.name);
 	    } else {
-	        console.log('userdom不是空的');
+	        console.log('userdom是',data.from);
 	        middle.currentUserDom = userDom
 	    }
 	    //更新用户资料
@@ -779,7 +788,7 @@
 	        middle.heartBeatFlag = setInterval(function () {
 	            middle.heartBeatTimer ++;//记录心跳次数
 	            public_chat.heartBeat(mycookie.getCookie('loginCid')); 
-	            console.log('middle.heartBeatTimer',middle.heartBeatTimer)
+	            //console.log('middle.heartBeatTimer',middle.heartBeatTimer)
 	            if(middle.heartBeatTimer > 3 && middle.heartBeatTimer <= 6){
 	                middle.my_connect_hint = '网络中断，正在连接中...';
 	                $('#alertHint',middle.currentUserDom).css('display','block');
@@ -1118,11 +1127,9 @@
 	            $(event.delegateTarget).css('background-color','#f2f2f2');
 	            $(event.delegateTarget).css('border-bottom-color','#f2f2f2');
 	            
-	            console.log('useravatar.component中的function中的user');
-	            console.log(user)
+	            console.log('当前窗口切换到用户',user.from);
 	            chat.currentChat.username = user.from;
 	            chat.currentChat.theUser = user;
-	            console.log(chat.currentChat)
 	            chat.toggleChatView(user);
 	            user.unreadMsgCount = null;
 	        };

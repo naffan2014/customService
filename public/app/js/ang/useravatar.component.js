@@ -33,11 +33,9 @@ angular.module('chatApp').component('userList', {
             $(event.delegateTarget).css('background-color','#f2f2f2');
             $(event.delegateTarget).css('border-bottom-color','#f2f2f2');
             
-            console.log('useravatar.component中的function中的user');
-            console.log(user)
+            console.log('当前窗口切换到用户',user.from);
             chat.currentChat.username = user.from;
             chat.currentChat.theUser = user;
-            console.log(chat.currentChat)
             chat.toggleChatView(user);
             user.unreadMsgCount = null;
         };

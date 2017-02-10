@@ -13,18 +13,21 @@ switch(env){
         upload = 'http://csapi.17youyun.com/fileProcess/custUploadFile';
         history = 'http://csapi.17youyun.com/history/getHistory';
         login = 'http://csapi.17youyun.com/customer/login';
+        kupai_userinfo = 'http://csapi.17youyun.com/customer/user_info/show'
         break;
      case 'development':
         communication_server_host = 'ws://test.csws.17youyun.com/websocket';
         upload = 'http://test.csapi.17youyun.com/fileProcess/custUploadFile';
         history = 'http://test.csapi.17youyun.com/history/getHistory';
         login = 'http://test.csapi.17youyun.com/customer/login';
+        kupai_userinfo = 'http://test.csapi.17youyun.com/customer/user_info/show'
         break;
      case 'test':
         communication_server_host = 'ws://test.csws.17youyun.com/websocket';
         upload = 'http://test.csapi.17youyun.com/fileProcess/custUploadFile';
         history = 'http://test.csapi.17youyun.com/history/getHistory';
         login = 'http://test.csapi.17youyun.com/customer/login';
+        kupai_userinfo = 'http://test.csapi.17youyun.com/customer/user_info/show'
         break;
      default://默认用正式的
         communication_server_host = 'ws://csws.17youyun.com/websocket';
@@ -41,6 +44,7 @@ var my_config = {
         upload: upload,
         history: history,
         login: login,
+        kupai_userinfo: kupai_userinfo,
     },
     avatar:{
         kf:'/public/app/img/avatar/kfavatar.png',

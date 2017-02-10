@@ -84,13 +84,32 @@ Chat.prototype.toggleChatView = function(data) {
         middle.currentUserDom = userDom
     }
     //更新用户资料
-    $("#users-info #nick").html(parseInt(Math.random()*10+2, 10))
-    $("#users-info #uid").html(parseInt(Math.random()*10+2, 10))
-    $("#users-info #phoneNum").html(parseInt(Math.random()*10+2, 10))
-    $("#users-info #prvalue").html(parseInt(Math.random()*10+2, 10))
-    $("#users-info #sumCount").html(parseInt(Math.random()*10+2, 10))
-    $("#users-info #dealCount").html(parseInt(Math.random()*10+2, 10))
-    $("#users-info #schoolCount").html(parseInt(Math.random()*10+2, 10))
+    $.ajax({
+      url: config.api.kupai_userinfo,
+      data: "uid="+ data.from,
+      type: 'get',
+      dataType:'jsonp',
+      jsonp:'json_callback',
+      jsonpCallback:"success_jsonpCallback",
+      success: function(res){
+          if(1 == res.api_status){
+            console.log('库拍个人信息',res.result)
+            $("#users-info #nick").html(res.result.nick);
+            $("#users-info #uid").html(res.result.uid);
+            $("#users-info #phoneNum").html(res.result.phoneNum);
+            $("#users-info #prvalue").html(res.result.prvalue);
+            $("#users-info #sumCount").html(parseInt(res.result.dealCount+res.result.schoolCount));
+            $("#users-info #dealCount").html(parseInt(res.result.dealCount));
+            $("#users-info #schoolCount").html(parseInt(res.result.schoolCount));
+          }else{
+               alert('获取用户信息失败')
+          }
+      },
+      error:function(){
+          alert('获取用户信息失败')
+          console.log('获取用户信息失败');
+      }
+    });
     //绑定下拉框到顶部后加载聊天记录
     $('div#box-body',userDom).scroll(function(){
         if(0 == $(this).scrollTop()){

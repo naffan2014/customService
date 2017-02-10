@@ -177,7 +177,8 @@ Connect.prototype.deliver = function(letter) {
         letter.ext_content = {
             name:localStorageInformation.ext_content.name,
             id:localStorageInformation.from,
-            pic:localStorageInformation.ext_content.pic,
+            //pic:localStorageInformation.ext_content.pic,
+            pic:'http://cs.17youyun.com/public/app/img/avatar/kfavatar.png',
         };
          console.log('deliver',letter)
     }

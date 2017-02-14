@@ -517,27 +517,25 @@
 	 */
 	Chat.prototype.sayEnd = function(data){
 
-	    // var chat = this;
-	    // console.log(data)
-	    // var closeId = $(this).attr('closeid');
-	    // alert(closeId)
-	    // var closePosition =  Object.keys(chat.users).indexOf(data.from);
-	//     
-	    // var appearPositionStart = closePosition+1;
-	    // var appearPositionEnd = closePosition+2;
-	    // var appearId = Object.keys(chat.users).slice(appearPositionStart,appearPositionEnd);
-	    // if("" == appearId){
-	        // //没有下一个就需要给出默认的窗体
-	        // alert('mei')
-	    // }else{
-	        // //有下一个就需要
-	        // alert(appearId);
-	        // var userDom = chat.chatWindowDom.get(appearId);
-	        // console.log(userDom)
-	        // middle.currentUserDom = userDom
-	    // }
-	    // console.log(this.users)
-	    // return false;
+	    var chat = this;
+	    var closePosition =  Object.keys(chat.users).indexOf(data.from);
+	    
+	    var appearPositionStart = closePosition+1;
+	    var appearPositionEnd = closePosition+2;
+	    var appearId = Object.keys(chat.users).slice(appearPositionStart,appearPositionEnd);
+	    if("" == appearId){
+	        //没有下一个就需要给出默认的窗体
+	        var userDom = chat.chatWindow.clone();
+	        $('#chatWindowDiv').replaceWith(userDom);
+	    }else{
+	        //有下一个就需要
+	        var userDom = chat.chatWindowDom.get(appearId.toString());
+	        if(userDom === undefined || userDom === null){
+	             userDom = chat.chatWindow.clone();
+	        }
+	        middle.currentUserDom = userDom
+	        $('#chatWindowDiv').replaceWith(userDom);
+	    }
 	    
 	    var forConnect = JSON.parse(localStorage.getItem('csyouyun'+data.from));
 	    if(0 != forConnect.connect){
@@ -604,10 +602,8 @@
 	    chatMsgLeft = templateDiv.find("#msg-left>div");
 	    chatMsgImage = templateDiv.find("#msg-image>div");
 	    chatWindow = templateDiv.find("#chatWindow>div");
-
 	    // 加载完在赋值
 	    chat.chatWindow = chatWindow;
-
 	});
 
 	var audio;

@@ -51,6 +51,7 @@ Chat.prototype.updateChatView = function(data){
     if (userDom === undefined || userDom === null) {
         userDom = chat.chatWindow.clone();
         userDom.find('#chatWindow-username').html(this.users[data.from].ext_content.name);
+        $('#closeChat',userDom).attr('closeid',data.from);
         chat.chatWindowDom.set(data.from, userDom);
      }
      
@@ -79,6 +80,7 @@ Chat.prototype.toggleChatView = function(data) {
         userDom = chat.chatWindow.clone();
         chat.chatWindowDom.set(data.from, userDom);
         $('#chatWindow-username',userDom).html(this.users[data.from].ext_content.name);
+        $('#closeChat',userDom).attr('closeid',data.from);
     } else {
         console.log('userdom是',data.from);
         middle.currentUserDom = userDom
@@ -92,6 +94,7 @@ Chat.prototype.toggleChatView = function(data) {
       jsonp:'json_callback',
       jsonpCallback:"success_jsonpCallback",
       success: function(res){
+          console.log('获取用户信息',res)
           if(1 == res.api_status){
             console.log('库拍个人信息',res.result)
             $("#users-info #nick").html(res.result.nick);
@@ -102,12 +105,8 @@ Chat.prototype.toggleChatView = function(data) {
             $("#users-info #dealCount").html(parseInt(res.result.dealCount));
             $("#users-info #schoolCount").html(parseInt(res.result.schoolCount));
           }else{
-               alert('获取用户信息失败')
+               alert(res.msg)
           }
-      },
-      error:function(){
-          alert('获取用户信息失败')
-          console.log('获取用户信息失败');
       }
     });
     //绑定下拉框到顶部后加载聊天记录
@@ -211,6 +210,8 @@ Chat.prototype.toggleChatView = function(data) {
     userDom.find('#closeChat').click(function(){
         if(confirm("确定结束本次对话吗？"))
         {
+            closeid = $(this).attr('closeid');
+            data.from = closeid;
             chat.sayEnd(data);
         }
         return false;
@@ -323,6 +324,29 @@ Chat.prototype.sayUpload = function(data){
  * 客服断开连接
  */
 Chat.prototype.sayEnd = function(data){
+
+    // var chat = this;
+    // console.log(data)
+    // var closeId = $(this).attr('closeid');
+    // alert(closeId)
+    // var closePosition =  Object.keys(chat.users).indexOf(data.from);
+//     
+    // var appearPositionStart = closePosition+1;
+    // var appearPositionEnd = closePosition+2;
+    // var appearId = Object.keys(chat.users).slice(appearPositionStart,appearPositionEnd);
+    // if("" == appearId){
+        // //没有下一个就需要给出默认的窗体
+        // alert('mei')
+    // }else{
+        // //有下一个就需要
+        // alert(appearId);
+        // var userDom = chat.chatWindowDom.get(appearId);
+        // console.log(userDom)
+        // middle.currentUserDom = userDom
+    // }
+    // console.log(this.users)
+    // return false;
+    
     var forConnect = JSON.parse(localStorage.getItem('csyouyun'+data.from));
     if(0 != forConnect.connect){
         var letter = {

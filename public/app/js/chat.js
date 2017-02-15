@@ -85,7 +85,9 @@ Chat.prototype.toggleChatView = function(data) {
         console.log('userdom是',data.from);
         middle.currentUserDom = userDom
     }
-    //更新用户资料
+    //更新用户资料 tyope: 1-用户 2-拍卖订单 3-主题订单
+    $('#informationTabBody').html("");
+    $('#informationTabHead').html("");
     $.ajax({
       url: config.api.kupai_userinfo,
       data: "uid="+ data.from,
@@ -94,18 +96,77 @@ Chat.prototype.toggleChatView = function(data) {
       jsonp:'json_callback',
       jsonpCallback:"success_jsonpCallback",
       success: function(res){
-          console.log('获取用户信息',res)
+          console.log('获取库拍个人信息信息',res)
           if(1 == res.api_status){
-            console.log('库拍个人信息',res.result)
-            $("#users-info #nick").html(res.result.nick);
-            $("#users-info #uid").html(res.result.uid);
-            $("#users-info #phoneNum").html(res.result.phoneNum);
-            $("#users-info #prvalue").html(res.result.prvalue);
-            $("#users-info #sumCount").html(parseInt(res.result.dealCount+res.result.schoolCount));
-            $("#users-info #dealCount").html(parseInt(res.result.dealCount));
-            $("#users-info #schoolCount").html(parseInt(res.result.schoolCount));
+              var html = "";
+              switch(parseInt(res.result.type)){
+                  case 1:
+                    //用户
+                    $('#informationTabHead').html('用户信息');
+                    html += '<div><span>昵称:</span><span>'+res.result.data.nick+'</span></div>';
+                    html += '<div><span>UID:</span><span>'+res.result.data.uid+'</span></div>';
+                    html += '<div><span>手机号:</span><span>'+res.result.data.phoneNum+'</span></div>';
+                    html += '<div><span>PR值:</span><span>'+res.result.data.prvalue+'</span></div>';
+                    html += '<div><span>成交笔数:</span><span>'+parseInt(res.result.data.dealCount+res.result.data.schoolCount)+'</span></div>';
+                    html += '<div><span>成交数:</span><span>'+parseInt(res.result.data.dealCount)+'</span></div>';
+                    html += '<div><span>流拍数:</span><span>'+parseInt(res.result.data.schoolCount)+'</span></div>';
+                    break;
+                  case 2:
+                    //拍卖订单
+                    $('#informationTabHead').html('拍卖订单信息');
+                    html += '<div><span>用户地址</span><span>'+res.result.data.address+'</span></div>';
+                    html += '<div><span>用户UID</span><span>'+res.result.data.buyerId+'</span></div>';
+                    html += '<div><span>快递公司名称</span><span>'+res.result.data.expressName+'</span></div>';
+                    html += '<div><span>快递公司电话</span><span>'+res.result.data.expressPhone+'</span></div>';
+                    html += '<div><span>待支付剩余时间</span><span>'+res.result.data.leftTime+'</span></div>';
+                    html += '<div><span>订单号</span><span>'+res.result.data.orderId+'</span></div>';
+                    html += '<div><span>订单状态</span><span>'+res.result.data.orderStatus+'</span></div>';
+                    html += '<div><span>订单类型</span><span>'+res.result.data.orderType+'</span></div>';
+                    html += '<div><span>支付超时时间</span><span>'+res.result.data.payOverTime+'</span></div>';
+                    html += '<div><span>支付时间</span><span>'+res.result.data.payTime+'</span></div>';
+                    html += '<div><span>交易成功时间</span><span>'+res.result.data.receivingTime+'</span></div>';
+                    html += '<div><span>过期多长时间</span><span>'+res.result.data.rightTime+'</span></div>';
+                    html += '<div><span>谁出售</span><span>'+res.result.data.sellerId+'</span></div>';
+                    html += '<div><span>物流信息</span><span><button/></span></div>';
+                    html += '<div><span>物流单号</span><span>'+res.result.data.waybillNum+'</span></div>';
+                    html += '<div><span>订单对应的拍卖信息</span><span><button></span></div>';
+                    html += '<div><span>拍品提供商信息</span><span><button></span></div>';
+                    html += '<div><span>购买人信息</span><span><button></span></div>';
+                    break
+                  case 3:
+                    //主题订单
+                    $('#informationTabHead').html('主题订单信息');
+                    html += '<div><span>地址</span><span>'+res.result.data.address+'</span></div>';
+                    html += '<div><span>商品订单总额</span><span>'+res.result.data.amount+'</span></div>';
+                    html += '<div><span>购买人id</span><span>'+res.result.data.buyerId+'</span></div>';
+                    html += '<div><span>订单创建时间</span><span>'+res.result.data.createTime+'</span></div>';
+                    html += '<div><span>发货时间</span><span>'+res.result.data.deliveryTime+'</span></div>';
+                    html += '<div><span>快递公司名称</span><span>'+res.result.data.expressName+'</span></div>';
+                    html += '<div><span>快递公司电话</span><span>'+res.result.data.expressPhone+'</span></div>';
+                    html += '<div><span>订单号</span><span>'+res.result.data.orderId+'</span></div>';
+                    html += '<div><span>订单状态</span><span>'+res.result.data.orderStatus+'</span></div>';
+                    html += '<div><span>订单类型</span><span>'+res.result.data.orderType+'</span></div>';
+                    html += '<div><span>超时时间</span><span>'+res.result.data.payOverTime+'</span></div>';
+                    html += '<div><span>支付时间</span><span>'+res.result.data.payTime+'</span></div>';
+                    html += '<div><span>交易成功时间</span><span>'+res.result.data.receivingTime+'</span></div>';
+                    html += '<div><span>备注</span><span>'+res.result.data.remark+'</span></div>';
+                    html += '<div><span>支付多长时间了</span><span>'+res.result.data.rightTime+'</span></div>';
+                    html += '<div><span>sellerId</span><span>'+res.result.data.购买人id+'</span></div>';
+                    html += '<div><span>购买数量</span><span>'+res.result.data.thingsCount+'</span></div>';
+                    html += '<div><span>物流信息</span><span><button></span></div>';
+                    html += '<div><span>物流单号</span><span>'+res.result.data.waybillNum+'</span></div>';
+                    html += '<div><span>商品信息</span><span><button></span></div>';
+                    html += '<div><span>购买人信息</span><span><button></span></div>';
+                    break;
+                  
+              }
+              $('#informationTabBody').html(html);
           }else{
-               alert(res.msg)
+              if(undefined == res.msg || "" == res.msg){
+                  alert("未获取到数据，请联系服务提供商");
+              }else{
+                  alert(res.msg);
+              }
           }
       }
     });

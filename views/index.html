@@ -92,79 +92,120 @@
 
                     </form> -->
                     <div class="cst-header">
-                        
-                        <div class="cst-header-tabs highlight">用户资料</div>
+                        <div class="cst-header-tabs highlight" id="informationTabHead">资料信息</div>
                         <!-- <div class="cst-header-tabs">其他1</div>
                         <div class="cst-header-tabs">其他2</div> -->
                     </div>
-                    <div class="users-info" id="users-info">
-                        <div class="userinfo" >
-                            <span class="nick">昵称：</span>
-                            <span class="nick" id="nick"></span>
-                        </div>
-                        <div class="userinfo">
-                            <span class="uid">UID：</span>
-                            <span class="uid" id="uid"></span>
-                        </div>
-                        <div class="userinfo">
-                            <span class="phoneNum">手机号：</span>
-                            <span class="phoneNum" id="phoneNum"></span>
-                        </div>
-                        <div class="userinfo">
-                            <span class="prvalue">PR值：</span>
-                            <span class="prvalue" id="prvalue"></span>
-                        </div>
-                        <div class="userinfo">
-                            <span class="sumCount">成交笔数：</span>
-                            <span class="sumCount" id="sumCount"></span>
-                        </div>
-                        <div class="userinfo">
-                            <span class="dealCount">成交数：</span>
-                            <span class="dealCount" id="dealCount"></span>
-                        </div>
-                        <div class="userinfo">
-                            <span class="schoolCount">流拍数：</span>
-                            <span class="schoolCount" id="schoolCount"></span>
-                        </div>
-                        
-                    </div>
-                    <!-- <div class="users-info tohide">
-                        <div class="userinfo">
-                            <span class="nick-namek">其他1昵称：</span>
-                            <span class="nick-namev">111</span>
-                        </div>
-                        <div class="userinfo">
-                            <span class="sexk">其他1性别：</span>
-                            <span class="sexv">男1</span>
-                        </div>
-                        <div class="userinfo">
-                            <span class="agek">其他1年龄：</span>
-                            <span class="agev">11</span>
-                        </div>
-                    </div>
-                    <div class="users-info tohide">
-                        <div class="userinfo">
-                            <span class="nick-namek">其他2昵称：</span>
-                            <span class="nick-namev">222</span>
-                        </div>
-                        <div class="userinfo">
-                            <span class="sexk">其他2性别：</span>
-                            <span class="sexv">男2</span>
-                        </div>
-                        <div class="userinfo">
-                            <span class="agek">其他2年龄：</span>
-                            <span class="agev">24</span>
-                        </div>
-                    </div>   --> 
+                    <div id="informationTabBody"></div>
                 </div>
-                
             </div>
-
         </div>
     </div>
 
-    <!-- 输入用户名的modal -->
-    <!-- fade会有动画效果 -->
+    <!--物流信息浮层 -->
+    <div class="modal fade" id="wlxx" tabindex="-1" data-backdrop='static' role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div ng-controller="sign" class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="informationHead">物流信息</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group informationModalBody"></div>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="col-sm-3 col-sm-offset-4">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!--订单对应的拍卖信息浮层 -->
+    <div class="modal fade" id="ddpm" tabindex="-1" data-backdrop='static' role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div ng-controller="sign" class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="informationHead">订单对应的拍卖信息</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group informationModalBody"></div>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-sm-3 col-sm-offset-4">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!--拍品提供商信息浮层 -->
+    <div class="modal fade" id="pptgs" tabindex="-1" data-backdrop='static' role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div ng-controller="sign" class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="informationHead">拍品提供商信息</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group informationModalBody"></div>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-sm-3 col-sm-offset-4">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!--购买人信息浮层 -->
+    <div class="modal fade" id="gmrxx" tabindex="-1" data-backdrop='static' role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div ng-controller="sign" class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="informationHead">购买人信息</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group informationModalBody"></div>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="col-sm-3 col-sm-offset-4">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!--商品信息浮层 -->
+    <div class="modal fade" id="spxx" tabindex="-1" data-backdrop='static' role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div ng-controller="sign" class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="informationHead">商品信息</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group informationModalBody"></div>
+                </div>
+
+                <div class="modal-footer">
+                    <div class="col-sm-3 col-sm-offset-4">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close">确定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 登录浮层 -->
     <div class="modal fade" id="init" tabindex="-1" data-backdrop='static' role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog" role="document">
             <div ng-controller="sign" class="modal-content">

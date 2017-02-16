@@ -465,6 +465,10 @@ Chat.prototype.sayUpload = function(data){
  */
 Chat.prototype.sayEnd = function(data){
 
+    $('#informationTabBody').html('');
+    $('#informationTabHead').html('');
+    $('#informationModalBody').html('');
+    
     var chat = this;
     var closePosition =  Object.keys(chat.users).indexOf(data.from);
     

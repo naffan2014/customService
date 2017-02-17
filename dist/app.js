@@ -390,7 +390,7 @@
 	                    html += '<div><span>交易成功时间</span>:<span>'+res.result.data.receivingTime+'</span></div>';
 	                    html += '<div><span>备注</span>:<span>'+res.result.data.remark+'</span></div>';
 	                    html += '<div><span>支付多长时间了</span>:<span>'+res.result.data.rightTime+'</span></div>';
-	                    html += '<div><span>购买人id</span>:<span>'+res.result.data.sellerId+'</span></div>';
+	                    html += '<div><span>供应商id</span>:<span>'+res.result.data.sellerId+'</span></div>';
 	                    html += '<div><span>购买数量</span>:<span>'+res.result.data.thingsCount+'</span></div>';
 	                    if($.isEmptyObject(res.result.data.traces)){
 	                        html += '<div><span>物流信息:</span><span></span></div>';

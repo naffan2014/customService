@@ -49,6 +49,8 @@
 	var mycookie = __webpack_require__(7);
 	var chat = __webpack_require__(3);
 	var Connect = __webpack_require__(5);
+	var config = __webpack_require__(4);
+
 
 	var userAvatarComponent = __webpack_require__(8);
 	middle.userAvatarComponent = userAvatarComponent;
@@ -56,11 +58,24 @@
 	$(function() {
 	    $('#exit').click(function(){
 	         if(confirm("确定要退出吗？")){
-	             chat.sayExit();
-	             mycookie.delCookie('loginGid');
-	             mycookie.delCookie('loginCid');
-	             mycookie.delCookie('loginToken');
-	             window.location.reload();
+	             var phone = mycookie.getCookie('phone');
+	             $.ajax({
+	                  url: config.api.update_online_statue,
+	                  data: "phone="+phone+"&online=0",
+	                  dataType:'jsonp',
+	                  jsonp:'json_callback',
+	                  jsonpCallback:"success_jsonpCallback",
+	                  success: function(res){
+	                      if(1 == res.api_status){
+	                          chat.sayExit();
+	                           mycookie.delCookie('loginGid');
+	                           mycookie.delCookie('loginCid');
+	                           mycookie.delCookie('loginToken');
+	                           mycookie.delCookie('phone');
+	                          window.location.reload();
+	                      }
+	                  }
+	             });
 	         }
 	        
 	    });
@@ -167,10 +182,22 @@
 	                      var socketUrl = config.api.communication_server_host +"?data="+ socketData;
 	                      var socketRes = connect.connect(socketUrl);
 	                      $("#init").modal('hide');
+	                      //更新客服状态
+	                      $.ajax({
+	                          url: config.api.update_online_statue,
+	                          data: "phone="+$scope.username+"&online=1",
+	                          dataType:'jsonp',
+	                          jsonp:'json_callback',
+	                          jsonpCallback:"success_jsonpCallback",
+	                          success: function(res){
+	                              console.log(res)
+	                          }
+	                       });
 	                      //设置cookie
 	                      mycookie.setCookie('loginGid',data.result.group_id);
 	                      mycookie.setCookie('loginCid',data.result.customer_id);
 	                      mycookie.setCookie('loginToken',data.result.token);
+	                      mycookie.setCookie('phone',$scope.username);
 	                  }else{
 	                      alert('验证失败，请重新登录');
 	                  }
@@ -869,27 +896,31 @@
 	        upload = 'http://csapi.17youyun.com/fileProcess/custUploadFile';
 	        history = 'http://csapi.17youyun.com/history/getHistory';
 	        login = 'http://csapi.17youyun.com/customer/login';
-	        kupai_userinfo = 'http://csapi.17youyun.com/customer/user_info/show'
+	        kupai_userinfo = 'http://csapi.17youyun.com/customer/user_info/show';
+	        update_online_statue = 'http://admin.cs.17youyun.com/api/seating/updateSeatingInfo';
 	        break;
 	     case 'development':
 	        communication_server_host = 'ws://test.csws.17youyun.com/websocket';
 	        upload = 'http://test.csapi.17youyun.com/fileProcess/custUploadFile';
 	        history = 'http://test.csapi.17youyun.com/history/getHistory';
 	        login = 'http://test.csapi.17youyun.com/customer/login';
-	        kupai_userinfo = 'http://test.csapi.17youyun.com/customer/user_info/show'
+	        kupai_userinfo = 'http://test.csapi.17youyun.com/customer/user_info/show';
+	        update_online_statue = 'http://test.admin.cs.17youyun.com/api/seating/updateSeatingInfo';
 	        break;
 	     case 'test':
 	        communication_server_host = 'ws://test.csws.17youyun.com/websocket';
 	        upload = 'http://test.csapi.17youyun.com/fileProcess/custUploadFile';
 	        history = 'http://test.csapi.17youyun.com/history/getHistory';
 	        login = 'http://test.csapi.17youyun.com/customer/login';
-	        kupai_userinfo = 'http://test.csapi.17youyun.com/customer/user_info/show'
+	        kupai_userinfo = 'http://test.csapi.17youyun.com/customer/user_info/show';
+	        update_online_statue = 'http://test.admin.cs.17youyun.com/api/seating/updateSeatingInfo';
 	        break;
 	     default://默认用正式的
 	        communication_server_host = 'ws://csws.17youyun.com/websocket';
 	        upload = 'http://csapi.17youyun.com/fileProcess/custUploadFile';
 	        history = 'http://csapi.17youyun.com/history/getHistory';
 	        login = 'http://csapi.17youyun.com/customer/login';
+	        update_online_statue = 'http://admin.cs.17youyun.com/api/seating/updateSeatingInfo';
 	     
 	}
 
@@ -901,6 +932,7 @@
 	        history: history,
 	        login: login,
 	        kupai_userinfo: kupai_userinfo,
+	        update_online_statue: update_online_statue,
 	    },
 	    avatar:{
 	        kf:'/public/app/img/avatar/kfavatar.png',

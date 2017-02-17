@@ -61,10 +61,22 @@ chatApp.controller('sign', function($scope, $http) {
                       var socketUrl = config.api.communication_server_host +"?data="+ socketData;
                       var socketRes = connect.connect(socketUrl);
                       $("#init").modal('hide');
+                      //更新客服状态
+                      $.ajax({
+                          url: config.api.update_online_statue,
+                          data: "phone="+$scope.username+"&online=1",
+                          dataType:'jsonp',
+                          jsonp:'json_callback',
+                          jsonpCallback:"success_jsonpCallback",
+                          success: function(res){
+                              console.log(res)
+                          }
+                       });
                       //设置cookie
                       mycookie.setCookie('loginGid',data.result.group_id);
                       mycookie.setCookie('loginCid',data.result.customer_id);
                       mycookie.setCookie('loginToken',data.result.token);
+                      mycookie.setCookie('phone',$scope.username);
                   }else{
                       alert('验证失败，请重新登录');
                   }

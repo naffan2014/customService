@@ -150,8 +150,6 @@
 	         * 登录浮层
 	         */
 	        $("#init").modal('show');
-	        $scope.username = '13522480935';
-	        $scope.password = '123456';
 	        $scope.signUser = function() {
 	            if(undefined === $scope.username || $scope.username.trim() === ''){
 	                alert('请输入用户名');

@@ -304,170 +304,8 @@
 	        console.log('userdom是',data.from);
 	        middle.currentUserDom = userDom
 	    }
-	    //更新用户资料 tyope: 1-用户 2-拍卖订单 3-主题订单
-	    $('#informationTabBody').html('');
-	    $('#informationTabHead').html('');
-	    $('#informationModalBody').html('');
-	    $.ajax({
-	      url: config.api.kupai_userinfo,
-	      data: "uid="+ data.from,
-	      type: 'get',
-	      dataType:'jsonp',
-	      jsonp:'json_callback',
-	      jsonpCallback:"success_jsonpCallback",
-	      success: function(res){
-	          console.log('获取库拍个人信息信息',res)
-	          if(1 == res.api_status){
-	              var html = "";
-	              switch(parseInt(res.result.type)){
-	                  case 1:
-	                    //用户
-	                    $('#informationTabHead').html('用户信息');
-	                    html += '<div><span>昵称:</span><span>'+res.result.data.nick+'</span></div>';
-	                    html += '<div><span>UID:</span><span>'+res.result.data.uid+'</span></div>';
-	                    html += '<div><span>手机号:</span><span>'+res.result.data.phoneNum+'</span></div>';
-	                    html += '<div><span>PR值:</span><span>'+res.result.data.prvalue+'</span></div>';
-	                    html += '<div><span>成交笔数:</span><span>'+parseInt(res.result.data.dealCount+res.result.data.schoolCount)+'</span></div>';
-	                    html += '<div><span>成交数:</span><span>'+parseInt(res.result.data.dealCount)+'</span></div>';
-	                    html += '<div><span>流拍数:</span><span>'+parseInt(res.result.data.schoolCount)+'</span></div>';
-	                    break;
-	                  case 2:
-	                    //拍卖订单
-	                    $('#informationTabHead').html('拍卖订单信息');
-	                    html += '<div><span>用户地址:</span><span>'+res.result.data.address+'</span></div>';
-	                    html += '<div><span>用户UID:</span><span>'+res.result.data.buyerId+'</span></div>';
-	                    html += '<div><span>快递公司名称:</span><span>'+res.result.data.expressName+'</span></div>';
-	                    html += '<div><span>快递公司电话:</span><span>'+res.result.data.expressPhone+'</span></div>';
-	                    html += '<div><span>待支付剩余时间:</span><span>'+res.result.data.leftTime+'</span></div>';
-	                    html += '<div><span>订单号:</span><span>'+res.result.data.orderId+'</span></div>';
-	                    html += '<div><span>订单状态:</span><span>'+res.result.data.orderStatus+'</span></div>';
-	                    html += '<div><span>订单类型:</span><span>'+res.result.data.orderType+'</span></div>';
-	                    html += '<div><span>支付超时时间:</span><span>'+res.result.data.payOverTime+'</span></div>';
-	                    html += '<div><span>支付时间:</span><span>'+res.result.data.payTime+'</span></div>';
-	                    html += '<div><span>交易成功时间:</span><span>'+res.result.data.receivingTime+'</span></div>';
-	                    html += '<div><span>过期多长时间:</span><span>'+res.result.data.rightTime+'</span></div>';
-	                    html += '<div><span>谁出售:</span><span>'+res.result.data.sellerId+'</span></div>';
-	                    if($.isEmptyObject(res.result.data.traces)){
-	                        html += '<div><span>物流信息:</span><span></span></div>';
-	                    }else{
-	                        var htmlwlxx = '';
-	                        $.each(res.result.data.traces,function(index,domEle){
-	                          htmlwlxx += '<div><span>'+res.result.data.traces[index].AcceptTime+'</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>'+res.result.data.traces[index].AcceptStation+'</span></div>';
-	                       });
-	                        $('#wlxx .informationModalBody').append(htmlwlxx);
-	                        html += '<div><span>物流信息:</span><span><button onclick="$(\'#wlxx\').modal(\'show\')">查看详情</button></span></div>';
-	                    }
-	                    html += '<div><span>物流单号:</span><span>'+res.result.data.waybillNum+'</span></div>';
-	                    if($.isEmptyObject(res.result.data.youyunBid)){
-	                        html += '<div><span>订单对应的拍卖信息:</span><span></span></div>';
-	                    }else{
-	                        var htmlddpm = '';
-	                        htmlddpm += '<div><span>拍卖状态:</span>:<span>'+res.result.data.youyunBid.bidStatus+'</span></div>';
-	                        htmlddpm += '<div><span>成交价:</span>:<span>'+res.result.data.youyunBid.dealPrice+'</span></div>';
-	                        htmlddpm += '<div><span>最高出价:</span>:<span>'+res.result.data.youyunBid.finalPrice+'</span></div>';
-	                        htmlddpm += '<div><span>熔断价:</span>:<span>'+res.result.data.youyunBid.fusingPrice+'</span></div>';
-	                        htmlddpm += '<div><span>拍品名称:</span>:<span>'+res.result.data.youyunBid.goodsName+'</span></div>';
-	                        htmlddpm += '<div><span>起拍价:</span>:<span>'+res.result.data.youyunBid.initialPrice+'</span></div>';
-	                        htmlddpm += '<div><span>拍买id:</span>:<span>'+res.result.data.youyunBid.saleId+'</span></div>';
-	                        htmlddpm += '<div><span>封顶价:</span>:<span>'+res.result.data.youyunBid.topPrice+'</span></div>';
-	                        $('#ddpm .informationModalBody').append(htmlddpm);
-	                        html += '<div><span>订单对应的拍卖信息:</span><span><button onclick="$(\'#ddpm\').modal(\'show\')">查看详情</button></span></div>';
-	                    }
-	                    
-	                    if($.isEmptyObject(res.result.data.youyunSupplier)){
-	                        html += '<div><span>拍品提供商信息:</span><span></span></div>';
-	                    }else{
-	                        var htmlpptgs = '';
-	                        htmlpptgs += '<div><span>供应商名称:</span>:<span>'+res.result.data.youyunSupplier.name+'</span></div>';
-	                        htmlpptgs += '<div><span>供应商电话:</span>:<span>'+res.result.data.youyunSupplier.phone+'</span></div>';
-	                        htmlpptgs += '<div><span>供应商id:</span>:<span>'+res.result.data.youyunSupplier.userId+'</span></div>';
-	                        $('#pptgs .informationModalBody').append(htmlpptgs);
-	                        html += '<div><span>拍品提供商信息:</span><span><button onclick="$(\'#pptgs\').modal(\'show\')">查看详情</button></span></div>';
-	                    }
-	                    
-	                    if($.isEmptyObject(res.result.data.youyunUser)){
-	                        html += '<div><span>购买人信息:</span><span></span></div>';
-	                    }else{
-	                        var htmlgmrxx = '';
-	                        htmlgmrxx += '<div><span>成交数:</span>:<span>'+res.result.data.youyunUser.dealCount+'</span></div>';
-	                        htmlgmrxx += '<div><span>用户昵称:</span>:<span>'+res.result.data.youyunUser.nick+'</span></div>';
-	                        htmlgmrxx += '<div><span>用户手机号:</span>:<span>'+res.result.data.youyunUser.phoneNum+'</span></div>';
-	                        htmlgmrxx += '<div><span>pr值:</span>:<span>'+res.result.data.youyunUser.prvalue+'</span></div>';
-	                        htmlgmrxx += '<div><span>流拍数:</span>:<span>'+res.result.data.youyunUser.schoolCount+'</span></div>';
-	                        htmlgmrxx += '<div><span>用户uid:</span>:<span>'+res.result.data.youyunUser.uid+'</span></div>';
-	                        $('#gmrxx .informationModalBody').append(htmlgmrxx);
-	                        html += '<div><span>购买人信息:</span><span><button onclick="$(\'#gmrxx\').modal(\'show\')">查看详情</button></span></div>';
-	                    }
-	                    break
-	                  case 3:
-	                    //主题订单
-	                    $('#informationTabHead').html('主题订单信息');
-	                    html += '<div><span>地址</span>:<span>'+res.result.data.address+'</span></div>';
-	                    html += '<div><span>商品订单总额</span>:<span>'+res.result.data.amount+'</span></div>';
-	                    html += '<div><span>购买人id</span>:<span>'+res.result.data.buyerId+'</span></div>';
-	                    html += '<div><span>订单创建时间</span>:<span>'+res.result.data.createTime+'</span></div>';
-	                    html += '<div><span>发货时间</span>:<span>'+res.result.data.deliveryTime+'</span></div>';
-	                    html += '<div><span>快递公司名称</span>:<span>'+res.result.data.expressName+'</span></div>';
-	                    html += '<div><span>快递公司电话</span>:<span>'+res.result.data.expressPhone+'</span></div>';
-	                    html += '<div><span>订单号</span>:<span>'+res.result.data.orderId+'</span></div>';
-	                    html += '<div><span>订单状态</span>:<span>'+res.result.data.orderStatus+'</span></div>';
-	                    html += '<div><span>订单类型</span>:<span>'+res.result.data.orderType+'</span></div>';
-	                    html += '<div><span>超时时间</span>:<span>'+res.result.data.payOverTime+'</span></div>';
-	                    html += '<div><span>支付时间</span>:<span>'+res.result.data.payTime+'</span></div>';
-	                    html += '<div><span>交易成功时间</span>:<span>'+res.result.data.receivingTime+'</span></div>';
-	                    html += '<div><span>备注</span>:<span>'+res.result.data.remark+'</span></div>';
-	                    html += '<div><span>支付多长时间了</span>:<span>'+res.result.data.rightTime+'</span></div>';
-	                    html += '<div><span>供应商id</span>:<span>'+res.result.data.sellerId+'</span></div>';
-	                    html += '<div><span>购买数量</span>:<span>'+res.result.data.thingsCount+'</span></div>';
-	                    if($.isEmptyObject(res.result.data.traces)){
-	                        html += '<div><span>物流信息:</span><span></span></div>';
-	                    }else{
-	                        var htmlwlxx = '';
-	                        $.each(res.result.data.traces,function(index,domEle){
-	                          htmlwlxx += '<div><span>'+res.result.data.traces[index].AcceptTime+'</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>'+res.result.data.traces[index].AcceptStation+'</span></div>';
-	                       });
-	                        $('#wlxx .informationModalBody').append(htmlwlxx);
-	                        html += '<div><span>物流信息:</span><span><button onclick="$(\'#wlxx\').modal(\'show\')">查看详情</button></span></div>';
-	                    }
-	                    html += '<div><span>物流单号</span>:<span>'+res.result.data.waybillNum+'</span></div>';
-	                    
-	                    if($.isEmptyObject(res.result.data.youyunGoods)){
-	                        html += '<div><span>商品信息</span>:<span></span></div>';
-	                    }else{
-	                        var htmlspxx = '';
-	                        htmlspxx += '<div><span>商品id</span>:<span>'+res.result.data.youyunGoods.commodityId+'</span></div>';
-	                        htmlspxx += '<div><span>商品名称</span>:<span>'+res.result.data.youyunGoods.commodityName+'</span></div>';
-	                        htmlspxx += '<div><span>商品单价</span>:<span>'+res.result.data.youyunGoods.price+'</span></div>';
-	                        $('#spxx .informationModalBody').append(htmlspxx);
-	                        html += '<div><span>商品信息</span>:<span><button onclick="$(\'#spxx\').modal(\'show\')">查看详情</button></span></div>';
-	                    }
-	                    
-	                    if($.isEmptyObject(res.result.data.youyunUser)){
-	                        html += '<div><span>购买人信息</span>:<span></span></div>';
-	                    }else{
-	                        var htmlgmrxx = '';
-	                        htmlgmrxx += '<div><span>成交数</span>:<span>'+res.result.data.youyunUser.dealCount+'</span></div>';
-	                        htmlgmrxx += '<div><span>用户昵称</span>:<span>'+res.result.data.youyunUser.nick+'</span></div>';
-	                        htmlgmrxx += '<div><span>用户手机号</span>:<span>'+res.result.data.youyunUser.phoneNum+'</span></div>';
-	                        htmlgmrxx += '<div><span>pr值</span>:<span>'+res.result.data.youyunUser.prvalue+'</span></div>';
-	                        htmlgmrxx += '<div><span>流拍数</span>:<span>'+res.result.data.youyunUser.schoolCount+'</span></div>';
-	                        htmlgmrxx += '<div><span>用户uid</span>:<span>'+res.result.data.youyunUser.uid+'</span></div>';
-	                        $('#gmrxx .informationModalBody').append(htmlgmrxx);
-	                        html += '<div><span>购买人信息</span>:<span><button onclick="$(\'#gmrxx\').modal(\'show\')">查看详情</button></span></div>';
-	                    }
-	                    break;
-	                  
-	              }
-	              $('#informationTabBody').html(html);
-	          }else{
-	              if(undefined == res.msg || "" == res.msg){
-	                  alert("未获取到数据，请联系服务提供商");
-	              }else{
-	                  alert(res.msg);
-	              }
-	          }
-	      }
-	    });
+	    //更新用户信息
+	    getKuPaiUserInfo(data.from)
 	    //绑定下拉框到顶部后加载聊天记录
 	    $('div#box-body',userDom).scroll(function(){
 	        if(0 == $(this).scrollTop()){
@@ -706,6 +544,9 @@
 	        }
 	        middle.currentUserDom = userDom
 	        $('#chatWindowDiv').replaceWith(userDom);
+	        
+	        //更新库拍用户信息
+	        getKuPaiUserInfo(uid)
 	    }
 	    
 	    var forConnect = JSON.parse(localStorage.getItem('csyouyun'+data.from));
@@ -873,7 +714,178 @@
 	    return message;
 	}
 
-
+	/*
+	 * 获取酷派用户的信息
+	 */
+	function getKuPaiUserInfo(uid){
+	    //更新用户资料 tyope: 1-用户 2-拍卖订单 3-主题订单
+	    $('#informationTabBody').html('');
+	    $('#informationTabHead').html('');
+	    $('#informationModalBody').html('');
+	    $.ajax({
+	      url: config.api.kupai_userinfo,
+	      data: "uid="+ uid,
+	      type: 'get',
+	      dataType:'jsonp',
+	      jsonp:'json_callback',
+	      jsonpCallback:"success_jsonpCallback",
+	      success: function(res){
+	          console.log('获取库拍个人信息信息',res)
+	          if(1 == res.api_status){
+	              var html = "";
+	              switch(parseInt(res.result.type)){
+	                  case 1:
+	                    //用户
+	                    html += '<div><span>昵称</span>:<span>'+res.result.data.nick+'</span></div>';
+	                    html += '<div><span>UID</span>:<span>'+res.result.data.uid+'</span></div>';
+	                    html += '<div><span>手机号</span>:<span>'+res.result.data.phoneNum+'</span></div>';
+	                    html += '<div><span>PR值</span>:<span>'+res.result.data.prvalue+'</span></div>';
+	                    html += '<div><span>成交笔数</span>:<span>'+parseInt(res.result.data.dealCount+res.result.data.schoolCount)+'</span></div>';
+	                    html += '<div><span>成交数</span>:<span>'+parseInt(res.result.data.dealCount)+'</span></div>';
+	                    html += '<div><span>流拍数</span>:<span>'+parseInt(res.result.data.schoolCount)+'</span></div>';
+	                    break;
+	                  case 2:
+	                    //拍卖订单
+	                    html += '<div><span>昵称</span>:<span>'+res.result.data.youyunUser.nick+'</span></div>';
+	                    html += '<div><span>UID</span>:<span>'+res.result.data.youyunUser.uid+'</span></div>';
+	                    html += '<div><span>手机号</span>:<span>'+res.result.data.youyunUser.phoneNum+'</span></div>';
+	                    html += '<div><span>PR值</span>:<span>'+res.result.data.youyunUser.prvalue+'</span></div>';
+	                    html += '<div><span>成交笔数</span>:<span>'+parseInt(res.result.data.youyunUser.dealCount+res.result.data.youyunUser.schoolCount)+'</span></div>';
+	                    html += '<div><span>成交数</span>:<span>'+parseInt(res.result.data.youyunUser.dealCount)+'</span></div>';
+	                    html += '<div><span>流拍数</span>:<span>'+parseInt(res.result.data.youyunUser.schoolCount)+'</span></div>';
+	                    html += '<div><span>拍卖名称</span>:<span>'+res.result.data.youyunBid.goodsName+'</span></div>';
+	                    html += '<div><span>拍卖状态</span>:<span>'+res.result.data.youyunBid.bidStatus+'</span></div>';
+	                    html += '<div><span>起拍价</span>:<span>'+res.result.data.youyunBid.initialPrice+'</span></div>';
+	                    html += '<div><span>用户实际出价</span>:<span>'+res.result.data.youyunBid.finalPrice+'</span></div>';
+	                    html += '<div><span>成交价</span>:<span>'+res.result.data.youyunBid.dealPrice+'</span></div>';
+	                    html += '<div><span>封顶成交价</span>:<span>'+res.result.data.youyunBid.topPrice+'</span></div>';
+	                    html += '<div><span>绝杀价</span>:<span>'+res.result.data.youyunBid.fusingPrice+'</span></div>';
+	                    switch(res.result.data.orderStatus){
+	                        case '待支付':
+	                            html += '<div><span>待支付剩余时间</span>:<span>'+res.result.data.leftTime+'</span></div>';
+	                            html += '<div><span>过了支付时间</span>:<span>'+payOverTime+'</span></div>';
+	                            break;
+	                        case '已支付待发货':
+	                            html += '<div><span>已支付时间</span>:<span>'+res.result.data.payTime+'</span></div>';
+	                            html += '<div><span>买受人地址</span>:<span>'+res.result.data.address+'</span></div>';
+	                            html += '<div><span>买受人电话</span>:<span>'+res.result.data.phone+'</span></div>';
+	                            html += '<div><span>此拍品送拍机构</span>:<span>'+res.result.data.youyunSupplier.name+'</span></div>';
+	                            html += '<div><span>机构联系电话</span>:<span>'+res.result.data.youyunSupplier.phone+'</span></div>';
+	                            break;
+	                        case '待收货':
+	                            html += '<div><span>已支付时间</span>:<span>'+res.result.data.payTime+'</span></div>';
+	                            html += '<div><span>买受人地址</span>:<span>'+res.result.data.address+'</span></div>';
+	                            html += '<div><span>买受人电话</span>:<span>'+res.result.data.phone+'</span></div>';
+	                            html += '<div><span>此拍品送拍机构</span>:<span>'+res.result.data.youyunSupplier.name+'</span></div>';
+	                            html += '<div><span>机构联系电话</span>:<span>'+res.result.data.youyunSupplier.phone+'</span></div>';
+	                            if($.isEmptyObject(res.result.data.traces)){
+	                                html += '<div><span>物流扭转状态</span>:<span></span></div>';
+	                            }else{
+	                                var htmlwlxx = '';
+	                                $.each(res.result.data.traces,function(index,domEle){
+	                                  htmlwlxx += '<div><span>'+res.result.data.traces[index].AcceptTime+'</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>'+res.result.data.traces[index].AcceptStation+'</span></div>';
+	                               });
+	                                $('#wlxx .informationModalBody').append(htmlwlxx);
+	                                html += '<div><span>物流扭转状态</span>:<span><button onclick="$(\'#wlxx\').modal(\'show\')">查看详情</button></span></div>';
+	                            }
+	                            break;
+	                        case '订单完成':
+	                            html += '<div><span>已支付时间</span>:<span>'+res.result.data.payTime+'</span></div>';
+	                            html += '<div><span>买受人地址</span>:<span>'+res.result.data.address+'</span></div>';
+	                            html += '<div><span>买受人电话</span>:<span>'+res.result.data.phone+'</span></div>';
+	                            html += '<div><span>此拍品送拍机构</span>:<span>'+res.result.data.youyunSupplier.name+'</span></div>';
+	                            html += '<div><span>机构联系电话</span>:<span>'+res.result.data.youyunSupplier.phone+'</span></div>';
+	                            if($.isEmptyObject(res.result.data.traces)){
+	                                html += '<div><span>物流扭转状态</span>:<span></span></div>';
+	                            }else{
+	                                var htmlwlxx = '';
+	                                $.each(res.result.data.traces,function(index,domEle){
+	                                  htmlwlxx += '<div><span>'+res.result.data.traces[index].AcceptTime+'</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>'+res.result.data.traces[index].AcceptStation+'</span></div>';
+	                               });
+	                                $('#wlxx .informationModalBody').append(htmlwlxx);
+	                                html += '<div><span>物流扭转状态</span>:<span><button onclick="$(\'#wlxx\').modal(\'show\')">查看详情</button></span></div>';
+	                            }
+	                            html += '<div><span>交易成功时间</span>:<span>'+res.result.data.receivingTime+'</span></div>';
+	                            break;
+	                        default:
+	                    }
+	                    break
+	                  case 3:
+	                    //主题订单
+	                    html += '<div><span>昵称</span>:<span>'+res.result.data.youyunUser.nick+'</span></div>';
+	                    html += '<div><span>UID</span>:<span>'+res.result.data.youyunUser.uid+'</span></div>';
+	                    html += '<div><span>手机号</span>:<span>'+res.result.data.youyunUser.phoneNum+'</span></div>';
+	                    html += '<div><span>PR值</span>:<span>'+res.result.data.youyunUser.prvalue+'</span></div>';
+	                    html += '<div><span>成交笔数</span>:<span>'+parseInt(res.result.data.youyunUser.dealCount+res.result.data.youyunUser.schoolCount)+'</span></div>';
+	                    html += '<div><span>成交数</span>:<span>'+parseInt(res.result.data.youyunUser.dealCount)+'</span></div>';
+	                    html += '<div><span>流拍数</span>:<span>'+parseInt(res.result.data.youyunUser.schoolCount)+'</span></div>';
+	                    html += '<div><span>商品名称</span>:<span>'+res.result.data.youyunGoods.commodityName+'</span></div>';
+	                    html += '<div><span>数量</span>:<span>'+res.result.data.amount+'</span></div>';
+	                    html += '<div><span>单价</span>:<span>'+res.result.data.youyunGoods.price+'</span></div>';
+	                    html += '<div><span>买家留言</span>:<span>'+res.result.data.remark+'</span></div>';
+	                    html += '<div><span>买家收货地址</span>:<span>'+res.result.data.address+'</span></div>';
+	                    html += '<div><span>收货姓名</span>:<span>'+res.result.data.receiveName+'</span></div>';
+	                    html += '<div><span>收货手机号</span>:<span>'+res.result.data.phone+'</span></div>';
+	                    html += '<div><span>买家昵称</span>:<span>'+res.result.data.youyunUser.nick+'</span></div>';
+	                    html += '<div><span>订单号</span>:<span>'+res.result.data.orderId+'</span></div>';
+	                    switch(res.result.data.orderStatus){
+	                        case '待支付':
+	                           // html += '<div><span>待支付金额</span>:<span>'++'</span></div>';
+	                            html += '<div><span>创建时间</span>:<span>'+res.result.data.createTime+'</span></div>';
+	                            html += '<div><span>关闭时间</span>:<span>'+res.result.data.payOverTime+'</span></div>';
+	                            break;
+	                        case '已支付待发货':
+	                            //html += '<div><span>总支付金额</span>:<span>'++'</span></div>';
+	                            html += '<div><span>创建时间</span>:<span>'+res.result.data.createTime+'</span></div>';
+	                            html += '<div><span>付款时间</span>:<span>'+res.result.data.payTime+'</span></div>';
+	                            html += '<div><span>距支付已过时间</span>:<span>'+res.result.data.rightTime+'</span></div>';
+	                     break;
+	                        case '待收货':
+	                            //html += '<div><span>总支付金额</span>:<span>'++'</span></div>';
+	                            html += '<div><span>创建时间</span>:<span>'+res.result.data.createTime+'</span></div>';
+	                            html += '<div><span>付款时间</span>:<span>'+res.result.data.payTime+'</span></div>';
+	                            html += '<div><span>发货时间</span>:<span>'+res.result.data.deliveryTime+'</span></div>';
+	                            if($.isEmptyObject(res.result.data.traces)){
+	                                html += '<div><span>物流扭转状态</span>:<span></span></div>';
+	                            }else{
+	                                var htmlwlxx = '';
+	                                $.each(res.result.data.traces,function(index,domEle){
+	                                  htmlwlxx += '<div><span>'+res.result.data.traces[index].AcceptTime+'</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>'+res.result.data.traces[index].AcceptStation+'</span></div>';
+	                               });
+	                                $('#wlxx .informationModalBody').append(htmlwlxx);
+	                                html += '<div><span>物流扭转状态</span>:<span><button onclick="$(\'#wlxx\').modal(\'show\')">查看详情</button></span></div>';
+	                            }
+	                            break;
+	                        case '订单完成':
+	                            //html += '<div><span>总支付金额</span>:<span>'++'</span></div>';
+	                            html += '<div><span>创建时间</span>:<span>'+res.result.data.createTime+'</span></div>';
+	                            html += '<div><span>付款时间</span>:<span>'+res.result.data.payTime+'</span></div>';
+	                            html += '<div><span>发货时间</span>:<span>'+res.result.data.deliveryTime+'</span></div>';
+	                            html += '<div><span>成交时间</span>:<span>'+res.result.data.receivingTime+'</span></div>';
+	                            break;
+	                        default:
+	                    }
+	                    break;
+	                  default:
+	                    html += '<div><span>昵称:</span><span>'+res.result.data.nick+'</span></div>';
+	                    html += '<div><span>UID:</span><span>'+res.result.data.uid+'</span></div>';
+	                    html += '<div><span>手机号:</span><span>'+res.result.data.phoneNum+'</span></div>';
+	                    html += '<div><span>PR值:</span><span>'+res.result.data.prvalue+'</span></div>';
+	                    html += '<div><span>成交笔数:</span><span>'+parseInt(res.result.data.dealCount+res.result.data.schoolCount)+'</span></div>';
+	                    html += '<div><span>成交数:</span><span>'+parseInt(res.result.data.dealCount)+'</span></div>';
+	                    html += '<div><span>流拍数:</span><span>'+parseInt(res.result.data.schoolCount)+'</span></div>';
+	              }
+	              $('#informationTabBody').html(html);
+	          }else{
+	              if(undefined == res.msg || "" == res.msg){
+	                  alert("未获取到数据，请联系服务提供商");
+	              }else{
+	                  alert(res.msg);
+	              }
+	          }
+	      }
+	    });
+	}
 	module.exports = chat;
 
 

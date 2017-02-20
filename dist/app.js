@@ -818,7 +818,7 @@
 	                    html += '<div><span>成交数</span>:<span>'+parseInt(res.result.data.youyunUser.dealCount)+'</span></div>';
 	                    html += '<div><span>流拍数</span>:<span>'+parseInt(res.result.data.youyunUser.schoolCount)+'</span></div>';
 	                    html += '<div><span>商品名称</span>:<span>'+res.result.data.youyunGoods.commodityName+'</span></div>';
-	                    html += '<div><span>数量</span>:<span>'+res.result.data.amount+'</span></div>';
+	                    html += '<div><span>数量</span>:<span>'+res.result.data.thingsCount+'</span></div>';
 	                    html += '<div><span>单价</span>:<span>'+res.result.data.youyunGoods.price+'</span></div>';
 	                    html += '<div><span>买家留言</span>:<span>'+res.result.data.remark+'</span></div>';
 	                    html += '<div><span>买家收货地址</span>:<span>'+res.result.data.address+'</span></div>';

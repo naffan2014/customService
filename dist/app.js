@@ -902,35 +902,35 @@
 
 	switch(env){
 	     case 'production':
-	        communication_server_host = 'ws://csws.17youyun.com/websocket';
-	        upload = 'http://csapi.17youyun.com/fileProcess/custUploadFile';
-	        history = 'http://csapi.17youyun.com/history/getHistory';
-	        login = 'http://csapi.17youyun.com/customer/login';
-	        kupai_userinfo = 'http://csapi.17youyun.com/customer/user_info/show';
-	        update_online_statue = 'http://admin.cs.17youyun.com/api/seating/updateSeatingInfo';
+	        communication_server_host = 'ws://ws.cs.51kupai.com/websocket';
+	        upload = 'http://api.cs.51kupai.com/fileProcess/custUploadFile';
+	        history = 'http://api.cs.51kupai.com/history/getHistory';
+	        login = 'http://api.cs.51kupai.com/customer/login';
+	        kupai_userinfo = 'http://api.cs.51kupai.com/customer/user_info/show';
+	        update_online_statue = 'http://admin.cs.51kupai.com/api/seating/updateSeatingInfo';
 	        break;
 	     case 'development':
-	        communication_server_host = 'ws://test.csws.17youyun.com/websocket';
-	        upload = 'http://test.csapi.17youyun.com/fileProcess/custUploadFile';
-	        history = 'http://test.csapi.17youyun.com/history/getHistory';
-	        login = 'http://test.csapi.17youyun.com/customer/login';
-	        kupai_userinfo = 'http://test.csapi.17youyun.com/customer/user_info/show';
-	        update_online_statue = 'http://test.admin.cs.17youyun.com/api/seating/updateSeatingInfo';
+	        communication_server_host = 'ws://test.ws.cs.51kupai.com/websocket';
+	        upload = 'http://test.api.cs.51kupai.com/fileProcess/custUploadFile';
+	        history = 'http://test.api.cs.51kupai.com/history/getHistory';
+	        login = 'http://test.api.cs.51kupai.com/customer/login';
+	        kupai_userinfo = 'http://test.api.cs.51kupai.com/customer/user_info/show';
+	        update_online_statue = 'http://test.admin.cs.51kupai.com/api/seating/updateSeatingInfo';
 	        break;
 	     case 'test':
-	        communication_server_host = 'ws://test.csws.17youyun.com/websocket';
-	        upload = 'http://test.csapi.17youyun.com/fileProcess/custUploadFile';
-	        history = 'http://test.csapi.17youyun.com/history/getHistory';
-	        login = 'http://test.csapi.17youyun.com/customer/login';
-	        kupai_userinfo = 'http://test.csapi.17youyun.com/customer/user_info/show';
-	        update_online_statue = 'http://test.admin.cs.17youyun.com/api/seating/updateSeatingInfo';
+	        communication_server_host = 'ws://test.ws.cs.51kupai.com/websocket';
+	        upload = 'http://test.api.cs.51kupai.com/fileProcess/custUploadFile';
+	        history = 'http://test.api.cs.51kupai.com/history/getHistory';
+	        login = 'http://test.api.cs.51kupai.com/customer/login';
+	        kupai_userinfo = 'http://test.api.cs.51kupai.com/customer/user_info/show';
+	        update_online_statue = 'http://test.admin.cs.51kupai.com/api/seating/updateSeatingInfo';
 	        break;
 	     default://默认用正式的
-	        communication_server_host = 'ws://csws.17youyun.com/websocket';
-	        upload = 'http://csapi.17youyun.com/fileProcess/custUploadFile';
-	        history = 'http://csapi.17youyun.com/history/getHistory';
-	        login = 'http://csapi.17youyun.com/customer/login';
-	        update_online_statue = 'http://admin.cs.17youyun.com/api/seating/updateSeatingInfo';
+	        communication_server_host = 'ws://ws.cs.51kupai.com/websocket';
+	        upload = 'http://api.cs.51kupai.com/fileProcess/custUploadFile';
+	        history = 'http://api.cs.51kupai.com/history/getHistory';
+	        login = 'http://api.cs.51kupai.com/customer/login';
+	        update_online_statue = 'http://admin.cs.51kupai.com/api/seating/updateSeatingInfo';
 	     
 	}
 

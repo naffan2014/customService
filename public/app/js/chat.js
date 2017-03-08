@@ -150,6 +150,7 @@ Chat.prototype.toggleChatView = function(data) {
         'from':data.to,
         'to':data.from,
         'fid':data.to+ '-' + data.from +'-'+ tmpTimestamp,//目前没有用
+        'domain':'51kupai.com',
         //'fid':210000-547240-1482758314000
       },
       onComplete: function(response) {

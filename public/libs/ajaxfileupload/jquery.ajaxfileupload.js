@@ -155,7 +155,7 @@
                 }
                 html += '<input type="hidden" name="' + key + '" value="' + paramVal + '" />';
               }
-              html += '<script>document.domain = "17youyun.com"</script>';
+              html += '<script>document.domain = "51kupai.com"</script>';
               return html;
             });
           }

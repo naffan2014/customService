@@ -367,6 +367,7 @@
 	        'from':data.to,
 	        'to':data.from,
 	        'fid':data.to+ '-' + data.from +'-'+ tmpTimestamp,//目前没有用
+	        'domain':'51kupai.com',
 	        //'fid':210000-547240-1482758314000
 	      },
 	      onComplete: function(response) {
@@ -918,12 +919,12 @@
 	        update_online_statue = 'http://test.admin.cs.51kupai.com/api/seating/updateSeatingInfo';
 	        break;
 	     case 'test':
-	        communication_server_host = 'ws://test.ws.cs.51kupai.com/websocket';
-	        upload = 'http://test.api.cs.51kupai.com/fileProcess/custUploadFile';
-	        history = 'http://test.api.cs.51kupai.com/history/getHistory';
-	        login = 'http://test.api.cs.51kupai.com/customer/login';
-	        kupai_userinfo = 'http://test.api.cs.51kupai.com/customer/user_info/show';
-	        update_online_statue = 'http://test.admin.cs.51kupai.com/api/seating/updateSeatingInfo';
+	        communication_server_host = 'ws://ws.cs.51kupai.com/websocket';
+	        upload = 'http://api.cs.51kupai.com/fileProcess/custUploadFile';
+	        history = 'http://api.cs.51kupai.com/history/getHistory';
+	        login = 'http://api.cs.51kupai.com/customer/login';
+	        kupai_userinfo = 'http://api.cs.51kupai.com/customer/user_info/show';
+	        update_online_statue = 'http://admin.cs.51kupai.com/api/seating/updateSeatingInfo';
 	        break;
 	     default://默认用正式的
 	        communication_server_host = 'ws://ws.cs.51kupai.com/websocket';

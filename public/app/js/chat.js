@@ -496,6 +496,7 @@ function getSpecifyMessageType(message){
     return message;
 }
 
+
 /*
  * 获取酷派用户的信息
  */

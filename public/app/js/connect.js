@@ -2,6 +2,8 @@ var Pubsub = require('./pubsub');
 var middle = require('./middle');
 var config = require('./config');
 var mycookie = require('./cookie');
+var newMessageWarn ='';
+
 
 var pubsub = new Pubsub();
 // 初始化事件
@@ -98,12 +100,19 @@ Connect.prototype.connect = function(host) {
         // $('#alertHint',middle.currentUserDom).html(middle.my_connect_hint);
     // };
     this.socket.onmessage = function (obj) {
+        
         //console.log('java原始数据',obj);
         //收到服务器消息
         var data = JSON.parse(obj.data);
         // console.log('总消息结构');
         // console.dir(data);
         type = data.type;//提取socket消息类型
+        if(type == 'entercs' || type == 'message'){
+            if(document.hidden){
+                document.title = "您有一条新的短消息";
+                scrollTitle();
+            }
+        }
         switch(type){
             case 'entercs':
                 var audio = document.getElementById('audio');
@@ -293,3 +302,4 @@ function genereateAvatarImg() {
 var directive = new Directive();
 
 module.exports = Connect;
+

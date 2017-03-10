@@ -19,7 +19,7 @@
         var env = "<%=env%>"
     </script>
 </head>
-<body>
+<body onfocus="document.title='<%=title%>';clearTimeout(newMessageWarn);">
     <div class="container" id="container">
         <div class="row chat-container">
             <div class="row">
@@ -187,5 +187,23 @@
             $usersIs[this.index].style.display = "block";
         };
     };
+    
+    
+ //新消息提醒滚动
+function scrollTitle(){
+    //拿到标题栏的文本
+    var title = document.title;
+    //将文本字符串转换为数组
+    var arr = title.split("");
+    //拿到数组的第一个元素，并从数组中删除
+    var first = arr.shift();
+    //将第一个元素添加到数组的最后
+    arr.push(first);
+    //将数组再组合成一个字符串
+    title = arr.join("");
+    document.title = title;
+    //每隔一秒做一遍前6步
+    newMessageWarn = setTimeout("scrollTitle()",500);
+}
 </script>
 </html>

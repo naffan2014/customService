@@ -115,8 +115,6 @@ Connect.prototype.connect = function(host) {
         }
         switch(type){
             case 'entercs':
-                var audio = document.getElementById('audio');
-                audio.play();
                 console.log('有用户接入');
                 //考虑某些缺少默认数据的用户，自动给他加上默认值
                 if(undefined == data.ext_content){

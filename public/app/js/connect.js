@@ -2,8 +2,6 @@ var Pubsub = require('./pubsub');
 var middle = require('./middle');
 var config = require('./config');
 var mycookie = require('./cookie');
-var newMessageWarn ='';
-
 
 var pubsub = new Pubsub();
 // 初始化事件

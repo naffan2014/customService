@@ -713,6 +713,7 @@
 	    return message;
 	}
 
+
 	/*
 	 * 获取酷派用户的信息
 	 */
@@ -966,6 +967,8 @@
 	var middle = __webpack_require__(1);
 	var config = __webpack_require__(4);
 	var mycookie = __webpack_require__(7);
+	var newMessageWarn ='';
+
 
 	var pubsub = new Pubsub();
 	// 初始化事件
@@ -1062,12 +1065,19 @@
 	        // $('#alertHint',middle.currentUserDom).html(middle.my_connect_hint);
 	    // };
 	    this.socket.onmessage = function (obj) {
+	        
 	        //console.log('java原始数据',obj);
 	        //收到服务器消息
 	        var data = JSON.parse(obj.data);
 	        // console.log('总消息结构');
 	        // console.dir(data);
 	        type = data.type;//提取socket消息类型
+	        if(type == 'entercs' || type == 'message'){
+	            if(document.hidden){
+	                document.title = "您有一条新的短消息";
+	                scrollTitle();
+	            }
+	        }
 	        switch(type){
 	            case 'entercs':
 	                var audio = document.getElementById('audio');
@@ -1257,6 +1267,7 @@
 	var directive = new Directive();
 
 	module.exports = Connect;
+
 
 
 /***/ },

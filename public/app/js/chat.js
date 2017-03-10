@@ -87,6 +87,42 @@ Chat.prototype.toggleChatView = function(data) {
     }
     //更新用户信息
     getKuPaiUserInfo(data.from)
+    //绑定页面中间的按钮加载聊天记录
+    $('.getNewHistory',userDom).click(function(){
+        $.ajax({
+              url: config.api.history,
+              data: "user_id="+ data.from +"&num="+ HistoryNum +"&next_id="+ $('#lastHistoryId',userDom).html(),
+              type: 'get',
+              dataType:'jsonp',
+              jsonp:'json_callback',
+              jsonpCallback:"success_jsonpCallback",
+              success: function(res){
+                console.log(res);
+                if(res == undefined){
+                    console.log('mei');
+                }else{
+                    console.log('you');
+                }
+                for(var key in res){
+                    res[key].content = JSON.parse(res[key].content);
+                    console.log(res[key])
+                    var resContent = getSpecifyMessageType(res[key])
+                    if( res[key].from == res[key].userId){
+                        insertChatHistoryLeft(resContent);
+                    }else{
+                        insertChatHistoryRight(resContent);
+                    }
+                    //记录历史记录最后一条
+                    $('#lastHistoryId',userDom).html(resContent.id);
+                }
+              },
+              error:function(){
+                  console.log('获取消息失败，请重试');
+              }
+            });
+    });
+    
+    
     //绑定下拉框到顶部后加载聊天记录
     $('div#box-body',userDom).scroll(function(){
         if(0 == $(this).scrollTop()){
@@ -197,10 +233,13 @@ Chat.prototype.toggleChatView = function(data) {
     });
     
     //
+    
     msg_input = userDom.find("#msg-input");
     msg_start = userDom.find("#box-body");
     msg_end = userDom.find("#msg_end");
     $('#chatWindowDiv').replaceWith(userDom);
+    msgScrollEnd();
+    
 };
 
 /**

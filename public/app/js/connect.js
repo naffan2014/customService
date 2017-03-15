@@ -129,6 +129,23 @@ Connect.prototype.connect = function(host) {
                 public_chat.usersMap.set(data.from, data);//为了更新未读数埋的数据
                 middle.userAvatarComponent.userListScope.$apply();
                 break;
+            case 'reentercs':
+                console.log('用户重新接入');
+                //考虑某些缺少默认数据的用户，自动给他加上默认值
+                if(undefined == data.ext_content){
+                    data.ext_content = {};
+                    data.ext_content.name = config.name.kr;
+                    data.ext_content.pic = config.avatar.kr;
+                }
+                data.connect = 1; //用户连接着
+                //存入用户集合
+                var jsonfyData = JSON.stringify(data); //为了显示用户列表埋的数据(替换成存入localstorage)
+                localStorage.setItem('csyouyun'+data.from,jsonfyData);
+                public_chat.users[data.from] = data;
+                //存入HashMap中
+                public_chat.usersMap.set(data.from, data);//为了更新未读数埋的数据
+                middle.userAvatarComponent.userListScope.$apply();
+                break;
             case 'leavecs':
                 console.log('用户退出');
                 break;

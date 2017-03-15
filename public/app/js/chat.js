@@ -93,6 +93,7 @@ Chat.prototype.toggleChatView = function(data) {
               url: config.api.history,
               data: "user_id="+ data.from +"&num="+ HistoryNum +"&next_id="+ $('#lastHistoryId',userDom).html(),
               type: 'get',
+              contentType: "application/x-www-form-urlencoded; charset=utf-8",
               dataType:'jsonp',
               jsonp:'json_callback',
               jsonpCallback:"success_jsonpCallback",
@@ -549,6 +550,7 @@ function getKuPaiUserInfo(uid){
       data: "uid="+ uid,
       type: 'get',
       dataType:'jsonp',
+      contentType: "application/x-www-form-urlencoded; charset=utf-8",
       jsonp:'json_callback',
       jsonpCallback:"success_jsonpCallback",
       success: function(res){

@@ -586,10 +586,11 @@
 	    
 	    var chat = this;
 	    var closePosition =  Object.keys(chat.users).indexOf(data.from);
-	    
+	    console.log('closePosition',closePosition);
 	    var appearPositionStart = closePosition+1;
 	    var appearPositionEnd = closePosition+2;
 	    var appearId = Object.keys(chat.users).slice(appearPositionStart,appearPositionEnd);
+	    console.log('appearId',appearId);
 	    if("" == appearId){
 	        //没有下一个就需要给出默认的窗体
 	        var userDom = chat.chatWindow.clone();
@@ -604,7 +605,7 @@
 	        $('#chatWindowDiv').replaceWith(userDom);
 	        
 	        //更新库拍用户信息
-	        getKuPaiUserInfo(uid)
+	        getKuPaiUserInfo(appearId);
 	    }
 	    
 	    var forConnect = JSON.parse(localStorage.getItem('csyouyun'+data.from));

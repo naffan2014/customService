@@ -5,6 +5,7 @@ var middle = require('./middle');
 var templateDiv = $("<div>");// 没有<> 就变成选取元素了
 var chatMsgRight; // 自己的聊天消息
 var chatMsgLeft; // 他人的聊天消息
+var chatMsgCenter; //系统消息
 var chatWindow; // 聊天窗口
 var msg_input; //聊天输入
 var msg_star; //聊天框最上端
@@ -108,7 +109,10 @@ Chat.prototype.toggleChatView = function(data) {
                     res[key].content = JSON.parse(res[key].content);
                     console.log(res[key])
                     var resContent = getSpecifyMessageType(res[key])
-                    if( res[key].from == res[key].userId){
+                    
+                    if('system' == res[key].from){
+                        insertChatHistoryCenter(resContent);
+                    }else if( res[key].from == res[key].userId){
                         insertChatHistoryLeft(resContent);
                     }else{
                         insertChatHistoryRight(resContent);
@@ -146,7 +150,9 @@ Chat.prototype.toggleChatView = function(data) {
                     res[key].content = JSON.parse(res[key].content);
                     console.log(res[key])
                     var resContent = getSpecifyMessageType(res[key])
-                    if( res[key].from == res[key].userId){
+                    if('system' == res[key].from){
+                        insertChatHistoryCenter(resContent);
+                    }else if( res[key].from == res[key].userId){
                         insertChatHistoryLeft(resContent);
                     }else{
                         insertChatHistoryRight(resContent);
@@ -434,6 +440,7 @@ templateDiv.load('/public/app/template/template.html', function() {
 
     chatMsgRight = templateDiv.find("#msg-right>div");
     chatMsgLeft = templateDiv.find("#msg-left>div");
+    chatMsgCenter = templateDiv.find("#msg-center>div");
     chatMsgImage = templateDiv.find("#msg-image>div");
     chatWindow = templateDiv.find("#chatWindow>div");
     // 加载完在赋值
@@ -491,9 +498,20 @@ function insertChatHistoryRight(message){
     date.setTime(message.createTime)
     var clone = chatMsgRight.clone();
     $(".direct-chat-timestamp",clone).html(date.toLocaleTimeString());
+    var ext = JSON.parse(message.ext)
+    $("img#chatWindow-rightAvatar",clone).attr('src',ext.pic);
     $(".dctr",clone).html(message.content);
     msg_start.prepend(clone)
     
+}
+
+/*
+ * 插入系统消息
+ */
+function insertChatHistoryCenter(message){
+    var clone = chatMsgCenter.clone();
+    $(".dctr",clone).html(message.content);
+    msg_start.prepend(clone)
 }
 
 /*

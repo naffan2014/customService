@@ -134,6 +134,7 @@
 	        var loginGid = mycookie.getCookie('loginGid');
 	        var loginCid = mycookie.getCookie('loginCid');
 	        var loginToken = mycookie.getCookie('loginToken');
+	        var phone = mycookie.getCookie('phone');
 	        //初始化chat信息
 	        chat.signinuser.username = loginCid;
 	        //chat.users.push($scope.username);
@@ -145,6 +146,18 @@
 	        var socketData = window.btoa(jsonStr);
 	        var socketUrl = config.api.communication_server_host +"?data="+ socketData;
 	        var socketRes = connect.connect(socketUrl);
+	        
+	        //更新客服状态
+	          $.ajax({
+	              url: config.api.update_online_statue,
+	              data: "phone="+phone+"&online=1",
+	              dataType:'jsonp',
+	              jsonp:'json_callback',
+	              jsonpCallback:"success_jsonpCallback",
+	              success: function(res){
+	                  console.log(res)
+	              }
+	           });
 	    }else{
 	          /*
 	         * 登录浮层
@@ -1138,6 +1151,23 @@
 	        switch(type){
 	            case 'entercs':
 	                console.log('有用户接入');
+	                //考虑某些缺少默认数据的用户，自动给他加上默认值
+	                if(undefined == data.ext_content){
+	                    data.ext_content = {};
+	                    data.ext_content.name = config.name.kr;
+	                    data.ext_content.pic = config.avatar.kr;
+	                }
+	                data.connect = 1; //用户连接着
+	                //存入用户集合
+	                var jsonfyData = JSON.stringify(data); //为了显示用户列表埋的数据(替换成存入localstorage)
+	                localStorage.setItem('csyouyun'+data.from,jsonfyData);
+	                public_chat.users[data.from] = data;
+	                //存入HashMap中
+	                public_chat.usersMap.set(data.from, data);//为了更新未读数埋的数据
+	                middle.userAvatarComponent.userListScope.$apply();
+	                break;
+	            case 'reentercs':
+	                console.log('用户重新接入');
 	                //考虑某些缺少默认数据的用户，自动给他加上默认值
 	                if(undefined == data.ext_content){
 	                    data.ext_content = {};

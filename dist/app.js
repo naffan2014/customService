@@ -134,6 +134,7 @@
 	        var loginGid = mycookie.getCookie('loginGid');
 	        var loginCid = mycookie.getCookie('loginCid');
 	        var loginToken = mycookie.getCookie('loginToken');
+	        var phone = mycookie.getCookie('phone');
 	        //初始化chat信息
 	        chat.signinuser.username = loginCid;
 	        //chat.users.push($scope.username);
@@ -145,6 +146,18 @@
 	        var socketData = window.btoa(jsonStr);
 	        var socketUrl = config.api.communication_server_host +"?data="+ socketData;
 	        var socketRes = connect.connect(socketUrl);
+	        
+	        //更新客服状态
+	          $.ajax({
+	              url: config.api.update_online_statue,
+	              data: "phone="+phone+"&online=1",
+	              dataType:'jsonp',
+	              jsonp:'json_callback',
+	              jsonpCallback:"success_jsonpCallback",
+	              success: function(res){
+	                  console.log(res)
+	              }
+	           });
 	    }else{
 	          /*
 	         * 登录浮层

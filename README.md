@@ -8,8 +8,10 @@ node采用pm2来启动。配置文件是根目录的ecosystem.config.js。这个
 pm2 start ecosystem.config.js --env production(生产环境，这个参数就是所采用的环境)。
 
 例如：
+
 1.本机测试：
 pm2 start ecosystem.config.js --env test
+
 2.测试服务器：
 pm2 start ecosystem.config.js --env development
 

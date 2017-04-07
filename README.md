@@ -1,7 +1,3 @@
-# socketio-chat
-nodejs 和 socketio 实现的 聊天窗口
-
-
 #启动说明：
 
 node采用pm2来启动。配置文件是根目录的ecosystem.config.js。这个文件里面规定了不同环境的不同环境变量（详情请看这个文件的配置）
